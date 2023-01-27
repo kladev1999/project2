@@ -1,0 +1,107 @@
+.Login{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: monospace;
+}
+
+.inputLogin, .buttonLogin {
+    appearance: none;
+    background: none;
+    border: none;
+    outline: none;
+}
+
+.App {
+    margin-top: 5px;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+}
+
+form{
+    display: block;
+    position: relative;
+    
+}
+
+form::after{
+    display: block;
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    z-index: 1;
+}
+
+form .form-inner{
+    background-color: #000000;
+    position: relative;
+    display: block;
+    padding: 50px;
+    z-index: 2;
+}
+
+form .form-inner h2{
+    color: rgb(255, 255, 255);
+    font-size: 30px;
+    font-weight: 500;
+    margin-bottom: 30;
+}
+
+form .form-inner h5{
+    color: rgb(255, 255, 255);
+}
+
+form .form-inner .form-group{
+    
+    display: inline;
+    width: 400px;
+    margin-bottom: 15px;
+}
+
+.form-inner .form-group label{
+    display: block;
+    color: rgb(253, 253, 253);
+    font-size: 18px;
+    margin-bottom: 5px;
+    transition: 0.4s;
+}
+
+.form-inner .form-group:focus-within label{
+    color: #6cca00;
+}
+
+form .form-inner .form-group input{
+    display: block;
+    width: 100%;
+    padding: 10px 15px;
+    background-color: #F8F8F8;
+    border-radius: 8px;
+    transition: 0.4s;
+}
+
+form .form-inner .form-group input:focus {
+    box-shadow: 0px 0px 3px;
+}
+
+form .form-inner input[type = "submit"]{
+    
+    padding: 10px 15px;
+    border-radius: 8px;
+    background-image: linear-gradient(to right, #6cca00 50%, #6cca00 50%,#FFFF);
+    transition: 0.4s;
+    background-size: 200%;
+    background-position: 0%;
+    color: #F8F8F8;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+form .form-inner input[type = "submit"]:hover{
+    background-position: 100% 0%;   
+}
+
