@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import TotalOrderService from "../../../services/TotalOrderService";
 import { Container, Row, Col } from "react-grid-system";
 import OrderMenuService from "../../../services/OrderMenuService";
-function ListTotalOrdermenu() {
+function ListTotalOrdermenuEmp() {
   const { compoSite, table_ID, totalOrder_ID,statusTable } = useParams();
   const navigate = useNavigate();
   const [totalOrder, setTotalOrder] = useState([]);
@@ -50,7 +50,7 @@ function ListTotalOrdermenu() {
   };
 
   const Back = () => {
-    navigate("/TotalOrder");
+    navigate("/TableOrderEmp");
   };
 
   useEffect(() => {
@@ -234,7 +234,7 @@ function ListTotalOrdermenu() {
                         <button
                           type="button"
                           class="btn btn-success"
-                          disabled={d.status_ID.status_ID === 4 || d.status_ID.status_ID ===3}
+                          disabled={d.status_ID.status_ID === 4 || d.status_ID.status_ID === 3}
                           onClick={() => finishedlStatus(d.orderMenu_ID,d.menu_ID.menu_Name)}
                         >
                           {" "}
@@ -244,7 +244,7 @@ function ListTotalOrdermenu() {
                           type="button"
                           style={{marginLeft: "5px"}}
                           class="btn btn-danger"
-                          disabled={d.status_ID.status_ID === 4 || d.status_ID.status_ID ===3}
+                          disabled={d.status_ID.status_ID === 4 || d.status_ID.status_ID === 3}
                           onClick={cancel(d.orderMenu_ID)}
                         >
                           {" "}
@@ -270,4 +270,4 @@ function ListTotalOrdermenu() {
   );
 }
 
-export default ListTotalOrdermenu;
+export default ListTotalOrdermenuEmp;

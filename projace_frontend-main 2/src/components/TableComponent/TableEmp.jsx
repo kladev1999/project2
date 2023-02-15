@@ -4,13 +4,13 @@ import { Container, Row, Col } from "reactstrap";
 import { useNavigate } from "react-router-dom";
 import TotalOrderService from "../../services/TotalOrderService";
 import AuthService from "../../services/Auth-service";
+import DatePicker from "react-datepicker";
 
-function TebleComponent() {
+function TableEmp() {
   const [table, setTabel] = useState([]);
   const [table_Zone, setTabel_Zone] = useState([]);
   const navigate = useNavigate();
   const currentUser = AuthService.getCurrentUser();
-
   const tableZone = {
     table_Zone
   }
@@ -22,8 +22,7 @@ function TebleComponent() {
 
   const [totalOrder, setTotalOrder] = useState([]);
   const [totalTab, setTotalTab] = useState([]);
-  const [totalTabs, setTotalTabs] = useState([]);
-  const [date, setDate] = useState(new Date());
+
   
 
 
@@ -83,14 +82,14 @@ function TebleComponent() {
     }
   };
   const AddTable = () => {
-    navigate("/CreateTableComponent");
+    navigate("/CreateTableEmp");
   };
 
   useEffect(() => {
     getAllTebles();
     getTotalOrder();
     findTable();
-  }, []);
+  }, [table.length,table]);
 
   useEffect(() => {
     console.log("=======2 ", totalTab);
@@ -98,18 +97,19 @@ function TebleComponent() {
 
   const updateTable = (table_ID) => {
 
-    navigate("/UpdateTable/"+table_ID)
+    navigate("/UpdateTableEmp/"+table_ID)
     
   }
+  
 
   const checkInTable = (e, table_ID) => {
     e.preventDefault();
     const totalOrderState = {
       totalPrice,
-      totalOrder_Status,
       id: {
         id: currentUser.id,
       },
+      totalOrder_Status,
       compoSite: table_ID,
       table_ID: {
         table_ID,
@@ -118,14 +118,14 @@ function TebleComponent() {
 
     TotalOrderService.addTotalOrder(totalOrderState)
       .then((response) => {
-        navigate("/TotalOrder");
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-        console.log(totalOrderState);
-      });
-  };
+          console.log(response.data);
+          navigate("/TableOrderEmp");
+        })
+        .catch((error) => {
+            console.log(error);
+            console.log(totalOrderState);
+        });
+    };
 
   const OrderMenu = (totalOrder, table_ID) => {
     TableService.getTotalOrder_ID(table_ID)
@@ -146,6 +146,13 @@ function TebleComponent() {
   const disableButton = (table_ID) => {
 
     let C
+    // const check = totalOrder.find((item) => {
+    //   return item.table_ID.table_ID === table_ID;
+    // });
+
+    // const checkStatus = totalOrder.find((item) => {
+    //   return item.totalOrder_ID;
+    // });
 
     totalOrder.map((t) => {
 
@@ -162,6 +169,14 @@ function TebleComponent() {
       }
     })
 
+
+
+
+    // if (check && t.totalOrder_Status) {
+    //   return true;
+    // } else {
+    //   return false;
+    // }
     return C
 
   };
@@ -228,11 +243,11 @@ function TebleComponent() {
               key={t.table_ID}
               className="md-4"
             >
-             
+           
               <div className="product__item">
                 <div className="product__content">
                   <h5>
-                    <h2>โต๊ะที่ {t.table_Zone}</h2>
+                    <h2>โต๊ะ {t.table_Zone}</h2>
                   </h5>
                   <div className="text-center">
                     <button
@@ -271,4 +286,4 @@ function TebleComponent() {
   );
 }
 
-export default TebleComponent;
+export default TableEmp;

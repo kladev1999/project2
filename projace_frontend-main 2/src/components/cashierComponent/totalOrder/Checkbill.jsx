@@ -6,7 +6,7 @@ import DisPromotionService from "../../../services/DisPromotionService";
 import logo from "./img/tawin.jpeg";
 
 function Checkbill() {
-  const { compoSite, discount_ID } = useParams();
+  const { compoSite, status } = useParams();
   const componentRef = useRef();
   const [Discount, setDiscount] = useState();
   const [discount, setdiscount_ID] = useState(null);
@@ -81,13 +81,13 @@ function Checkbill() {
   const GetDiscount = () => {
     DisPromotionService.getDisPromotion().then((respone) => {
       setDiscount(respone.data);
-      setdiscount_ID(respone.data[0].discount_Percent);
+      setdiscount_ID(0);
       console.log("getdis", respone.data);
     });
   };
 
-  const getListOrderMenu = (compoSite) => {
-    TotalOrderService.getTotalListOrderById(compoSite)
+  const getListOrderMenu = () => {
+    TotalOrderService.getTotalListOrderById(compoSite,status)
       .then((response) => {
         setlist(response.data);
         console.log("listBill = ", response.data);
@@ -126,9 +126,9 @@ function Checkbill() {
           style={{ width: "200px", marginLeft: "10px" }}
           id="Promotion"
           name="Promotion"
-          value={discount}
           onChange={(e) => setdiscount_ID(e.target.value)}
         >
+        <option value="0">ส่วนลด</option>
           {Discount?.map((Discount, index) => (
             <option key={index} value={Discount?.discount_Percent}>
               {Discount?.discount_Name} {Discount?.discount_Percent}%

@@ -87,9 +87,6 @@ function ListRoleComponent() {
         </div>
         
   )
-  return (
-    <div>ListRoleComponent</div>
-  )
 }
 
 export default ListRoleComponent

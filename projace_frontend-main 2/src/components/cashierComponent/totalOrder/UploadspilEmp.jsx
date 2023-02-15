@@ -4,7 +4,7 @@ import { useParams,useNavigate } from "react-router-dom";
 import TotalOrderService from "../../../services/TotalOrderService";
 import authHeader from "../../../services/Auth-HeaderService";
 
-function Uploadslipcomponent() {
+function UploadspilEmp() {
     const { totalOrder_ID } = useParams();
   const [previewURL, setPreViewURL] = useState([]);
   const [preview, setPreView] = useState([]);
@@ -34,7 +34,7 @@ function Uploadslipcomponent() {
   };
 
   const Back = () => {
-    navigate("/TotalOrder")
+    navigate("/TableOrderEmp")
   }
 
   console.log("Img",ImageUpload)
@@ -55,7 +55,7 @@ function Uploadslipcomponent() {
       });
 
       TotalOrderService.UpdateSlip(totalOrder_ID).then(() => {
-        navigate("/TotalOrder")
+        navigate("/TableOrderEmp")
     })
 
   }
@@ -110,4 +110,4 @@ function Uploadslipcomponent() {
   );
 }
 
-export default Uploadslipcomponent;
+export default UploadspilEmp;

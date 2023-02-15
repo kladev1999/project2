@@ -5,6 +5,9 @@ import axios from "axios";
 import EmployeeService from "../../services/EmployeeService";
 import { Button, Spinner } from "react-bootstrap";
 import authHeader from "../../services/Auth-HeaderService";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as Yup from "yup";
 const CreateEmployeeComponent = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [image, SetImage] = useState([]);
@@ -15,28 +18,22 @@ const CreateEmployeeComponent = () => {
   const [phone, setPhone] = useState([]);
   const [address, setAddress] = useState([]);
   const [line, setLine] = useState([]);
-  const [role_id, setRole_id] = useState([]);
-  const [idRole, setRole] = useState([]);
   const Navigate = useNavigate();
   const [preview, setPreView] = useState([]);
   const [previewURL, setPreViewURL] = useState([]);
   const { id } = useParams();
   const initialValues = { username: "", email: "", password: "" };
   const [formValues, setFormValues] = useState(initialValues);
-  const [formErrors, setFormErrors] = useState({});
-  const [isSubmit, setIsSubmit] = useState(false);
-  let name;
-  let roles;
-  const url = "http://localhost:8080/file-upload-imageEmployees"
+  const [Role, setRole] = useState();
+  const url = "http://localhost:8080/file-upload-imageEmployees";
 
-  let pic = "http://localhost:8080/menu/getimagesEmp/"
+  let pic = "http://localhost:8080/menu/getimagesEmp/";
 
-    const roles_ids = [
-      {id:"1",value:"1",label:"ROLE_ADMIN"},
-      {id:"2",value:"2",label:"ROLE_USER"},
-      {id:"3",value:"3",label:"ROLE_COOK"}
-    ]
-
+  const roles_ids = [
+    { id: "1", value: "1", label: "ROLE_ADMIN" },
+    { id: "2", value: "2", label: "ROLE_USER" },
+    { id: "3", value: "3", label: "ROLE_COOK" },
+  ];
   const handleChange = (e) => {
     console.log("name", e.target.files[0].name);
     console.log(e.target.files);
@@ -50,17 +47,15 @@ const CreateEmployeeComponent = () => {
     SetImageUpload(img);
   };
 
-  function handleClick(e) {
+  function handleClick() {
     setIsLoading(true);
     // perform some action here, then set isLoading back to false
     setTimeout(() => {
-      e.preventDefault();
-
       var formData = new FormData();
       formData.append("file", ImageUpload[ImageUpload.length - 1]);
 
       axios
-        .post(url, formData,{ headers: authHeader()})
+        .post(url, formData, { headers: authHeader() })
         .then((res) => {
           console.log("res", res);
         })
@@ -77,8 +72,9 @@ const CreateEmployeeComponent = () => {
             phone,
             address,
             line,
+
           };
-          EmployeeService.updateEmployee(id, employee,name)
+          EmployeeService.updateEmployee(id, employee, Role)
             .then((response) => {
               console.log(response.data);
               Navigate("/employee");
@@ -96,11 +92,11 @@ const CreateEmployeeComponent = () => {
             phone,
             address,
             line,
-            
+            image
           };
-          EmployeeService.updateEmployee(id, employee,name)
+          EmployeeService.updateEmployee(id, employee, Role)
             .then((response) => {
-              console.log(response.data);
+              console.log("emp", response.data);
               Navigate("/employee");
             })
             .catch((error) => {
@@ -119,13 +115,12 @@ const CreateEmployeeComponent = () => {
           line,
           roles: [
             {
-              name,
+              Role,
             },
           ],
         };
         EmployeeService.createEmployee(employee)
           .then((response) => {
-            
             Navigate("/employee");
           })
           .catch((error) => {
@@ -158,13 +153,39 @@ const CreateEmployeeComponent = () => {
       });
   };
 
-  const handleRole = (event) => {
-    name = event.target.value;
-    console.log(name);
-  };
+  const validationSchema = Yup.object().shape({
+    name: Yup.string().min(5).required("name is required"),
+    username: Yup.string().min(5).required("Username is required"),
+    password: Yup.string().min(8).required("password is required"),
+    phone: Yup.number("Phone number is use only number").min(10).required("phone is required"),
+    address: Yup.string().required("address is required"),
+    line: Yup.string().required("password is required"),
+  });
+  const formOptions = { resolver: yupResolver(validationSchema) };
+
+  // get functions to build form with useForm() hook
+  const { register, handleSubmit, reset, formState } = useForm(formOptions);
+  const { errors } = formState;
+
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    console.log(formErrors);
+    // simulate async api call with set timeout
+    setTimeout(
+      () =>
+        setUser({
+          name: name_Emp,
+          username: username,
+          password: password,
+          phone: phone,
+          address: address,
+          line: line,
+        }),
+      300
+    );
+  }, []);
+
+  useEffect(() => {
     getEmployeeRoles();
 
     if (preview.length < 1) return;
@@ -173,6 +194,10 @@ const CreateEmployeeComponent = () => {
     preview.forEach((pre) => newPreviewURL.push(URL.createObjectURL(pre)));
     setPreViewURL(newPreviewURL);
   }, [preview]);
+
+  useEffect(() => {
+    getEmployeeRoles();
+  }, []);
 
   const title = () => {
     if (id) {
@@ -183,21 +208,22 @@ const CreateEmployeeComponent = () => {
           </div>
           <div className="input-roles">
             <div className="form-group mb-2">
-                  <select
-                    className="custom-select"
-                    style={{ width: "300px", marginLeft: "10px" }}
-                    id="roles_ids"
-                    name="roles_ids"
-                    value={roles_ids.id}
-                    onChange={handleRole}
-                  >
-                    {roles_ids.map((role_id, index) => (
-                      <option key={index} value={role_id.id}>
-                        {role_id.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+              <select
+                className="custom-select"
+                style={{ width: "300px", marginLeft: "10px" }}
+                id="roles_ids"
+                name="roles_ids"
+                value={roles_ids.id}
+                onChange={(e) => setRole(e.target.value)}
+              >
+                <option>เลือกตำแหน่ง</option>
+                {roles_ids.map((role_id, index) => (
+                  <option key={index} value={role_id.id}>
+                    {role_id.label}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
         </div>
       );
@@ -227,7 +253,6 @@ const CreateEmployeeComponent = () => {
       return <span>New </span>;
     }
   };
-
   return (
     <div>
       <br />
@@ -237,135 +262,156 @@ const CreateEmployeeComponent = () => {
           <div className="card col-md-6 offset-md-3 offset-md-3">
             {title()}
             <div className="card-body">
-              <form onSubmit={handleClick}>
-                {/* <div className="form-group mb-2">
-                  <select
-                    className="custom-select"
-                    style={{ width: "300px", marginLeft: "10px" }}
-                    id="role_id"
-                    name="role_id"
-                    value={role_id.roleName}
-                    onChange={handleRole}
-                  >
-                    {role_id.map((role_id, index) => (
-                      <option key={index} value={role_id.roleName}>
-                        {role_id.roleName}
-                      </option>
-                    ))}
-                  </select>
-                </div> */}
-                <div className="form-group mb-2">
-                  <label className="form-label"> Name :</label>
-                  <input
-                    type="text"
-                    placeholder="Name"
-                    name="Name"
-                    className="form-control"
-                    value={name_Emp}
-                    onChange={(e) => setName(e.target.value)}
-                    required
-                  ></input>
-                </div>
-
-                <div className="form-group mb-2">
-                  <label className="form-label"> Username:</label>
-                  <input
-                    type="text"
-                    placeholder="Username"
-                    name="Username"
-                    className="form-control"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    required
-                  ></input>
-                </div>
-
-                <div className="form-group mb-2">
-                  <label className="form-label"> Password :</label>
-                  <input
-                    type="password"
-                    placeholder="Password"
-                    name="Password"
-                    className="form-control"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                  ></input>
-                </div>
-                <div className="form-group mb-2">
-                  <label className="form-label"> Phone :</label>
-                  <input
-                    placeholder="Phone"
-                    name="Phone"
-                    className="form-control"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    required
-                  ></input>
-                </div>
-                <div className="form-group mb-2">
-                  <label className="form-label"> Address :</label>
-                  <input
-                    placeholder="Address"
-                    name="Address"
-                    className="form-control"
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)}
-                  ></input>
-                </div>
-                <div className="form-group mb-2">
-                  <label className="form-label"> Line :</label>
-                  <input
-                    placeholder="Line"
-                    name="Line"
-                    className="form-control"
-                    value={line}
-                    onChange={(e) => setLine(e.target.value)}
-                  ></input>
-                </div>
-
-                {Updateimg()}
-
-                <div className="form-group mb-2">
-                  <label className="form-label"> {Newimage()}Picture :</label>
-                  <input
-                    type="file"
-                    multiple
-                    accept="image/*"
-                    placeholder="Picture"
-                    name="image"
-                    className="form-control"
-                    // value={image}
-                    onChange={handleChange}
-                    // onChange={(e) => handleChange(e)
-                  ></input>
-                </div>
-
-                <div className="form-group mb-3">
-                  {previewURL.map((ingSrc) => (
-                    <img
-                      src={ingSrc}
-                      width="170"
-                      height="170"
-                      className="img-thumbnail"
+              {user && (
+                <form onSubmit={handleSubmit(handleClick)}>
+                  <div className="form-group mb-2">
+                    <label className="form-label"> Name :</label>
+                    <input
+                      name="name_Emp"
+                      type="text"
+                      value={name_Emp}
+                      {...register('name')}
+                      className={`form-control ${
+                        errors.name ? 'is-invalid' : ''
+                      }`}
+                      onChange={(e) => setName(e.target.value)}
                     />
-                  ))}
-                </div>
+                    <div className="invalid-feedback">
+                      {errors.name?.message}
+                    </div>
+                  </div>
 
-                <Button
-                  disabled={isLoading}
-                  variant="btn btn-outline-success"
-                  onClick={handleClick}
-                >
-                  {isLoading ? "Loading..." : "Save"}
-                  {isLoading && <Spinner animation="border" size="sm" />}
-                </Button>
-                <Link to="/employee" className="btn btn-outline-danger mx-2">
-                  {" "}
-                  Cancel{" "}
-                </Link>
-                <button className="fluid ui button blue">Submit</button>
-              </form>
+                  <div className="form-group mb-2">
+                    <label className="form-label"> Username:</label>
+                    <input
+                      name="username"
+                      type="text"
+                      value={username}
+                      {...register("username")}
+                      className={`form-control ${
+                        errors.username ? "is-invalid" : ""
+                      }`}
+                      onChange={(e) => setUsername(e.target.value)}
+                    />
+                    <div className="invalid-feedback">
+                      {errors.username?.message}
+                    </div>
+                  </div>
+
+                  <div className="form-group mb-2">
+                    <label className="form-label"> Password :</label>
+                    <input
+                      name="password"
+                      type="password"
+                      value={password}
+                      {...register("password")}
+                      className={`form-control ${
+                        errors.password ? "is-invalid" : ''
+                      }`}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <div className="invalid-feedback">
+                      {errors.password?.message}
+                    </div>
+                    
+                  </div>
+                  <div className="form-group mb-2">
+                    <label className="form-label"> Phone :</label>
+                    <input
+                      name="phone"
+                      type="text"
+                      value={phone}
+                      {...register("phone")}
+                      className={`form-control ${
+                        errors.phone ? "is-invalid" : ""
+                      }`}
+                      onChange={(e) => setPhone(e.target.value)}
+                    />
+                    <div className="invalid-feedback">
+                      {errors.phone?.message}
+                    </div>
+
+                  </div>
+                  <div className="form-group mb-2">
+                    <label className="form-label"> Address :</label>
+                    <input
+                      name="address"
+                      type="text"
+                      value={address}
+                      {...register("address")}
+                      className={`form-control ${
+                        errors.address ? "is-invalid" : ""
+                      }`}
+                      onChange={(e) => setAddress(e.target.value)}
+                    />
+                    <div className="invalid-feedback">
+                      {errors.address?.message}
+                    </div>
+                  </div>
+                  <div className="form-group mb-2">
+                    <label className="form-label"> Line :</label>
+                    <input
+                      name="line"
+                      type="text"
+                      value={line}
+                      {...register("line")}
+                      className={`form-control ${
+                        errors.line ? "is-invalid" : ""
+                      }`}
+                      onChange={(e) => setLine(e.target.value)}
+                    />
+                    <div className="invalid-feedback">
+                      {errors.line?.message}
+                    </div>
+                  </div>
+
+                  {Updateimg()}
+
+                  <div className="form-group mb-2">
+                    <label className="form-label"> {Newimage()}Picture :</label>
+                    <input
+                      type="file"
+                      multiple
+                      accept="image/*"
+                      placeholder="Picture"
+                      name="image"
+                      className="form-control"
+                      // value={image}
+                      onChange={handleChange}
+                      // onChange={(e) => handleChange(e)
+                    ></input>
+                  </div>
+
+                  <div className="form-group mb-3">
+                    {previewURL.map((ingSrc) => (
+                      <img
+                        src={ingSrc}
+                        width="170"
+                        height="170"
+                        className="img-thumbnail"
+                      />
+                    ))}
+                  </div>
+
+                  <Button
+                    disabled={isLoading}
+                    variant="btn btn-outline-success"
+                    onClick={handleSubmit(handleClick)}
+                  >
+                    {isLoading ? "Loading..." : "Save"}
+                    {isLoading && <Spinner animation="border" size="sm" />}
+                  </Button>
+                  <Link to="/employee" className="btn btn-outline-danger mx-2">
+                    {" "}
+                    Cancel{" "}
+                  </Link>
+                </form>
+              )}
+              {!user && (
+                <div className="text-center p-3">
+                  <span className="spinner-border spinner-border-lg align-center"></span>
+                </div>
+              )}
             </div>
           </div>
         </div>

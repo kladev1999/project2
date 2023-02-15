@@ -4,11 +4,11 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import MenuService from "../../services/MenuService";
 import "./stly/User.css";
 import { Container, Row, Col } from "reactstrap";
-import Cart from "./Cart";
+import CartEmp from "./CartEmp";
 import OrderMenuService from "../../services/OrderMenuService";
 import TotalOrderService from "../../services/TotalOrderService";
 
-const DashboardUser = (props) => {
+const DashboardEmp = (props) => {
   let pic = "http://localhost:8080/menu/getimages/";
   const { totalOrder_ID, table_ID, compoSite } = useParams();
   const [menuList, setMenuList] = useState([]);
@@ -62,8 +62,6 @@ const DashboardUser = (props) => {
       .catch((e) => {
         console.log(e);
       });
-
-    console.log(totalOrder);
   };
 
   const getAllMenu = () => {
@@ -156,10 +154,10 @@ const DashboardUser = (props) => {
     if (totalOrder) {
       return (
         <>
-          <Cart M_tatol={M_tatol} />
           <h3 className="text-center" style={{ margin: "5%" }}>
             โต๊ะที่ {table_ID}
           </h3>
+          <h4 className="text-center">เมนูขายดีและเมนูแนะนำ</h4>
         </>
       );
     } else {
@@ -177,7 +175,9 @@ const DashboardUser = (props) => {
               <div className="row">
                 {BaseSeller?.map((keyName, i) => {
                   return (
+                    <>
                     <div className="col-2" style={{ margin: "10px" }}>
+                    <p className="text-center">อันดับที่ {i+1}</p>
                       <h3
                         className="text-center"
                         width="180"
@@ -193,6 +193,7 @@ const DashboardUser = (props) => {
                       </h3>
                       <p className="text-center">{keyName[1]}</p>
                     </div>
+                    </>
                   );
                 })}
               </div>
@@ -246,6 +247,14 @@ const DashboardUser = (props) => {
                           <div className="product__item">
                             <div className="product__img">
                               <img
+                                 onClick={() =>
+                                    addToCart(
+                                      menus.menu_ID,
+                                      menus.menu_Name,
+                                      menus.menu_Price,
+                                      totalOrder_ID
+                                    )
+                                  }
                                 src={pic + menus.menu_Pic}
                                 alt="product-img"
                                 width="150"
@@ -293,4 +302,4 @@ const DashboardUser = (props) => {
   );
 };
 
-export default DashboardUser;
+export default DashboardEmp;

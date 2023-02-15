@@ -1,17 +1,20 @@
 import React, { useState, useEffect } from "react";
 import StockService from "../../services/StockService";
 import { useNavigate } from "react-router-dom";
-
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as Yup from "yup";
 const CreateStockComponent = () => {
   const navigate = useNavigate();
 
-  const [stock_Qty, setStock_Qty] = useState(0);
-  const [stock_Cost, setStock_Cost] = useState(0);
-  const [stock_Min, setStock_Min] = useState(0);
+  const [stock_Qty, setStock_Qty] = useState();
+  const [stock_Cost, setStock_Cost] = useState();
+  const [stock_Min, setStock_Min] = useState();
   const [stockType_ID, setStockType_ID] = useState([]);
   const [fromValid,setFromValid] = useState(false);
 
   const [stockType, setStockType] = useState([]);
+
 
   const saveStock = (e) => {
     e.preventDefault();
@@ -50,6 +53,28 @@ const CreateStockComponent = () => {
     setFromValid(checkData) 
   }, [stock_Qty,stock_Cost,stock_Min]);
 
+  const validationSchema = Yup.object().shape({
+    stockType_ID: Yup.string().required("Type is required"),
+  });
+  const formOptions = { resolver: yupResolver(validationSchema) };
+
+  // get functions to build form with useForm() hook
+  const { register, handleSubmit, reset, formState } = useForm(formOptions);
+  const { errors } = formState;
+
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    // simulate async api call with set timeout
+    setTimeout(
+      () =>
+        setUser({
+          table_Zone: "",
+        }),
+      300
+    );
+  }, []);
+
   return (
     <div>
       <br />
@@ -62,25 +87,33 @@ const CreateStockComponent = () => {
                 <div>
                   <label className="form-label"> StockType Name</label>
                   <select
-                    className="custom-select"
                     style={{ width: "200px", marginLeft: "10px" }}
                     name="stockType_ID"
+                    value={stockType_ID}
+                    {...register("stockType_ID")}
+                      className={`form-control ${
+                        errors.stockType_ID ? "is-invalid" : ''
+                      }`}
                     onChange={(e) => setStockType_ID(e.target.value)}
                   >
+                   <option value="">--เลือกประเภทสต๊อก--</option>
                     {stockType.map((stockType, index) => (
                       <option key={index} value={stockType.stockType_ID}>
                         {stockType.stockType_Name}
                       </option>
                     ))}
                   </select>
+                  <div className="invalid-feedback">
+                      {errors.stockType_ID?.message}
+                    </div>
                 </div>
                 <div className="form-group mb-2">
                   <label className="form-label"> Stock Qty</label>
                   <input
                     type="text"
+                    className="form-control"
                     placeholder="Enter Stock Qty"
                     name="stock_Qty"
-                    className="form-control"
                     value={stock_Qty}
                     onChange={(e) => setStock_Qty(e.target.value)}
                   ></input>

@@ -4,8 +4,6 @@ import TotalOrderService from "../../services/TotalOrderService";
 import { Button, Spinner } from "react-bootstrap";
 import Dropdown from 'react-bootstrap/Dropdown';
 function IncomeExpense() {
-  
-
   const [selectedDate, setSelectedDate] = useState({
     day: "",
     month: "",
@@ -155,6 +153,56 @@ function IncomeExpense() {
   return (
     <>
 
+      <div className="text-center" style={{ margin: "40px" }}>
+        <select
+          value={selectedDate.day}
+          disabled={selectedDate.month === ""}
+          onChange={(e) =>
+            setSelectedDate({ ...selectedDate, day: e.target.value })
+          }
+        >
+          <option value="">Day</option>
+          {days.map((day) => (
+            <option key={day} value={day}>
+              {day}
+            </option>
+          ))}
+        </select>
+
+        <select
+          style={{ margin: "10px" }}
+          value={selectedDate.month}
+          disabled={selectedDate.year === ""}
+          onChange={(e) =>
+            setSelectedDate({ ...selectedDate, month: e.target.value })
+          }
+        >
+          <option value="">Month</option>
+          {Array.from({ length: 12 }, (_, i) =>
+            new Date(null, i).toLocaleString("default", { month: "2-digit" })
+          ).map((month, index) => (
+            <option key={month} value={month}>
+              {month}
+            </option>
+          ))}
+        </select>
+        <select
+          value={selectedDate.year}
+          onChange={(e) =>
+            setSelectedDate({ ...selectedDate, year: e.target.value })
+          }
+        >
+          <option value="">Year</option>
+          {Array.from(
+            { length: 10 },
+            (_, i) => new Date().getFullYear() - i
+          ).map((year) => (
+            <option key={year} value={year}>
+              {year}
+            </option>
+          ))}
+        </select>
+      </div>
       <div className="text-center" style={{ margin: "40px" }}>
         <select
           value={selectedDate.day}

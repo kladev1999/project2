@@ -1,9 +1,25 @@
 import React, { useState} from "react";
 import StockService from "../../services/StockService";
 import {  useNavigate} from "react-router-dom";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as Yup from "yup";
+import { useForm } from "react-hook-form";
+
+
 
 const CreateStockTypeComponent = () => {
   const navigate = useNavigate();
+
+  const validationSchema = Yup.object().shape({
+    stockType_Name: Yup.string().required("stockType_Name is required"),
+    stockType_Unit: Yup.string().required("stockType_Unit is required"),
+  });
+  const formOptions = { resolver: yupResolver(validationSchema) };
+
+  // get functions to build form with useForm() hook
+  const { register, handleSubmit, reset, formState } = useForm(formOptions);
+  const { errors } = formState;
+
 
   const stockTypeData = {
     stockType_ID: null,
@@ -39,7 +55,7 @@ const CreateStockTypeComponent = () => {
         console.log(e);
       });
 
-    navigate("/stock");
+    navigate("/MStockType");
   };
 
   return (
@@ -57,10 +73,16 @@ const CreateStockTypeComponent = () => {
                     type="text"
                     placeholder="Enter StockType Name"
                     name="stockType_Name"
-                    className="form-control"
                     value={stockType.stockType_Name}
+                    {...register('stockType_Name')}
+                      className={`form-control ${
+                        errors.stockType_Name ? 'is-invalid' : ''
+                      }`}
                     onChange={handleInputChange}
                   ></input>
+                   <div className="invalid-feedback">
+                      {errors.stockType_Name?.message}
+                    </div>
                 </div>
                 <div className="form-group mb-2">
                   <label className="form-label"> StockType Unit</label>
@@ -68,16 +90,21 @@ const CreateStockTypeComponent = () => {
                     type="text"
                     placeholder="Enter StockType Unit"
                     name="stockType_Unit"
-                    className="form-control"
                     value={stockType.stockType_Unit}
+                    {...register('stockType_Unit')}
+                      className={`form-control ${
+                        errors.stockType_Unit ? 'is-invalid' : ''
+                      }`}
                     onChange={handleInputChange}
                   ></input>
+                   <div className="invalid-feedback">
+                      {errors.stockType_Unit?.message}
+                    </div>
                 </div>
-
                 <button
                   className="btn btn-success"
                   style={{ marginLeft: "5px" }}
-                  onClick={saveStockType}
+                  onClick={handleSubmit(saveStockType)}
                 >
                   Submit{" "}
                 </button>
@@ -85,7 +112,7 @@ const CreateStockTypeComponent = () => {
                 <button
                   className="btn btn-danger"
                   style={{ marginLeft: "5px" }}
-                  onClick={() => navigate("/stock")}
+                  onClick={() => navigate("/MStockType")}
                 >
                   Cancel
                 </button>

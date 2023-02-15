@@ -3,64 +3,106 @@ import { useParams, useNavigate } from "react-router-dom";
 import MenuService from "../../services/MenuService";
 import axios from "axios";
 import authHeader from "../../services/Auth-HeaderService";
-import { Button, Spinner } from 'react-bootstrap';
+import { Button, Spinner } from "react-bootstrap";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as Yup from "yup";
+import { useForm } from "react-hook-form";
 const UpdateMenuComponent = (props) => {
   const { menu_ID } = useParams();
-  const url = "http://localhost:8080/file-upload"
-  let pic = "http://localhost:8080/menu/getimages/"
+  const url = "http://localhost:8080/file-upload";
+  let pic = "http://localhost:8080/menu/getimages/";
   const [menu_Pic, setmenu_Pic] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [preview, setPreView] = useState([]);
   const [previewURL, setPreViewURL] = useState([]);
+  const [typeMenu, setTypeMenu] = useState([]);
+  const [typeMenu_ID, setTypeMenu_ID] = useState([]);
+  const [menu_Type, setMenu_Type] = useState();
   let navigate = useNavigate();
 
+  const validationSchema = Yup.object().shape({
+    menu_Name: Yup.string().required("Name is required"),
+    menu_Price: Yup.number("Price number is use only number").required(
+      "Price is required"
+    ),
+    typeMenu_ID: Yup.string().required("typeMenu_ID is required"),
+    menu_Qty: Yup.number("is use only number").required("is required"),
+    menu_Type: Yup.string().required("menu_Type is required"),
+  });
+  const formOptions = { resolver: yupResolver(validationSchema) };
 
+  // get functions to build form with useForm() hook
+  const { register, handleSubmit, reset, formState } = useForm(formOptions);
+  const { errors } = formState;
 
-  function handleClick(e) {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    // simulate async api call with set timeout
+    setTimeout(
+      () =>
+        setUser({
+          menu_Name: menu.menu_Name,
+          menu_Price: menu.menu_Price,
+          menu_Qty: menu.menu_Qty,
+          menu_Type: menu.menu_Type,
+          menu_Pic: menu.menu_Pic,
+          typeMenu_ID: menu.typeMenu_ID.typeMenu_ID,
+        }),
+      300
+    );
+  }, []);
+
+  function handleClick() {
     setIsLoading(true);
 
-    setTimeout(() =>{
-      e.preventDefault();
-
+    setTimeout(() => {
       var formData = new FormData();
       formData.append("file", menu_Pic[menu_Pic.length - 1]);
-  
-  
-      axios.post(url, formData,{ headers: authHeader()}).then((res) => {
-        console.log('res', res);
-      }).catch(e => {
-        console.log('Error', e);
-      });
-  
+
+      axios
+        .post(url, formData, { headers: authHeader() })
+        .then((res) => {
+          console.log("res", res);
+        })
+        .catch((e) => {
+          console.log("Error", e);
+        });
+
       if (menu_Pic.length >= 1) {
-  
         MenuService.updateMenu(menu.menu_ID, menu)
           .then((response) => {
+            console.log("menu".menu);
             navigate("/menu");
-            console.log(response.data);
           })
           .catch((err) => {
             console.log(err);
           });
-  
       } else {
-  
         MenuService.updateMenu(menu.menu_ID, menu, menu.menu_Pic)
           .then((response) => {
+            console.log("menu".menu);
             navigate("/menu");
-            console.log(response.data);
           })
           .catch((err) => {
             console.log(err);
           });
-  
       }
-  
-      setIsLoading(false)
-    },500)
 
-
+      setIsLoading(false);
+    }, 500);
   }
+
+  const getMenuType = () => {
+    MenuService.getMenuType()
+      .then((response) => {
+        setTypeMenu(response.data);
+        console.log(response.data);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
 
   const menuState = {
     menu_ID: "",
@@ -69,8 +111,7 @@ const UpdateMenuComponent = (props) => {
     menu_Price: "",
     menu_Qty: "",
     menu_Pic: "",
-    menu_Cost: "",
-    menu_Status: "",
+    menu_Type: "",
   };
 
   const [menu, setMenu] = useState(menuState);
@@ -79,6 +120,8 @@ const UpdateMenuComponent = (props) => {
     MenuService.getMenuById(menu_ID)
       .then((response) => {
         setMenu(response.data);
+        console.log(response.data);
+        setTypeMenu_ID(response.data.typeMenu_ID.typeMenu_ID);
       })
       .catch((error) => {
         console.log("Something went wrong", error);
@@ -87,30 +130,34 @@ const UpdateMenuComponent = (props) => {
 
   useEffect(() => {
     getMenuID(menu_ID);
+    getMenuType();
 
     if (preview.length < 1) return;
     const newPreviewURL = [];
 
-    preview.forEach(pre => newPreviewURL.push(URL.createObjectURL(pre)))
+    preview.forEach((pre) => newPreviewURL.push(URL.createObjectURL(pre)));
     setPreViewURL(newPreviewURL);
-  }, [menu_ID, preview]);
+  }, [menu_ID, preview, typeMenu_ID]);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
+    console.log([name], value);
     setMenu({ ...menu, [name]: value });
+  };
+  const handleInputChangeTypeMenu = (event) => {
+    const { name, value } = event.target;
+    console.log([name], value);
+    setMenu({ ...menu, [name]: { typeMenu_ID: value } });
   };
 
   const handleChange = (e) => {
-
-    setPreView([...e.target.files])
+    setPreView([...e.target.files]);
     let img = [...menu_Pic];
     for (var i = 0; i < e.target.files.length; i++) {
       img.push(e.target.files[i]);
     }
     setmenu_Pic(img);
-  }
-
-
+  };
 
   const cancel = () => {
     navigate("/menu");
@@ -118,120 +165,155 @@ const UpdateMenuComponent = (props) => {
 
   return (
     <div>
-      {menu ? (
-        <div className="edit-form">
-          <h2 style={{ textAlign: "center" }}>Menu Update</h2>
+      <div className="edit-form">
+        <h2 style={{ textAlign: "center" }}>Menu Update</h2>
+        {user && (
           <form>
-            <div className="form-group">
-              <h4 style={{ textAlign: "center" }}>
-                <label htmlFor="title">
-                  คุณกำลังอัพเดทประเภทอาหาร
-                  <p style={{ color: "green" }}>
-                    {menu.typeMenu_ID.typeMenu_Name}
-                  </p>
-                </label>
-              </h4>
+            <div>
+              <label className="form-label"> ประเภทเมนู</label>
+              <select
+                style={{ width: "200px", marginLeft: "10px" }}
+                name="typeMenu_ID"
+                value={menu.typeMenu_ID.typeMenu_ID}
+                {...register("typeMenu_ID")}
+                className={`form-control ${
+                  errors.typeMenu_ID ? "is-invalid" : ""
+                }`}
+                onChange={handleInputChangeTypeMenu}
+              >
+                <option value="">--เลือกประเภทเมนู--</option>
+                {typeMenu.map((typeMenu, index) => (
+                  <option key={index} value={typeMenu.typeMenu_ID}>
+                    --{typeMenu.typeMenu_Name}--
+                  </option>
+                ))}
+              </select>
+              <div className="invalid-feedback">
+                {errors.typeMenu_ID?.message}
+              </div>
+            </div>
+            <div className="form-group mb-2">
+              <select
+                style={{
+                  width: "200px",
+                  marginLeft: "10px",
+                  marginBottom: "15px",
+                  marginTop: "15px",
+                }}
+                name="menu_Type"
+                value={menu_Type}
+                {...register("menu_Type")}
+                className={`form-control ${
+                  errors.menu_Type ? "is-invalid" : ""
+                }`}
+                onChange={handleInputChange}
+              >
+                <option value="0">-- อาหาร --</option>
+                <option value="1"> -- เครื่องดื่ม -- </option>
+              </select>
+              <div className="invalid-feedback">
+                {errors.menu_Type?.message}
+              </div>
             </div>
             <div className="form-group">
               <label htmlFor="description">Menu Name</label>
               <input
                 type="text"
-                className="form-control"
                 id="menu_Name"
                 name="menu_Name"
                 value={menu.menu_Name}
+                {...register("menu_Name")}
+                className={`form-control ${
+                  errors.menu_Name ? "is-invalid" : ""
+                }`}
                 onChange={handleInputChange}
               />
+              <div className="invalid-feedback">
+                {errors.menu_Name?.message}
+              </div>
             </div>
             <div className="form-group">
               <label htmlFor="description">Menu Price</label>
               <input
                 type="text"
-                className="form-control"
                 id="menu_Price"
                 name="menu_Price"
                 value={menu.menu_Price}
+                {...register("menu_Price")}
+                className={`form-control ${
+                  errors.menu_Price ? "is-invalid" : ""
+                }`}
                 onChange={handleInputChange}
               />
-            </div>
-            <div className="form-group">
-              <label htmlFor="description">Menu Cost</label>
-              <input
-                type="text"
-                className="form-control"
-                id="menu_Cost"
-                name="menu_Cost"
-                value={menu.menu_Cost}
-                onChange={handleInputChange}
-              />
+              <div className="invalid-feedback">
+                {errors.menu_Price?.message}
+              </div>
             </div>
             <div className="form-group">
               <label htmlFor="description">Menu Qty</label>
               <input
                 type="text"
-                className="form-control"
                 id="menu_Qty"
                 name="menu_Qty"
                 value={menu.menu_Qty}
+                {...register("menu_Qty")}
+                className={`form-control ${
+                  errors.menu_Qty ? "is-invalid" : ""
+                }`}
                 onChange={handleInputChange}
               />
+              <div className="invalid-feedback">{errors.menu_Qty?.message}</div>
             </div>
-
-            <div className="form-group">
-              <label htmlFor="description">Menu Status</label>
-              <input
-                type="text"
-                className="form-control"
-                id="menu_Status"
-                name="menu_Status"
-                value={menu.menu_Status}
-                onChange={handleInputChange}
-              />
-            </div>
-
             <div className="form-group mb-2">
               <label className="form-label"> Original : </label>
-              <img src={pic + menu.menu_Pic} width="170" height="170" className="img-thumbnail" />
+              <img
+                src={pic + menu.menu_Pic}
+                width="170"
+                height="170"
+                className="img-thumbnail"
+              />
             </div>
             <div className="form-group mb-2">
               <label className="form-label"> Menu Picture</label>
               <input
                 type="file"
+                className="form-control"
                 placeholder="Enter Menu Picture"
                 name="menu_Pic"
-                className="form-control"
                 onChange={handleChange}
-
               ></input>
             </div>
 
             <div className="form-group mb-3">
-
-              {
-                previewURL.map((ingSrc) => (
-
-                  <img src={ingSrc} width="170" height="170" className="img-thumbnail" />
-                ))
-              }
+              {previewURL.map((ingSrc) => (
+                <img
+                  src={ingSrc}
+                  width="170"
+                  height="170"
+                  className="img-thumbnail"
+                />
+              ))}
             </div>
+            <button className="btn btn-danger mr-2" onClick={cancel}>
+              Cancel
+            </button>
 
-
+            <Button
+              disabled={isLoading}
+              variant="btn btn-outline-success"
+              onClick={handleSubmit(handleClick)}
+            >
+              {isLoading ? "Loading..." : "Update"}
+              {isLoading && <Spinner animation="border" size="sm" />}
+            </Button>
           </form>
-          <button className="btn btn-danger mr-2" onClick={cancel}>
-            Cancel
-          </button>
-
-          <Button disabled={isLoading} variant="btn btn-outline-success" onClick={handleClick}>
-                  {isLoading ? 'Loading...' : 'Update'}
-                  {isLoading && <Spinner animation="border" size="sm" />}
-                </Button>
-        </div>
-      ) : (
-        <div>
-          <br />
-          <p>Please click on a Menu...</p>
-        </div>
-      )}
+        )}
+        {!user && (
+          <div className="text-center p-3">
+            <span className="spinner-border spinner-border-lg align-center"></span>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

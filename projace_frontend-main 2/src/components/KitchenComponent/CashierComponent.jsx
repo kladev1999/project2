@@ -3,7 +3,7 @@ import { useEffect, useState, useCallback } from "react";
 import OrderMenuService from "../../services/OrderMenuService";
 import { Container } from "reactstrap";
 import DatePicker from "react-datepicker";
-const KitchenComponent = () => {
+const CashierComponent = () => {
   const [orderKitchen, setOrderKitchen] = useState([]);
   const [search, searchInput] = useState("");
   const WAIT_TIME = 3000;
@@ -158,7 +158,7 @@ const KitchenComponent = () => {
   }, [dateData]);
 
   const watingCook = (k, index) => {
-    if (k.status_ID.status_ID !== 4 && k.status_ID.status_ID !== 3 && k.menu_ID.menu_Type !== 1 ) {
+    if (k.status_ID.status_ID !== 4 && k.status_ID.status_ID !== 3 && k.menu_ID.menu_Type !== 0 ) {
       return (
         <tr style={{ backgroundColor: getBackgroundColor(k) }}>
           <th>{index + 1}</th>
@@ -199,8 +199,7 @@ const KitchenComponent = () => {
   };
 
   const finishedCook = (k, index) => {
-    if (k.status_ID.status_ID === 4 && k.menu_ID.menu_Type === 0 || k.status_ID.status_ID === 3 && k.menu_ID.menu_Type === 0) {
-
+    if (k.status_ID.status_ID === 4 && k.menu_ID.menu_Type === 1 || k.status_ID.status_ID === 3 && k.menu_ID.menu_Type === 1) {
       return (
         <tr style={{ backgroundColor: getBackgroundColor(k) ,marginTop: "50px" }}>
           <th>{index + 1}</th>
@@ -240,17 +239,20 @@ const KitchenComponent = () => {
       <Container>
       <div style={{ width: "100%", height: "500px" }}>
         <h2 className="bg-success text-white" style={{ padding: 5, margin: 5 }}>
-          ครัว
+        บาร์น้ำ
         </h2>
 
         <h2 class="text-center"> ทำยังไม่เสร็จ </h2>
+      
         <input
-          style={{ marginTop: 10 }}
+         style={{ marginTop: 10, width: "150px" }}
           type="search"
+          className="text-center"
           placeholder="ค้นหาโต๊ะ..."
           aria-label="Search"
           onChange={(e) => searchInput(e.target.value)}
         />
+
         <p className="col-md-12"></p>
         <h3>
           {"วัน "} {day} {"ที่ "} {datetime[2]} {"เดือน "} {month} {"พ.ศ. "}{" "}
@@ -360,4 +362,4 @@ const KitchenComponent = () => {
   );
 };
 
-export default KitchenComponent;
+export default CashierComponent;

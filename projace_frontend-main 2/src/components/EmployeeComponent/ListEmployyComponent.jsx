@@ -57,9 +57,14 @@ function ListEmployyComponent() {
       };
 
     const filterEmp = employees.filter((employee) => {
+      if(search.length> 2){
+
         return employee.name_Emp
-          .toLowerCase()
-          .includes(search.toLowerCase());
+        .toLowerCase()
+        .includes(search.toLowerCase());
+      }else{
+        return employees
+      }
       });
 
 
