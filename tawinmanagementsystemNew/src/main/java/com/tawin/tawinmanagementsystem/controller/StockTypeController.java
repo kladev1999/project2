@@ -61,6 +61,7 @@ public class StockTypeController {
 				.orElseThrow(() -> new ResourceNotFoundException("StockType not exist with id :" + stockType_ID));
 		
 		stockType.setStockType_Name(stockTypeDetails.getStockType_Name());
+		stockType.setStockType_Unit(stockTypeDetails.getStockType_Unit());
 		StockType updateStockType = stockTypeRepo.save(stockType);
 		return ResponseEntity.ok(updateStockType);
 	}

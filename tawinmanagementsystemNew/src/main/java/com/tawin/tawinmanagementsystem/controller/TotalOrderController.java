@@ -41,6 +41,11 @@ public class TotalOrderController {
 		return (List<Total_Order>) totalOrderRepo.getDatetime(Datetime);
 	}
 
+	@GetMapping("/getMytable/{Emp_id}/{Datetime}")
+	public List<Total_Order> getMytable(@PathVariable Integer Emp_id,@PathVariable String Datetime) {
+		return (List<Total_Order>) totalOrderRepo.getMytable(Emp_id,Datetime);
+	}
+
 	@GetMapping("/Update_TotalPrice/{totalPrice}/{total_order_ID}")
 	public int Update_TotalPrice(@PathVariable int totalPrice, @PathVariable int total_order_ID) {
 		return (int) totalOrderRepo.Update_Totalprice(totalPrice, total_order_ID);

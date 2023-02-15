@@ -39,6 +39,14 @@ public class MenuController {
 		return (List<Menu>) menuRepo.findAll();
 	}
 
+	@GetMapping("/getMenu/{menu_ID}")
+	public ResponseEntity <Menu> getMenuById(@PathVariable Long menu_ID) {
+		Menu menu = menuRepo.findById(menu_ID)
+				.orElseThrow(() -> new ResourceNotFoundException("Menu not exist with id :" + menu_ID));
+		return ResponseEntity.ok(menu);
+	
+	}
+
 
 
 	@PostMapping("/addMenu")
@@ -61,16 +69,13 @@ public class MenuController {
 		
 		return menu;
 	}
-	
-
 
 	
-	@GetMapping("/getMenu/{menu_ID}")
-	public ResponseEntity <Menu> getMenuById(@PathVariable Long menu_ID) {
-		Menu menu = menuRepo.findById(menu_ID)
-				.orElseThrow(() -> new ResourceNotFoundException("Menu not exist with id :" + menu_ID));
-		return ResponseEntity.ok(menu);
-	
+
+	@GetMapping("/getSearchMenu/{Datetime}")
+	public List<Menu> getDatetime(@PathVariable String Datetime) {
+		System.out.println("ssssss"+Datetime);
+		return (List<Menu>) menuRepo.getDatetime(Datetime);
 	}
 	
 	@PutMapping("/updateMenu/{menu_ID}")
@@ -92,8 +97,8 @@ public class MenuController {
 		menu.setMenu_Name(menuDetails.getMenu_Name());
 		menu.setMenu_Price(menuDetails.getMenu_Price());
 		menu.setMenu_Qty(menuDetails.getMenu_Qty());
-		menu.setMenu_Cost(menuDetails.getMenu_Cost());
-		menu.setMenu_Status(menuDetails.getMenu_Status());
+		menu.setMenu_Type(menuDetails.getMenu_Type());
+		menu.setTypeMenu_ID(menuDetails.getTypeMenu_ID());
 		
 		if(menuDetails.getMenu_Pic() == null){
 			menu.setMenu_Pic(datetime+".jpg");

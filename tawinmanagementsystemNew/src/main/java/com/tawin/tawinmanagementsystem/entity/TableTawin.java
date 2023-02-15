@@ -29,8 +29,6 @@ public class TableTawin {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer table_ID;
 
-	@Column(length = 255)
-	private LocalDateTime table_TimeStamp;
 	
 	@Column(nullable = true,length = 50)
 	private String table_Zone;

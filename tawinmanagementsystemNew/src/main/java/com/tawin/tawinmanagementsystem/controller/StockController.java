@@ -48,6 +48,13 @@ public class StockController {
 		
 	return (List<Stock>) stockRepo.findAllStockSQL();
 	}
+
+	@GetMapping("/backupStockFindAll")
+	public List<BackupStock> getbackupStockkAll(){
+
+	return (List<BackupStock>) backupRepo.findAll();
+	
+	}
 	
 	// หาวัตถุดิบ
     @GetMapping("/getListInt/{menu_ID}")

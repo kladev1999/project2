@@ -22,6 +22,11 @@ public interface Total_OrderRepository extends JpaRepository<Total_Order, Intege
 	@Query(value = "SELECT * FROM total_order where total_order_time_stamp like :Datetime% order by total_order_status ASC", nativeQuery = true)
 	List<Total_Order> getDatetime(@Param("Datetime") String Datetime);
 
+	@Query(value = "SELECT * FROM total_order where emp_id = :Emp_id AND total_order_time_stamp like :Datetime%", nativeQuery = true)
+	List<Total_Order> getMytable(@Param("Emp_id") Integer Emp_id,@Param("Datetime") String Datetime);
+
+
+
 // 	@Query(value = "SELECT * "
 // 	+ "FROM total_order "
 // 	+ "WHERE table_id NOT IN (SELECT table_id FROM total_order WHERE compo_site = :table_ID)", nativeQuery = true)

@@ -35,7 +35,6 @@ public class Menu implements Serializable{
 	@Column(nullable = false,length = 50)
 	private String menu_Name;
 	
-	
 	@Column(nullable = false,length = 10)
 	private Integer menu_Price;
 	
@@ -45,11 +44,8 @@ public class Menu implements Serializable{
 	@Column(nullable = false,length = 10)
 	private Integer menu_Qty;
 	
-	@Column(nullable = false,length = 10)
-	private Integer menu_Cost;
-	
 	@Column(nullable = false,length = 50)
-	private String menu_Status;
+	private Integer menu_Type;
 	
 	@Column(length = 200)
 	private LocalDateTime menu_TimeStamp;

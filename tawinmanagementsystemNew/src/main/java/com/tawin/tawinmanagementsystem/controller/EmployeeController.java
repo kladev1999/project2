@@ -4,16 +4,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+
 import java.util.Calendar;
 import java.util.TimeZone;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -114,17 +110,16 @@ public class EmployeeController {
 		employee.setPhone(employeeDetails.getPhone());
 		employee.setAddress(employeeDetails.getAddress());
 
+		System.out.println(employeeDetails.getImage()+"1");
+
 		if (employeeDetails.getImage() == null) {
 
 			employee.setImage(datetime + ".jpg");
 
 		} else {
 
-			employee.setImage(employeeDetails.getImage());
+			// employee.setImage(employeeDetails.getImage());
 		}
-		
-
-
 		employee.setLine(employeeDetails.getLine());
 //		employee.setRole("Admin");
 
@@ -156,16 +151,19 @@ public class EmployeeController {
 		employee.setPhone(employeeDetails.getPhone());
 		employee.setAddress(employeeDetails.getAddress());
 
+		System.out.println(employeeDetails.getImage()+"2");
+
 		if (employeeDetails.getImage() == null) {
 
 			employee.setImage(datetime + ".jpg");
-
+			System.out.println("if");
+			
 		} else {
-
+			
 			employee.setImage(employeeDetails.getImage());
-		}
-		
+			System.out.println("else");
 
+		}
 
 		employee.setLine(employeeDetails.getLine());
 //		employee.setRole("Admin");

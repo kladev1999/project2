@@ -19,9 +19,9 @@ public interface Order_MenuRepository extends JpaRepository<Order_Menu, Integer>
         		+ "FROM order_menu \n"
         		+ "INNER JOIN total_order \n"
         		+ "ON order_menu.total_order_id = total_order.total_order_id \n"
-        		+ "WHERE compo_site = :compoSite\n"
+        		+ "WHERE compo_site = :compoSite AND total_order_status = :statusTable \n"
         		+ "ORDER BY order_menu.status_id AND order_menu.order_menu_time_stamp ASC", nativeQuery = true)
-        List<Order_Menu> findByTotalOrder_ID(@Param("compoSite") Integer compoSite);
+        List<Order_Menu> findByTotalOrder_ID(@Param("compoSite") Integer compoSite,@Param("statusTable") Integer statusTable);
 
         @Query(value = "SELECT o.menu_id,m.menu_name,m.menu_pic FROM order_menu o inner join menu m on o.menu_id = m.menu_id group by menu_id order by SUM(order_menu_qty) DESC LIMIT 5", nativeQuery = true)
         List<Object> Bestseller();
@@ -131,9 +131,16 @@ public interface Order_MenuRepository extends JpaRepository<Order_Menu, Integer>
         @Modifying
         @Transactional
         @Query(value = "UPDATE order_menu "
-                        + "SET order_menu.status_id = 3 "
+                        + "SET order_menu.status_id = 4 "
                         + "WHERE order_menu.order_menu_id = :orderMenu_ID", nativeQuery = true)
         public int cancelStatus(@Param("orderMenu_ID") Long orderMenu_ID);
+
+        @Modifying
+        @Transactional
+        @Query(value = "UPDATE order_menu "
+                        + "SET order_menu.status_id = 3 "
+                        + "WHERE order_menu.order_menu_id = :orderMenu_ID", nativeQuery = true)
+        public int finishedStatus(@Param("orderMenu_ID") Long orderMenu_ID);
 
         // รวมโต๊ะ
         @Modifying

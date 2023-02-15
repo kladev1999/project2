@@ -53,6 +53,12 @@ public class Total_Order {
 	@JoinColumn(name = "table_ID")
 	private TableTawin table_ID;
 
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) 
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.MERGE)
+	@JoinColumn(name = "emp_ID")
+	private Employee id;
+
+
 	@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "discount_ID")
