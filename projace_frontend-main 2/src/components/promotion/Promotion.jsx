@@ -1,54 +1,74 @@
-import React from 'react'
+import React from "react";
 import { useEffect, useState } from "react";
-import DisPromotionService from '../../services/DisPromotionService';
-import Modal from 'react-bootstrap/Modal';
-import { Button, Spinner } from 'react-bootstrap';
+import DisPromotionService from "../../services/DisPromotionService";
+import Modal from "react-bootstrap/Modal";
+import { Button, Spinner } from "react-bootstrap";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as Yup from "yup";
 function Promotion() {
+  const [Discount, setDiscount] = useState();
+  const [showAdd, setShowAdd] = useState(false);
+  const [showUpdate, setShowUpdate] = useState(null);
+  const handleCloseAdd = () => setShowAdd(false);
+  const handleCloseUpdate = () => setShowUpdate(false);
+  const handleOpenAdd = () => setShowAdd(true);
+  const Update = (item) => setShowUpdate(item);
 
+  const GetDiscount = () => {
+    DisPromotionService.getDisPromotion().then((respone) => {
+      setDiscount(respone.data);
+      console.log(respone.data);
+    });
+  };
 
-    const [Discount, setDiscount] = useState();
-    const [showAdd, setShowAdd] = useState(false);
-    const [showUpdate, setShowUpdate] = useState(null);
-    const handleCloseAdd = () => setShowAdd(false);
-    const handleCloseUpdate = () => setShowUpdate(false);
-    const handleOpenAdd = () => setShowAdd(true);
-    const Update = (item) => setShowUpdate(item);
+  useEffect(() => {
+    GetDiscount();
+  }, []);
 
-
-
-    const GetDiscount = () => {
-
-        DisPromotionService.getDisPromotion().then((respone) => {
-            setDiscount(respone.data)
-            console.log(respone.data)
-        })
-
-    }
-
-    useEffect(() => {
+  const DeleteDiscount = (discount_ID) => {
+    if (window.confirm("Are you sure you want to delete")) {
+      DisPromotionService.DeleteDiscount(discount_ID).then((respone) => {
         GetDiscount();
-    }, [])
-
-    const DeleteDiscount = (discount_ID) => {
-        if (window.confirm('Are you sure you want to delete')) {
-
-            DisPromotionService.DeleteDiscount(discount_ID).then((respone) => {
-                GetDiscount();
-            })
-        }
-
+      });
     }
+  };
 
+  const AddDiscount = () => {
+    const [discount_Name, setdiscount_Name] = useState();
+    const [discount_Percent, setdiscount_Percent] = useState();
+    const [isLoading, setIsLoading] = useState(false);
 
-    const AddDiscount = () => {
-        const [discount_Name, setdiscount_Name] = useState();
-        const [discount_Percent, setdiscount_Percent] = useState();
-        const [isLoading, setIsLoading] = useState(false);
+    const validationSchema = Yup.object().shape({
+        discount_Name: Yup.string().required("name is required"),
+        discount_Percent: Yup.number("Percent must be number").required("discount_Percent is required"),
+      });
+      const formOptions = { resolver: yupResolver(validationSchema) };
+    
+      // get functions to build form with useForm() hook
+      const { register, handleSubmit, reset, formState } = useForm(formOptions);
+      const { errors } = formState;
+    
+      const [user, setUser] = useState(null);
+    
+      useEffect(() => {
+        // simulate async api call with set timeout
+        setTimeout(
+          () =>
+            setUser({
+                discount_Name: "",
+                discount_Percent:"",
+             
+            }),
+          300
+        );
+      }, []);
+    
 
-        const Discount = {
-            discount_Name,
-            discount_Percent,
-        }
+    const Discount = {
+      discount_Name,
+      discount_Percent,
+    };
 
         const AddDis = () => {
             setIsLoading(true);
@@ -200,6 +220,14 @@ function Promotion() {
         </>
     }
 
+      setTimeout(() => {
+        DisPromotionService.AddDiscount(Discount).then((respone) => {
+          console.log(respone.data);
+          GetDiscount();
+          handleCloseAdd();
+        });
+      }, 250);
+    };
 
     return (
         <>
@@ -253,6 +281,6 @@ function Promotion() {
         </>
 
     )
-}
 
-export default Promotion
+
+export default Promotion;

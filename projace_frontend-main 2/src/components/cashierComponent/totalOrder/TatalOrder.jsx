@@ -9,11 +9,12 @@ import TableService from "../../../services/TableService";
 import OrderMenuService from "../../../services/OrderMenuService";
 import DisPromotionService from "../../../services/DisPromotionService";
 import "react-datepicker/dist/react-datepicker.css";
+
 import DatePicker from "react-datepicker";
 const TatalOrder = () => {
   const [totalOrder, setTotalOrder] = useState([]);
   const compo = [];
-  let count = 0;
+
   const [getMoveTable, SetGetMoveTable] = useState();
   const [search, searchInput] = useState("");
   const navigate = useNavigate();
@@ -142,11 +143,16 @@ const TatalOrder = () => {
   };
 
   totalOrder?.forEach((e) => {
-    compo.push(e.compoSite);
+
+    if(e.totalOrder_Status == "0"){
+      
+      compo.push(e.compoSite);
+    }
+
   });
 
   const GetMoveTable = () => {
-    TableService.getMoveTable(dateData).then((respone) => {
+    TableService.getMoveTable().then((respone) => {
       SetGetMoveTable(respone.data);
       console.log(respone.data);
     });
@@ -177,14 +183,14 @@ const TatalOrder = () => {
     }
   };
 
-  const viewTotalOrder = (compoSite, totalOrder_ID) => {
-    navigate("/ListTotalOrderMenu/" + compoSite + "/" + totalOrder_ID);
+  const viewTotalOrder = (compoSite, totalOrder_ID,statusTable) => {
+    navigate("/ListTotalOrderMenu/" + compoSite + "/" + totalOrder_ID+"/"+statusTable);
   };
 
   const OrderMenu = (totalOrder_ID, table_ID, compoSite) => {
     // navigate("/DashboardUser/" + totalOrder_ID+ "/" + table_ID);
     navigate(
-      "/DashboardUser/" + totalOrder_ID + "/" + table_ID + "/" + compoSite
+      "/OrderMenuAdmin/" + totalOrder_ID + "/" + table_ID + "/" + compoSite
     );
   };
 
@@ -231,6 +237,7 @@ const TatalOrder = () => {
         <button
           style={{ marginLeft: "3px" }}
           onClick={() => handleShowEditMixTable(value)}
+          disabled={value.totalOrder_Status === "1"}
           className="btn btn-warning"
         >
           แก้ไขรวมโต๊ะ
@@ -242,7 +249,7 @@ const TatalOrder = () => {
           style={{ marginLeft: "3px" }}
           onClick={() => handleShowMixTable(value)}
           disabled={
-            DisBTNmixTable(value.compoSite) || value.totalOrder_Status === "1"
+            DisBTNmixTable(value.compoSite , value.totalOrder_Status) || value.totalOrder_Status === "1"
           }
           className="btn btn-info"
         >
@@ -255,27 +262,31 @@ const TatalOrder = () => {
   
   const DeleteTable = ({ data }) => {
     return (
-      <>
-        <Modal show={data ? true : false} onHide={handleClose}>
-          <Modal.Header closeButton>
-            <Modal.Title>ต้องการลบหรือไม่!!</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            ต้องการลบข้อมูลโต๊ะที่ {data?.table_ID?.table_ID} หรือไม่!
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={handleClose}>
-              ไม่
-            </Button>
-            <Button
-              variant="btn btn-danger"
-              onClick={() => deleteTotalOrder(data.totalOrder_ID)}
-            >
-              ลบ
-            </Button>
-          </Modal.Footer>
-        </Modal>
-      </>
+      <div style={{marginTop: "30px"}}>
+        <Modal show={data ? true : false} onHide={handleClose} ize="lg"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered>
+
+  <Modal.Header closeButton>
+
+    <Modal.Title>ต้องการลบหรือไม่!!</Modal.Title>
+  </Modal.Header>
+  <Modal.Body>
+    ต้องการลบข้อมูลโต๊ะที่ {data?.table_ID?.table_ID} หรือไม่!
+  </Modal.Body>
+  <Modal.Footer>
+    <Button variant="secondary" onClick={handleClose}>
+      ไม่
+    </Button>
+    <Button
+      variant="btn btn-danger"
+      onClick={() => deleteTotalOrder(data.totalOrder_ID)}
+    >
+      ลบ
+    </Button>
+  </Modal.Footer>
+</Modal>
+      </div>
     );
   };
   const Promotion = ({ data }) => {
@@ -303,7 +314,10 @@ const TatalOrder = () => {
 
     return (
       <>
-        <Modal show={data ? true : false} onHide={handleClosepro}>
+        <Modal show={data ? true : false} onHide={handleClosepro} ize="lg"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered>
+
           <Modal.Header closeButton>
             <Modal.Title>
               ส่วนลดของโต๊ที่ {data?.table_ID?.table_ID}
@@ -395,7 +409,10 @@ const TatalOrder = () => {
 
     return (
       <>
-        <Modal show={data ? true : false} onHide={handleClosepay}>
+        <Modal show={data ? true : false} onHide={handleClosepay} ize="lg"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered>
+
           <Modal.Header closeButton>
             <Modal.Title>สลิปการโอนชำระเงิน </Modal.Title>
           </Modal.Header>
@@ -424,7 +441,7 @@ const TatalOrder = () => {
             <Button
               variant="success"
               onClick={() => UpdatePay(data?.compoSite)}
-              disabled={data?.totalOrder_image === null}
+              disabled={data?.totalOrder_image === null || data?.totalOrder_Status === "1"}
             >
               อนุมัติการชำระเงิน
             </Button>
@@ -461,7 +478,10 @@ const TatalOrder = () => {
 
     return (
       <>
-        <Modal show={data ? true : false} onHide={handleCloseMove}>
+        <Modal show={data ? true : false} onHide={handleCloseMove} ize="lg"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered>
+ 
           <Modal.Header closeButton>
             <Modal.Title>ย้ายโต๊ะ</Modal.Title>
           </Modal.Header>
@@ -511,17 +531,25 @@ const TatalOrder = () => {
     );
   };
 
-  const DisBTNmixTable = (compoSite) => {
+  const DisBTNmixTable = (compoSite,status) => {
+
+    let count = 0;
+
     let F;
+    console.log("compo.length",compo.length)
+
     for (let i = 0; i < compo.length; i++) {
-      if (compoSite == compo[i]) {
-        count += 1;
+      if (compoSite === compo[i]) {
+        count = count + 1;
       }
     }
+  
     if (count >= 2) {
+
       F = true;
       count = 0;
     } else {
+ 
       F = false;
       count = 0;
     }
@@ -553,6 +581,7 @@ const TatalOrder = () => {
         } else {
           OrderMenuService.mergeTable(totalOrder_ID, pointTable).then(() => {
             setShowMix(false);
+            UpdateTotalPrice();
             getAllTotalOrder();
             GetMoveTable();
           });
@@ -561,19 +590,25 @@ const TatalOrder = () => {
       }, 500);
     };
 
-    useEffect(() => {
-      for (let i = 0; i < compo.length; i++) {
-        if (data?.table_ID?.table_ID == compo[i]) {
-          count += 1;
+    const UpdateTotalPrice = () => {
+      TotalOrderService.updateTotalprice(0, data?.totalOrder_ID).then(
+        (response) => {
+          getAllTotalOrder();
+            GetMoveTable();
         }
-      }
+      );
+    };
 
+    useEffect(() => {
       getMixTebles();
     }, []);
 
     return (
       <>
-        <Modal show={data ? true : false} onHide={handleCloseMix}>
+        <Modal show={data ? true : false} onHide={handleCloseMix} ize="lg"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered>
+
           <Modal.Header closeButton>
             <Modal.Title>รวมโต๊ะ</Modal.Title>
           </Modal.Header>
@@ -611,7 +646,7 @@ const TatalOrder = () => {
             </Button>
             <Button
               variant="success"
-              onClick={() => mixTable(data?.totalOrder_ID)}
+              onClick={() => mixTable(data?.totalOrder_ID,data?.totalOrder_TimeStamp)}
             >
               {isLoading ? "Loading..." : "รวมโต๊ะ"}
               {isLoading && <Spinner animation="border" size="sm" />}
@@ -623,10 +658,10 @@ const TatalOrder = () => {
   };
 
   const EditMixTable = ({ data }) => {
-    const [isLoading, setIsLoading] = useState(false);
-    const [isLoadingCan, setIsLoadingCan] = useState(false);
-    const [table, setTabel] = useState([]);
-    const [pointTable, setPointTable] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingCan, setIsLoadingCan] = useState(false);
+  const [table, setTabel] = useState([]);
+  const [pointTable, setPointTable] = useState(null);
 
     const getMixTebles = () => {
       TableService.MixTable(data?.compoSite,dateData)
@@ -682,7 +717,9 @@ const TatalOrder = () => {
 
     return (
       <>
-        <Modal show={data ? true : false} onHide={handleCloseEditMix}>
+        <Modal show={data ? true : false} onHide={handleCloseEditMix} ize="lg"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered>
           <Modal.Header closeButton>
             <Modal.Title>รวมโต๊ะ</Modal.Title>
           </Modal.Header>
@@ -691,6 +728,7 @@ const TatalOrder = () => {
               <div>
                 <h2 className="text-center">
                   โต๊ที่ {data?.table_ID?.table_ID} จะรวมโต๊ะไปที่
+               
                 </h2>
                 {table?.map((t) => {
                   return (
@@ -739,8 +777,8 @@ const TatalOrder = () => {
     );
   };
 
-  const Checkbill = (compoSite) => {
-    navigate("/Checkbill/" + compoSite);
+  const Checkbill = (compoSite,status) => {
+    navigate("/Checkbill/" + compoSite+"/"+status);
   };
 
   const mystyle = {
@@ -842,7 +880,7 @@ const TatalOrder = () => {
                   {statusTotalOrder(totalOrder)}
                   {/* <td>{totalOrder.table_ID.table_ID}</td> */}
                   <th className="text-center" style={mystyle}>
-                    {totalOrder.table_ID.table_ID}
+                    {totalOrder.table_ID.table_Zone}
                   </th>
                   <td>{statusMixTable(totalOrder)}</td>
                   <td>
@@ -850,7 +888,7 @@ const TatalOrder = () => {
                       onClick={() =>
                         OrderMenu(
                           totalOrder.totalOrder_ID,
-                          totalOrder.table_ID.table_ID,
+                          totalOrder.table_ID.table_Zone,
                           totalOrder.compoSite
                         )
                       }
@@ -867,7 +905,8 @@ const TatalOrder = () => {
                       onClick={() =>
                         viewTotalOrder(
                           totalOrder.compoSite,
-                          totalOrder.totalOrder_ID
+                          totalOrder.totalOrder_ID,
+                          totalOrder.totalOrder_Status
                         )
                       }
                       disabled={
@@ -884,7 +923,7 @@ const TatalOrder = () => {
                       style={{ marginLeft: "3px" }}
                       disabled={
                         totalOrder.compoSite !== totalOrder.table_ID.table_ID ||
-                        totalOrder.totalOrder_Status === "1" || DisBTNmixTable(totalOrder.compoSite)
+                        totalOrder.totalOrder_Status === "1" || DisBTNmixTable(totalOrder.compoSite , totalOrder.totalOrder_Status)
                       }
                       onClick={
                         (e) => handleShowModeTable(totalOrder)
@@ -899,9 +938,8 @@ const TatalOrder = () => {
                       disabled={
                         totalOrder.compoSite !== totalOrder.table_ID.table_ID||
                         totalOrder.totalOrder_Status === "1"
-                        
                       }
-                      onClick={() => Checkbill(totalOrder.compoSite)}
+                      onClick={() => Checkbill(totalOrder.compoSite,totalOrder.totalOrder_Status)}
                       className="btn btn-outline-primary"
                     >
                       เช็คบิล
@@ -922,7 +960,7 @@ const TatalOrder = () => {
                       variant="danger"
                       disabled={
                         totalOrder.compoSite !== totalOrder.table_ID.table_ID ||
-                        DisBTNmixTable(totalOrder.compoSite)
+                        DisBTNmixTable(totalOrder.compoSite , totalOrder.totalOrder_Status)
                       }
                       onClick={() => handleShow(totalOrder)}
                     >
@@ -945,10 +983,6 @@ const TatalOrder = () => {
       </div>
     );
   }
-
-
-  
-
   return (
     <>
       <h2 className="text-center"> ข้อมูลทั้งหมด </h2>
@@ -966,6 +1000,7 @@ const TatalOrder = () => {
           maxDate={new Date()}
           showYearDropdown
         />
+      
       </div>
       {MyComponent()}
 

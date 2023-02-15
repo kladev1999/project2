@@ -1,22 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import TotalOrderService from "../../../services/TotalOrderService";
 import { Container, Row, Col } from "react-grid-system";
 import OrderMenuService from "../../../services/OrderMenuService";
-import useWebSocket from "react-use-websocket";
-import { exportDefaultSpecifier } from "@babel/types";
 function ListTotalOrdermenu() {
-  const { compoSite, table_ID, totalOrder_ID } = useParams();
+  const { compoSite, table_ID, totalOrder_ID,statusTable } = useParams();
   const navigate = useNavigate();
   const [totalOrder, setTotalOrder] = useState([]);
   const [list, setlist] = useState([]);
 
   const [checkPay, setCheckPay] = useState([]);
-
-
-
-
-
 
   let TotalPrice = list?.reduce(
     (prev, cur) => 
@@ -25,14 +18,8 @@ function ListTotalOrdermenu() {
     0
   );
 
-  
-
-
-
-
-
-  const getListOrderMenu = (compoSite) => {
-    TotalOrderService.getTotalListOrderById(compoSite)
+  const getListOrderMenu = useCallback(() => {
+    TotalOrderService.getTotalListOrderById(compoSite,statusTable)
       .then((response) => {
         setlist(response.data);
         console.log("list = ", response.data);
@@ -40,7 +27,7 @@ function ListTotalOrdermenu() {
       .catch((error) => {
         console.log("Something went wrong", error);
       });
-  };
+    }, []);
 
   const UpdateTotalPrice = (Price) => {
     TotalOrderService.updateTotalprice(Price, totalOrder_ID).then(
@@ -67,10 +54,18 @@ function ListTotalOrdermenu() {
   };
 
   useEffect(() => {
+    getListOrderMenu();
     UpdateTotalPrice();
-    getListOrderMenu(compoSite);
     getTotalOrder(compoSite);
   }, [compoSite, list.length]);
+
+
+  useEffect(() => {
+    const id = setInterval(getListOrderMenu,1000);
+    return() => {
+      clearInterval(id);
+    }
+  },[getListOrderMenu])
 
   const checkStatus = () => {
     TotalOrderService.checkPay()
@@ -83,13 +78,13 @@ function ListTotalOrdermenu() {
   };
 
   const status = (value) => {
-    if (value.status_ID.status_ID === 2) {
+    if (value.status_ID.status_ID === 3) {
       return (
         <td className="text-center" style={{ backgroundColor: "#A7D489" }}>
           {value.status_ID.status}
         </td>
       );
-    } else if(value.status_ID.status_ID === 3){
+    } else if(value.status_ID.status_ID === 4){
       return (
         <td className="text-center" style={{ backgroundColor: "#FF6961" }}>
           {value.status_ID.status}
@@ -157,14 +152,29 @@ function ListTotalOrdermenu() {
     
       OrderMenuService.cancelStatus(orderMenu_ID)
       .then((response) => {
-        window.location.reload();
-        
       })
       .catch((e) => {
         console.log(e);
       });
     }
       };
+
+      const finishedlStatus = (orderMenu_ID,name) => {
+        console.log(name)
+        if(window.confirm(`${name} เสร็จแล้ว!!`)){
+
+          OrderMenuService.finishedlStatus(orderMenu_ID)
+          .then((response) => {
+            
+          })
+          .catch((e) => {
+            console.log(e);
+          });
+        }
+        
+        
+      }
+      
 
   return (
     <Container>
@@ -198,11 +208,15 @@ function ListTotalOrdermenu() {
                 </thead>
 
                 <tbody>
-                  {list?.map((d, index) => (
+                  {list?.map((d, index) => {
+
+                 return (
+
+                 
                     <tr>
                       <th className="text-center">{index + 1}</th>
                       <td className="text-center">
-                        {d.totalOrder_ID.table_ID.table_ID}
+                        {d.totalOrder_ID.table_ID.table_Zone}
                       </td>
                       {/* <td className="text-center">{d.status_ID.status}</td> */}
                       {status(d)}
@@ -219,8 +233,18 @@ function ListTotalOrdermenu() {
                       <td>
                         <button
                           type="button"
+                          class="btn btn-success"
+                          disabled={d.status_ID.status_ID === 4 || d.status_ID.status_ID ===3}
+                          onClick={() => finishedlStatus(d.orderMenu_ID,d.menu_ID.menu_Name)}
+                        >
+                          {" "}
+                          เสริฟแล้ว
+                        </button>
+                        <button
+                          type="button"
+                          style={{marginLeft: "5px"}}
                           class="btn btn-danger"
-                          disabled={d.status_ID.status_ID === 3 || d.status_ID.status_ID ===2}
+                          disabled={d.status_ID.status_ID === 4 || d.status_ID.status_ID ===3}
                           onClick={cancel(d.orderMenu_ID)}
                         >
                           {" "}
@@ -229,7 +253,7 @@ function ListTotalOrdermenu() {
                       </td>
                     </tr>
                    
-                  ))}
+                    )})}
                 </tbody>
               </table>
             )}

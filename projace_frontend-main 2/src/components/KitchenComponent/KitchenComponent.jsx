@@ -110,16 +110,18 @@ const KitchenComponent = () => {
     }
   };
   const filterStock = orderKitchen.filter((ok) => {
-    return ok.totalOrder_ID.table_ID.table_Zone
+  
+      return ok.totalOrder_ID.table_ID.table_Zone
       .toLowerCase()
       .includes(search.toLowerCase());
+    
   });
 
   const getBackgroundColor = (value) => {
     let color;
-    if (value.status_ID.status_ID === 2) {
+    if (value.status_ID.status_ID === 3) {
       color = "#A7D489";
-    } else if (value.status_ID.status_ID === 3) {
+    } else if (value.status_ID.status_ID === 4) {
       color = "#FF6961";
     }
     return color;
@@ -127,7 +129,7 @@ const KitchenComponent = () => {
 
   const cutStock = (status, menu_ID, qty) => {
     console.log(qty);
-    if (status.status_ID.status_ID === 1) {
+    if (status?.status_ID?.status_ID === 1) {
       OrderMenuService.loopStockCut(menu_ID, qty)
         .then((response) => {
           console.log(response.data);
@@ -156,7 +158,7 @@ const KitchenComponent = () => {
   }, [dateData]);
 
   const watingCook = (k, index) => {
-    if (k.status_ID.status_ID !== 2 && k.status_ID.status_ID !== 3) {
+    if (k.status_ID.status_ID !== 4 && k.status_ID.status_ID !== 3 && k.menu_ID.menu_Type !== 1 ) {
       return (
         <tr style={{ backgroundColor: getBackgroundColor(k) }}>
           <th>{index + 1}</th>
@@ -197,9 +199,10 @@ const KitchenComponent = () => {
   };
 
   const finishedCook = (k, index) => {
-    if (k.status_ID.status_ID === 3 || k.status_ID.status_ID === 2) {
+    if (k.status_ID.status_ID === 4 && k.menu_ID.menu_Type === 0 || k.status_ID.status_ID === 3 && k.menu_ID.menu_Type === 0) {
+
       return (
-        <tr style={{ backgroundColor: getBackgroundColor(k) }}>
+        <tr style={{ backgroundColor: getBackgroundColor(k) ,marginTop: "50px" }}>
           <th>{index + 1}</th>
           <td>{k.totalOrder_ID.table_ID.table_Zone}</td>
           <td>{k.menu_ID.menu_Name}</td>
@@ -310,8 +313,8 @@ const KitchenComponent = () => {
       <br />
       <br />
       <Container>
-        <div>
-          <h2 class="text-center"> เสิร์ฟแล้ว </h2>
+        <div >
+          <h2 class="text-center" style={{marginTop: "40px"}}> เสิร์ฟแล้ว </h2>
           <input
             style={{ marginTop: 10, width: "150px" }}
             type="search"

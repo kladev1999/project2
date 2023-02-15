@@ -12,11 +12,15 @@ const getTotalOrderById = (totalOrder_ID) =>{
     return axios.get("http://localhost:8080/totalOrder/getTotalOrder/" + totalOrder_ID,{ headers: authHeader()});
 }
 
-const getTotalListOrderById = (totalOrder_ID) =>{
-    return axios.get("http://localhost:8080/OrderMenu/getListOrderMenu/" + totalOrder_ID,{ headers: authHeader()});
+const getTotalListOrderById = (totalOrder_ID,statusTable) =>{
+    return axios.get("http://localhost:8080/OrderMenu/getListOrderMenu/" + totalOrder_ID+"/"+statusTable,{ headers: authHeader()});
 }
 const getDate = (Datetime) =>{
     return axios.get("http://localhost:8080/totalOrder/getDatetime/" + Datetime);
+}
+
+const getMytable = (Emp_id,dateData) =>{
+    return axios.get("http://localhost:8080/totalOrder/getMytable/" + Emp_id +"/"+dateData ,{ headers: authHeader()});
 }
 const checkPay = (status)=>{
     return axios.get("http://localhost:8080/totalOrder/checkPay/1",{ headers: authHeader()});
@@ -66,6 +70,7 @@ const TotalOrderService = {
     addTotalOrder,
     getTotalOrderById,
     UpdateStatusPay,
+    getMytable,
     Update_Discount,
     updateTotalOrder,
     deleteTotalOrder,

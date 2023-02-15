@@ -12,8 +12,8 @@ import com.tawin.tawinmanagementsystem.entity.TableTawin;
 
 public interface TableRepository extends JpaRepository<TableTawin, Integer> {
 
-    @Query(value = "SELECT *  from table_tawin A left join total_order B on A.table_id = B.table_id where B.table_id is null AND table_time_stamp like :Datetime%", nativeQuery = true)
-    List<TableTawin> GetmoveTableTawins(@Param("Datetime") String Datetime);
+    @Query(value = "SELECT *  from table_tawin A left join total_order B on A.table_id = B.table_id where B.table_id is null", nativeQuery = true)
+    List<TableTawin> GetmoveTableTawins();
 
     
     @Modifying

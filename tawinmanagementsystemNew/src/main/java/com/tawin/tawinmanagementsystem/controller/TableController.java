@@ -1,6 +1,5 @@
 package com.tawin.tawinmanagementsystem.controller;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,9 +40,9 @@ public class TableController {
 		return (List<TableTawin>) tableRepo.getTableDatetime(Datetime);
 	}
 
-	@GetMapping("/getmoveTable/{Datetime}")
-	public List<TableTawin> getmoveTable(@PathVariable String Datetime){
-		return (List<TableTawin>) tableRepo.GetmoveTableTawins(Datetime);
+	@GetMapping("/getmoveTable")
+	public List<TableTawin> getmoveTable(){
+		return (List<TableTawin>) tableRepo.GetmoveTableTawins();
 	}
 
 	@GetMapping("/moveTable/{table_id}/{total_order_ID}")
@@ -54,7 +53,6 @@ public class TableController {
 	
 	@PostMapping("/addTable")
 	public TableTawin addTable(@RequestBody TableTawin tableTawin) {
-		tableTawin.setTable_TimeStamp(LocalDateTime.now());
 		return tableRepo.save(tableTawin);
 	}
 

@@ -6,6 +6,10 @@ const STOCKTYPE_API_BASE_URL = "http://localhost:8080/stockType";
 const getStockType = () => {
   return axios.get(STOCKTYPE_API_BASE_URL + "/getStockType",{ headers: authHeader()});
 };
+
+const getBackUpStock = () => {
+  return axios.get("http://localhost:8080/stock/backupStockFindAll",{ headers: authHeader()});
+};
 const addStockType = (stockType) => {
   return axios.post(STOCKTYPE_API_BASE_URL + "/addStockType",stockType,{ headers: authHeader()});
 };
@@ -13,7 +17,7 @@ const getStockTypeById = (stockType_ID) => {
   return axios.get(
     "http://localhost:8080/stockType/getStockType/" + stockType_ID,{ headers: authHeader()});
 };
-const updateStockType = (stockType, stockType_ID) => {
+const updateStockType = (stockType_ID, stockType) => {
   return axios.put(
     STOCKTYPE_API_BASE_URL + "/updateStockType/" + stockType_ID,
     stockType,{ headers: authHeader()}
@@ -51,6 +55,7 @@ const StockService = {
   addStock,
   getStockById,
   updateStock,
+  getBackUpStock,
   deleteStock,
   getStockType,
   addStockType,

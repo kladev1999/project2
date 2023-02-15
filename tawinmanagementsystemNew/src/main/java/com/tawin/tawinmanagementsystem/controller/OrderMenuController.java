@@ -88,10 +88,10 @@ public class OrderMenuController {
 		return ResponseEntity.ok(orderMenu);
 	}
 
-	@GetMapping("/getListOrderMenu/{totalOrder_ID}")
-	public List<Order_Menu> getStockTypeByIDd(@PathVariable Integer totalOrder_ID) {
+	@GetMapping("/getListOrderMenu/{totalOrder_ID}/{statusTable}")
+	public List<Order_Menu> getStockTypeByIDd(@PathVariable Integer totalOrder_ID,@PathVariable Integer statusTable) {
 
-		return (List<Order_Menu>) orderMenuRepo.findByTotalOrder_ID(totalOrder_ID);
+		return (List<Order_Menu>) orderMenuRepo.findByTotalOrder_ID(totalOrder_ID,statusTable);
 	}
 
 	@PutMapping("/updateOrderMenu/{orderMenu_ID}")
@@ -393,6 +393,11 @@ public class OrderMenuController {
 	@GetMapping("/statusCancel/{orderMenu_ID}")
 	public int cancelStatus(@PathVariable Long orderMenu_ID) {
 		return orderMenuRepo.cancelStatus(orderMenu_ID);
+	}
+
+	@GetMapping("/finished/{orderMenu_ID}")
+	public int finishedStatus(@PathVariable Long orderMenu_ID) {
+		return orderMenuRepo.finishedStatus(orderMenu_ID);
 	}
 
 // การรวมโต๊ะ

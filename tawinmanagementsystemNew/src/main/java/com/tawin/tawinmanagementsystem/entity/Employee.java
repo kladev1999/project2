@@ -3,7 +3,7 @@ package com.tawin.tawinmanagementsystem.entity;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -60,6 +60,11 @@ public class Employee {
 	@JsonIgnore
 	@OneToMany(mappedBy = "id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<Order_Menu> orderMenu_ID;
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "id",fetch = FetchType.LAZY,cascade = CascadeType.MERGE)
+    private List<Total_Order> totalOrder_ID;
+
 
 	public long getId() {
 		return id;

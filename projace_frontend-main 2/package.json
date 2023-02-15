@@ -3,7 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "@hookform/resolvers": "^2.9.10",
+    "@material-ui/core": "^4.12.4",
     "@material/button": "^14.0.0",
+    "@mui/icons-material": "^5.11.0",
+    "@mui/material": "^5.11.8",
     "@reduxjs/toolkit": "^1.8.6",
     "@syncfusion/ej2-react-dropdowns": "^20.3.50",
     "@testing-library/jest-dom": "^5.15.0",
@@ -35,7 +41,8 @@
     "slick-carousel": "^1.8.1",
     "styled-components": "^5.3.6",
     "useref": "^1.4.4",
-    "web-vitals": "^1.1.2"
+    "web-vitals": "^1.1.2",
+    "yup": "^0.32.11"
   },
   "scripts": {
     "start": "react-scripts start",

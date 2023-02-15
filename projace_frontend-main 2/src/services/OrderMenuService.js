@@ -59,6 +59,10 @@ const cancelStatus = (orderMenu_ID) =>{
     return axios.get("http://localhost:8080/OrderMenu/statusCancel/"+ orderMenu_ID,{ headers: authHeader()});
 }
 
+const finishedlStatus = (orderMenu_ID) =>{
+    return axios.get("http://localhost:8080/OrderMenu/finished/"+ orderMenu_ID,{ headers: authHeader()});
+}
+
 const mergeTable = (totalOrder_ID,pointTable) =>{
     return axios.get("http://localhost:8080/OrderMenu/mergeTable/"+totalOrder_ID+"/"+pointTable,{ headers: authHeader()});
 }
@@ -90,6 +94,7 @@ const OrderMenuService = {
     addOrderMenus,
     getOrderMenuByID,
     deleteOrderMenu,
+    finishedlStatus,
     mergeTable,
     updateOrderMenu,
     kitchen,

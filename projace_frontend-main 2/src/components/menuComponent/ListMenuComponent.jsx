@@ -13,6 +13,7 @@ const ListMenuComponent = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage] = useState(5);
   let countpage = 0;
+  const [searchName, setsearchName] = useState("");
 
   const indexOfLastRow = currentPage * rowsPerPage;
   const indexOfFirstRow = indexOfLastRow - rowsPerPage;
@@ -88,7 +89,7 @@ const ListMenuComponent = () => {
   };
 
   const addMenuType = () => {
-    navigate("/addMenuType");
+    navigate("/ListMunuType");
   };
 
   const editStockMenu = (menu_ID) => {
@@ -96,10 +97,25 @@ const ListMenuComponent = () => {
   };
 
   const filterMenu = currentRows.filter((menuList) => {
-    if (search.length >= 2) {
-      return menuList.menu_Name.toLowerCase().includes(search.toLowerCase());
-    } else if (search.length === 0) {
-      return menuList.menu_Name.toLowerCase().includes(search.toLowerCase());
+    if(search.length>0){
+
+      return (
+        menuList.typeMenu_ID.typeMenu_Name
+        .toLowerCase()
+        .includes(search.toLowerCase())
+      );
+    }else if(searchName.length>2){
+      return (
+        menuList.menu_Name
+        .toLowerCase()
+        .includes(searchName.toLowerCase())
+      );
+    }else{
+      return (
+        menuList.typeMenu_ID.typeMenu_Name
+        .toLowerCase()
+        .includes(search.toLowerCase())
+      );
     }
   });
 
@@ -132,28 +148,29 @@ const ListMenuComponent = () => {
             onClick={addMenuType}
           >
             {" "}
-            เพิ่มชนิดเมนู
+            ประเภทเมนู
           </button>
-          <input
-            type="search"
-            placeholder="ค้นหา"
-            aria-label="Search"
-            onChange={(e) => searchInput(e.target.value)}
-          />
-          <select
-            className="custom-select"
-            style={{ width: "150px", marginLeft: "10px" }}
-            id="typeMenu_ID"
-            name="typeMenu_ID"
-            onChange={(e) => searchInput(e.target.value)}
-          >
-            {typeMenu.map((typeMenu, index) => (
-              <option key={index} value={typeMenu.typeMenu_Name}>
-                {typeMenu.typeMenu_Name}
-              </option>
-            ))}
-          </select>
-        </div>
+        <input
+          type="search"
+          placeholder="ค้นหา"
+          aria-label="Search"
+          onChange={(e) => setsearchName(e.target.value)}
+        />
+        <select
+          className="custom-select"
+          style={{ width: "150px", marginLeft: "10px" }}
+          id="typeMenu_ID"
+          name="typeMenu_ID"
+          onChange={(e) => searchInput(e.target.value)}
+        >
+            <option value="">ประเภทเมนู</option>
+          {typeMenu.map((typeMenu, index) => (
+            <option key={index} value={typeMenu.typeMenu_Name}>
+              {typeMenu.typeMenu_Name}
+            </option>
+          ))}
+        </select>
+      </div>
 
         <br></br>
         <br></br>
@@ -187,9 +204,8 @@ const ListMenuComponent = () => {
                   </td>
                   <td>{menus.menu_Name}</td>
                   <td>{menus.menu_Price}</td>
-                  {/* <td>{menus.menu_Qty}</td>
-                  <td>{menus.menu_Cost}</td>
-                  <td>{menus.menu_Status}</td> */}
+                  <td>{menus.menu_Qty}</td>
+                  <td>{menus.menu_Type}</td>
                   <td>{menus.typeMenu_ID.typeMenu_Name}</td>
                   <td>{timestamp(menus.menu_TimeStamp)}</td>
                   <td>

@@ -13,11 +13,13 @@ const DashboardUser = (props) => {
   const { totalOrder_ID, table_ID, compoSite } = useParams();
   const [menuList, setMenuList] = useState([]);
   const [search, searchInput] = useState("");
+  const [searchName, setsearchName] = useState("");
   const navigate = useNavigate();
   const [typeMenu_ID, setTypeMenu_ID] = useState([]);
   const [M_tatol, setM_tatol] = useState([]);
   const [totalOrder, setTotalOrder] = useState([]);
   const [BaseSeller, setBaseSeller] = useState();
+  const [searchmenu, setSearchMenu] = useState();
 
   //const [orderMenu, setOrderMenu] = useState([]);
 
@@ -39,6 +41,7 @@ const DashboardUser = (props) => {
         console.log(e);
       });
   };
+
   const getBaseseller = () => {
     OrderMenuService.bestseller()
       .then((respone) => {
@@ -84,9 +87,26 @@ const DashboardUser = (props) => {
   }, [totalOrder_ID]);
 
   const filterMenu = menuList.filter((menuList) => {
-    return menuList.typeMenu_ID.typeMenu_Name
-      .toLowerCase()
-      .includes(search.toLowerCase());
+    if(search.length>0){
+
+      return (
+        menuList.typeMenu_ID.typeMenu_Name
+        .toLowerCase()
+        .includes(search.toLowerCase())
+      );
+    }else if(searchName.length>2){
+      return (
+        menuList.menu_Name
+        .toLowerCase()
+        .includes(searchName.toLowerCase())
+      );
+    }else{
+      return (
+        menuList.typeMenu_ID.typeMenu_Name
+        .toLowerCase()
+        .includes(search.toLowerCase())
+      );
+    }
   });
 
   const addToCart = (menu_ID, menu_Name, menu_Price, totalOrder_ID) => {
@@ -95,6 +115,7 @@ const DashboardUser = (props) => {
       menu_ID: menu_ID,
       menu_Name: menu_Name,
       menu_Price: menu_Price,
+      menu_Price_unit: menu_Price,
       menu_Qty: 1,
       totalOrder_ID: totalOrder_ID,
       compoSite: compoSite,
@@ -120,6 +141,7 @@ const DashboardUser = (props) => {
           menu_ID: menu_ID,
           menu_Name: menu_Name,
           menu_Price: acc.menu_Price + current.menu_Price,
+          menu_Price_unit: menu_Price,
           menu_Qty: acc.menu_Qty + current.menu_Qty,
           totalOrder_ID: totalOrder_ID,
           compoSite: compoSite,
@@ -155,8 +177,12 @@ const DashboardUser = (props) => {
               <div className="row">
                 {BaseSeller?.map((keyName, i) => {
                   return (
-                    <div className="col-2" style={{margin: "10px"}}>
-                      <h3 className="text-center" width="180" style={{margin: "10px"}}>
+                    <div className="col-2" style={{ margin: "10px" }}>
+                      <h3
+                        className="text-center"
+                        width="180"
+                        style={{ margin: "10px" }}
+                      >
                         <img
                           src={pic + keyName[2]}
                           alt="img"
@@ -206,7 +232,15 @@ const DashboardUser = (props) => {
                             </option>
                           ))}
                         </select>
+
+                        <input
+                          style={{ marginLeft: "10px" }}
+                          placeholder="ค้นหาอาหาร"
+                          value={searchName}
+                          onChange={(e) => setsearchName(e.target.value)}
+                        ></input>
                       </div>
+
                       <Row lg="12" md="4" sm="2" xs="8">
                         {filterMenu.map((menus, index) => (
                           <div className="product__item">

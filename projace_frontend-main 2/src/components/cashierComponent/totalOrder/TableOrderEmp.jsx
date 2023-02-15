@@ -9,15 +9,18 @@ import TableService from "../../../services/TableService";
 import OrderMenuService from "../../../services/OrderMenuService";
 import DisPromotionService from "../../../services/DisPromotionService";
 import "react-datepicker/dist/react-datepicker.css";
+import AuthService from "../../../services/Auth-service";
 import DatePicker from "react-datepicker";
 const TableOrderEmp = () => {
   const [totalOrder, setTotalOrder] = useState([]);
   const compo = [];
   let count = 0;
+  const currentUser = AuthService.getCurrentUser();
   const [getMoveTable, SetGetMoveTable] = useState();
   const [search, searchInput] = useState("");
   const navigate = useNavigate();
   const [show, setShow] = useState(null);
+  const [showMytable, setShowMytable] = useState("0");
   const [showpay, setShowpay] = useState(null);
   const [showpro, setShowpro] = useState(null);
   const [showMove, setShowMove] = useState(null);
@@ -104,10 +107,23 @@ const TableOrderEmp = () => {
 
   let pic = "http://localhost:8080/menu/getimagesPay/";
 
+  console.log("mytable = ",showMytable)
+
   useEffect(() => {
-    getAllTotalOrder();
+    if(showMytable === "0"){
+      getMytable();
+    }else{
+      getAllTotalOrder();
+    }
     GetMoveTable();
-  }, [date]);
+  }, [date,showMytable]);
+
+  const getMytable = () => {
+    TotalOrderService.getMytable(currentUser.id,dateData).then((response) =>{
+      setTotalOrder(response.data);
+    })
+  }
+
   const getAllTotalOrder = () => {
     TotalOrderService.getDate(dateData)
       .then((response) => {
@@ -120,7 +136,9 @@ const TableOrderEmp = () => {
   };
 
   totalOrder?.forEach((e) => {
-    compo.push(e.compoSite);
+    if (e.totalOrder_Status == "0") {
+      compo.push(e.compoSite);
+    }
   });
 
   const GetMoveTable = () => {
@@ -155,14 +173,21 @@ const TableOrderEmp = () => {
     }
   };
 
-  const viewTotalOrder = (compoSite, totalOrder_ID) => {
-    navigate("/ListTotalOrderMenu/" + compoSite + "/" + totalOrder_ID);
+  const viewTotalOrder = (compoSite, totalOrder_ID, statusTable) => {
+    navigate(
+      "/ListTotalOrderMenuEmp/" +
+        compoSite +
+        "/" +
+        totalOrder_ID +
+        "/" +
+        statusTable
+    );
   };
 
   const OrderMenu = (totalOrder_ID, table_ID, compoSite) => {
     // navigate("/DashboardUser/" + totalOrder_ID+ "/" + table_ID);
     navigate(
-      "/DashboardUser/" + totalOrder_ID + "/" + table_ID + "/" + compoSite
+      "/OrderMenuEmp/" + totalOrder_ID + "/" + table_ID + "/" + compoSite
     );
   };
 
@@ -183,21 +208,27 @@ const TableOrderEmp = () => {
   const statusTotalOrder = (value) => {
     if (value.totalOrder_image !== null && value.totalOrder_Status === "0") {
       return (
-        <td className="text-center" style={{ backgroundColor: "#ffc847" }}>
+        <p className="text-center" style={{ backgroundColor: "#ffc847" }}>
           รออนุมัติ
-        </td>
+        </p>
       );
     } else if (value.totalOrder_Status === "0") {
       return (
-        <td style={{ backgroundColor: color(value.totalOrder_Status) }}>
+        <p
+          className="text-center"
+          style={{ backgroundColor: color(value.totalOrder_Status) }}
+        >
           ยังไม่ชำระเงิน
-        </td>
+        </p>
       );
     } else {
       return (
-        <td style={{ backgroundColor: color(value.totalOrder_Status) }}>
+        <p
+          className="text-center"
+          style={{ backgroundColor: color(value.totalOrder_Status) }}
+        >
           ชำระเงินแล้ว
-        </td>
+        </p>
       );
     }
   };
@@ -208,6 +239,7 @@ const TableOrderEmp = () => {
         <button
           style={{ marginLeft: "3px" }}
           onClick={() => handleShowEditMixTable(value)}
+          disabled={value.totalOrder_Status === "1"}
           className="btn btn-warning"
         >
           แก้ไขรวมโต๊ะ
@@ -219,7 +251,8 @@ const TableOrderEmp = () => {
           style={{ marginLeft: "3px" }}
           onClick={() => handleShowMixTable(value)}
           disabled={
-            DisBTNmixTable(value.compoSite) || value.totalOrder_Status === "1"
+            DisBTNmixTable(value.compoSite, value.totalOrder_Status) ||
+            value.totalOrder_Status === "1"
           }
           className="btn btn-info"
         >
@@ -233,6 +266,8 @@ const TableOrderEmp = () => {
     return (
       <>
         <Modal show={data ? true : false} onHide={handleClose}>
+          <p></p>
+          <p></p>
           <Modal.Header closeButton>
             <Modal.Title>ต้องการลบหรือไม่!!</Modal.Title>
           </Modal.Header>
@@ -280,6 +315,8 @@ const TableOrderEmp = () => {
     return (
       <>
         <Modal show={data ? true : false} onHide={handleClosepro}>
+          <p></p>
+          <p></p>
           <Modal.Header closeButton>
             <Modal.Title>
               ส่วนลดของโต๊ที่ {data?.table_ID?.table_ID}
@@ -331,7 +368,6 @@ const TableOrderEmp = () => {
     );
   };
 
-
   const PayModal = ({ data }) => {
     const Uploadslip = () => {
       navigate("/Uploadslip/" + data?.totalOrder_ID);
@@ -361,6 +397,8 @@ const TableOrderEmp = () => {
     return (
       <>
         <Modal show={data ? true : false} onHide={handleClosepay}>
+          <p></p>
+          <p></p>
           <Modal.Header closeButton>
             <Modal.Title>สลิปการโอนชำระเงิน </Modal.Title>
           </Modal.Header>
@@ -417,9 +455,15 @@ const TableOrderEmp = () => {
 
     return (
       <>
-        <Modal show={data ? true : false} onHide={handleCloseMove}>
+        <Modal
+          show={data ? true : false}
+          onHide={handleCloseMove}
+          size="lg"
+          aria-labelledby="contained-modal-title-vcenter"
+          centered
+        >
           <Modal.Header closeButton>
-            <Modal.Title>ย้ายโต๊ะ</Modal.Title>
+            <Modal.Title centered>ย้ายโต๊ะ</Modal.Title>
           </Modal.Header>
           <form onSubmit={() => Movetable(data?.totalOrder_ID)}>
             <Modal.Body>
@@ -431,7 +475,7 @@ const TableOrderEmp = () => {
                 {getMoveTable?.map((value, index) => {
                   return (
                     <fieldset>
-                      <div>
+                      <div className="text-center">
                         <input
                           type="radio"
                           id="louie"
@@ -467,13 +511,18 @@ const TableOrderEmp = () => {
     );
   };
 
-  const DisBTNmixTable = (compoSite) => {
+  const DisBTNmixTable = (compoSite, status) => {
+    let count = 0;
+
     let F;
+    console.log("compo.length", compo.length);
+
     for (let i = 0; i < compo.length; i++) {
-      if (compoSite == compo[i]) {
-        count += 1;
+      if (compoSite === compo[i]) {
+        count = count + 1;
       }
     }
+
     if (count >= 2) {
       F = true;
       count = 0;
@@ -530,6 +579,8 @@ const TableOrderEmp = () => {
     return (
       <>
         <Modal show={data ? true : false} onHide={handleCloseMix}>
+          <p></p>
+          <p></p>
           <Modal.Header closeButton>
             <Modal.Title>รวมโต๊ะ</Modal.Title>
           </Modal.Header>
@@ -573,7 +624,7 @@ const TableOrderEmp = () => {
               {isLoading && <Spinner animation="border" size="sm" />}
             </Button>
           </Modal.Footer>
-        </Modal>  
+        </Modal>
       </>
     );
   };
@@ -627,7 +678,6 @@ const TableOrderEmp = () => {
         setIsLoadingCan(false);
       }, 500);
     };
-    console.log("yoooooooooooo",pointTable)
 
     useEffect(() => {
       getMixTebles();
@@ -636,6 +686,8 @@ const TableOrderEmp = () => {
     return (
       <>
         <Modal show={data ? true : false} onHide={handleCloseEditMix}>
+          <p></p>
+          <p></p>
           <Modal.Header closeButton>
             <Modal.Title>รวมโต๊ะ</Modal.Title>
           </Modal.Header>
@@ -711,7 +763,9 @@ const TableOrderEmp = () => {
     if (value.table_ID.table_ID === value.compoSite) {
       return <p className="text-center"></p>;
     } else {
-      return <p>รวมกับโต๊ะที่ {value.compoSite}</p>;
+      return (
+        <h4 style={{ color: "green" }}>รวมกับโต๊ะที่ {value.compoSite}</h4>
+      );
     }
   };
 
@@ -752,139 +806,141 @@ const TableOrderEmp = () => {
     };
 
     return (
-        <Container>
+      <Container>
         <Col>
-        <div>
-          <h4>
-            เวลา {hour}:{minutes} น.
-          </h4>
-        </div>
-       
-
-       
-        {
-            totalOrder.length === 0 ? 
-        <h2 className="text-center"
-        style={{color: 'red'}}
-        >
-          ยังไม่มีการเปิดโต๊ะ
-        </h2>
-        :
-        filterTotalOrder.map((totalOrder, index) => {
-          return (
-            <Col
-              lg="3"
-              md="12"
-              sm="12"
-              xs="12"
-              key=""
-              className="md-4"
+          <div className="text-center">
+            <h4>
+              เวลา {hour}:{minutes} น.
+            </h4>
+            <div className="text-center">
+            <select
+              style={{ width: "200px", marginLeft: "50px" ,marginBottom: "15px"}}
+              name="typeMenu_ID"
+              className="form-control"
+              value={showMytable}
+              onChange={(e) => setShowMytable(e.target.value)}
             >
-              <div className="product__item">
-                <div className="product__content">
-                  <h5>
-                    <h2>โต๊ะ {totalOrder.table_ID.table_ID} </h2>
-                    <h4> Zone </h4>
-                    {statusMixTable(totalOrder)}
-                  </h5>
-                  <div className=" d-flex align-items-center justify-content-between ">
-                    <button
-                      className="btn btn-success"
-                      onClick={() =>
-                        OrderMenu(
-                          totalOrder.totalOrder_ID,
-                          totalOrder.table_ID.table_ID,
-                          totalOrder.compoSite
-                        )
-                      }
-                      disabled={
-                        totalOrder.compoSite !== totalOrder.table_ID.table_ID ||
-                        totalOrder.totalOrder_Status === "1"
-                      }
-                    >
-                      สั่งอาหาร
-                    </button>
-                    <button
-                      style={{ marginLeft: "3px" }}
-                      onClick={() =>
-                        viewTotalOrder(
-                          totalOrder.compoSite,
-                          totalOrder.totalOrder_ID
-                        )
-                      }
-                      disabled={
-                        totalOrder.compoSite !== totalOrder.table_ID.table_ID
-                      }
-                      className="btn btn-outline-secondary"
-                    >
-                      เมนูที่สั่ง
-                    </button>
-                    {editMixtable(totalOrder)}
-                   
+              <option value="0" className="text-center" >-- โต๊ะของฉัน --</option>
+              <option value="1" className="text-center"> -- โต๊ะทั้งหมด -- </option>
+            </select>
+    
+          </div>
+          </div>
+         
 
+          {totalOrder.length === 0 ? (
+            <h2 className="text-center" style={{ color: "red" }}>
+              ยังไม่มีการเปิดโต๊ะ
+            </h2>
+          ) : (
+            filterTotalOrder.map((totalOrder, index) => {
+              return (
+                <Col lg="3" md="12" sm="12" xs="12" key="" className="md-4">
+                  <div className="product__item">
+                    <div className="product__content">
+                      <h5>
+                        <h2>โต๊ะ {totalOrder.table_ID.table_Zone} </h2>
+                        {statusMixTable(totalOrder)}
+                        {statusTotalOrder(totalOrder)}
+                      </h5>
+                      <div className=" d-flex align-items-center justify-content-between ">
+                        <button
+                          className="btn btn-warning"
+                          onClick={() =>
+                            OrderMenu(
+                              totalOrder.totalOrder_ID,
+                              totalOrder.table_ID.table_Zone,
+                              totalOrder.compoSite
+                            )
+                          }
+                          disabled={
+                            totalOrder.compoSite !==
+                              totalOrder.table_ID.table_ID ||
+                            totalOrder.totalOrder_Status === "1"
+                          }
+                        >
+                          สั่งอาหาร
+                        </button>
+                        <button
+                          style={{ marginLeft: "3px" }}
+                          onClick={() =>
+                            viewTotalOrder(
+                              totalOrder.compoSite,
+                              totalOrder.totalOrder_ID,
+                              totalOrder.totalOrder_Status
+                            )
+                          }
+                          disabled={
+                            totalOrder.compoSite !==
+                            totalOrder.table_ID.table_ID
+                          }
+                          className="btn btn-secondary"
+                        >
+                          รายการอาหารที่สั่ง
+                        </button>
+                        {editMixtable(totalOrder)}
+                      </div>
+                      <p className="col-md-12"></p>
+                      <div className="product__content">
+                        <div className=" d-flex align-items-center justify-content-between ">
+                          <button
+                            style={{ marginLeft: "3px" }}
+                            disabled={
+                              totalOrder.compoSite !==
+                                totalOrder.table_ID.table_ID ||
+                              totalOrder.totalOrder_Status === "1" ||
+                              DisBTNmixTable(totalOrder.compoSite)
+                            }
+                            onClick={
+                              (e) => handleShowModeTable(totalOrder)
+                              // movetable(totalOrder.totalOrder_ID, totalOrder.table_ID.table_ID)
+                            }
+                            className="btn btn-success"
+                          >
+                            ย้ายโต๊ะ
+                          </button>
+                          <Button
+                            style={{ marginLeft: "3px" }}
+                            variant="btn btn-outline-dark"
+                            disabled={
+                              totalOrder.compoSite !==
+                              totalOrder.table_ID.table_ID
+                            }
+                            onClick={() => handleShowpay(totalOrder)}
+                          >
+                            สลิปโอนเงิน
+                          </Button>
+                          <Button
+                            style={{ marginLeft: "3px" }}
+                            variant="danger"
+                            disabled={
+                              totalOrder.compoSite !==
+                                totalOrder.table_ID.table_ID ||
+                              DisBTNmixTable(totalOrder.compoSite)
+                            }
+                            onClick={() => handleShow(totalOrder)}
+                          >
+                            ลบ
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <p className="col-md-12"></p>
-                  <div className="product__content">
-                  <div className=" d-flex align-items-center justify-content-between ">
-
-                  <button
-                      style={{ marginLeft: "3px" }}
-                      disabled={
-                        totalOrder.compoSite !== totalOrder.table_ID.table_ID ||
-                        totalOrder.totalOrder_Status === "1" || DisBTNmixTable(totalOrder.compoSite)
-                      }
-                      onClick={
-                        (e) => handleShowModeTable(totalOrder)
-                        // movetable(totalOrder.totalOrder_ID, totalOrder.table_ID.table_ID)
-                      }
-                      className="btn btn-success"
-                    >
-                      ย้ายโต๊ะ
-                    </button>
-                    <Button
-                      style={{ marginLeft: "3px" }}
-                      variant="btn btn-outline-dark"
-                      disabled={
-                        totalOrder.compoSite !== totalOrder.table_ID.table_ID 
-                      }
-                      onClick={() => handleShowpay(totalOrder)}
-                    >
-                      สลิปโอนเงิน
-                    </Button>
-                    <Button
-                      style={{ marginLeft: "3px" }}
-                      variant="danger"
-                      disabled={
-                        totalOrder.compoSite !== totalOrder.table_ID.table_ID ||
-                        DisBTNmixTable(totalOrder.compoSite)
-                      }
-                      onClick={() => handleShow(totalOrder)}
-                    >
-                      ลบ
-                    </Button>
-
-                  </div>
-                </div>
-                </div>
-              </div>
-            </Col>
-          );
-        })}
-        
-      
-        
+                </Col>
+              );
+            })
+          )}
         </Col>
-    </Container>
+      </Container>
     );
   }
 
   return (
     <>
       <h2 className="text-center">พนักงาน</h2>
-      <div>
-        <h3>
-          {"วัน "} {day} {"ที่ "} {datetime[2]} {"เดือน "} {month} {"พ.ศ. "}{" "}
-          {y + 543}
+      <div className="text-center">
+        <h3 style={{ marginLeft: "30px" }}>
+          {day} {"ที่ "} {datetime[2]} {"เดือน "} {month} {"พ.ศ. "} {y + 543}
         </h3>
         <DatePicker
           selected={date}

@@ -18,10 +18,13 @@ import com.tawin.tawinmanagementsystem.entity.Stock_Menu;
 public interface Order_MenuRepository extends JpaRepository<Order_Menu, Integer> {
 	
 
-	@Query(value = "SELECT * \n" + "FROM order_menu \n" + "INNER JOIN total_order \n"
-			+ "ON order_menu.total_order_id = total_order.total_order_id \n" + "WHERE compo_site = :compoSite\n"
-			+ "ORDER BY order_menu.status_id AND order_menu.order_menu_time_stamp ASC", nativeQuery = true)
-	List<Order_Menu> findByTotalOrder_ID(@Param("compoSite") Integer compoSite);
+        @Query(value = "SELECT * \n"
+        		+ "FROM order_menu \n"
+        		+ "INNER JOIN total_order \n"
+        		+ "ON order_menu.total_order_id = total_order.total_order_id \n"
+        		+ "WHERE compo_site = :compoSite AND total_order_status = :statusTable \n"
+        		+ "ORDER BY order_menu.status_id AND order_menu.order_menu_time_stamp ASC", nativeQuery = true)
+        List<Order_Menu> findByTotalOrder_ID(@Param("compoSite") Integer compoSite,@Param("statusTable") Integer statusTable);
 
 	@Query(value = "SELECT o.menu_id,m.menu_name,m.menu_pic FROM order_menu o inner join menu m on o.menu_id = m.menu_id group by menu_id order by SUM(order_menu_qty) DESC LIMIT 5", nativeQuery = true)
 	List<Object> Bestseller();

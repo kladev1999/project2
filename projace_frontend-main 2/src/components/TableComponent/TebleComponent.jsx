@@ -3,11 +3,17 @@ import TableService from "../../services/TableService";
 import { Container, Row, Col } from "reactstrap";
 import { useNavigate } from "react-router-dom";
 import TotalOrderService from "../../services/TotalOrderService";
-import DatePicker from "react-datepicker";
+import AuthService from "../../services/Auth-service";
 
 function TebleComponent() {
   const [table, setTabel] = useState([]);
+  const [table_Zone, setTabel_Zone] = useState([]);
   const navigate = useNavigate();
+  const currentUser = AuthService.getCurrentUser();
+
+  const tableZone = {
+    table_Zone
+  }
 
   const [totalOrder_ID, setTotalOrder_ID] = useState();
   let value = 0;
@@ -16,70 +22,9 @@ function TebleComponent() {
 
   const [totalOrder, setTotalOrder] = useState([]);
   const [totalTab, setTotalTab] = useState([]);
+  const [totalTabs, setTotalTabs] = useState([]);
   const [date, setDate] = useState(new Date());
-  let s = date.toString();
-  let datetime = s.split(" ");
-  let y = parseInt(datetime[3]);
-
-  let day = "";
-  let month = "";
-  let monthnum = "";
-
-  if (datetime[0] === "Sun") {
-    day = "อาทิตย์";
-  } else if (datetime[0] === "Mon") {
-    day = "จันทร์";
-  } else if (datetime[0] === "Tue") {
-    day = "อังคาร";
-  } else if (datetime[0] === "Wed") {
-    day = "พุธ";
-  } else if (datetime[0] === "Thu") {
-    day = "พฤหัสบดี";
-  } else if (datetime[0] === "Fri") {
-    day = "ศุกร์";
-  } else if (datetime[0] === "Sat") {
-    day = "เสาร์";
-  }
-
-  if (datetime[1] === "Jan") {
-    month = "มกราคม";
-    monthnum = "01";
-  } else if (datetime[1] === "Feb") {
-    month = "กุมภาพันธ์";
-    monthnum = "02";
-  } else if (datetime[1] === "Mar") {
-    month = "มีนาคม";
-    monthnum = "03";
-  } else if (datetime[1] === "Apr") {
-    month = "เมษายน";
-    monthnum = "04";
-  } else if (datetime[1] === "May") {
-    month = "พฤษภาคม";
-    monthnum = "05";
-  } else if (datetime[1] === "Jun") {
-    month = "มิถุนายน";
-    monthnum = "06";
-  } else if (datetime[1] === "Jul") {
-    month = "กรกฎาคม";
-    monthnum = "07";
-  } else if (datetime[1] === "Aug") {
-    month = "สิงหาคม";
-    monthnum = "08";
-  } else if (datetime[1] === "Sep") {
-    month = "กันยายน";
-    monthnum = "09";
-  } else if (datetime[1] === "Oct") {
-    month = "ตุลาคม";
-    monthnum = "10";
-  } else if (datetime[1] === "Nov") {
-    month = "พฤศจิกายน";
-    monthnum = "11";
-  } else if (datetime[1] === "Dec") {
-    month = "ธันวาคม";
-    monthnum = "12";
-  }
-
-  let dateData = datetime[3] + "-" + monthnum + "-" + datetime[2];
+  
 
 
   const getTotalOrder = () => {
@@ -97,6 +42,7 @@ function TebleComponent() {
     TableService.getTotalOrder_ID(table_ID)
       .then((response) => {
         setTotalOrder_ID(response.data);
+        console.log(response.data)
       })
       .catch((e) => {
         console.log(e);
@@ -104,7 +50,7 @@ function TebleComponent() {
   };
 
   const getAllTebles = () => {
-    TableService.getTableDatetime(dateData)
+    TableService.getTable()
       .then((response) => {
         setTabel(response.data);
         console.log("table = ", response.data);
@@ -144,17 +90,26 @@ function TebleComponent() {
     getAllTebles();
     getTotalOrder();
     findTable();
-  }, [dateData]);
+  }, []);
 
   useEffect(() => {
     console.log("=======2 ", totalTab);
   }, [totalTab]);
+
+  const updateTable = (table_ID) => {
+
+    navigate("/UpdateTable/"+table_ID)
+    
+  }
 
   const checkInTable = (e, table_ID) => {
     e.preventDefault();
     const totalOrderState = {
       totalPrice,
       totalOrder_Status,
+      id: {
+        id: currentUser.id,
+      },
       compoSite: table_ID,
       table_ID: {
         table_ID,
@@ -188,10 +143,43 @@ function TebleComponent() {
     navigate("/MixTable/" + table_ID);
   };
 
-  const disableButton = (Tab) => {
+  const disableButton = (table_ID) => {
+
+    let C
+
+    totalOrder.map((t) => {
+
+      if(t.totalOrder_Status === "1"){
+        console.log("1",t.table_ID.table_ID)
+      }else{
+        console.log("0",t.table_ID.table_ID)
+
+      }
+
+
+      if(table_ID === t.table_ID.table_ID && t.totalOrder_Status !== "1") {
+        C = true;
+      }
+    })
+
+    return C
+
+  };
+
+  const deleteTable = (params) => {
+    if(window.confirm('Are you sure you want to delete')){
+      TableService.deleteTable(params).then(() => {
+        getAllTebles();
+      })
+    }
+  }
+  
+
+  const disableButtonNotOpentable = (Tab) => {
     const check = totalOrder.find((item) => {
-      return item.table_ID.table_ID === Tab;
+      return item.totalOrder_TimeStamp === Tab;
     });
+
     if (check) {
       return true;
     } else {
@@ -199,20 +187,17 @@ function TebleComponent() {
     }
   };
 
-  const disableButtonNotOpentable = (Tab) => {
-    const check = totalOrder.find((item) => {
-      return item.table_ID.table_ID === Tab;
+  const saveTable = () => {
+    TableService.addTable(table).then((response) => {
+    }).catch(error => {
+      console.log(error)
     });
-    if (check) {
-      return false;
-    } else {
-      return true;
-    }
   };
 
   return (
     <Container>
       <Row>
+      <h3 className="text-center">โต๊ะ</h3>
         <Row lg="6" md="6" sm="6" xs="12">
           <div className="search__widget d-flex align-items-center justify-content-between ">
             <span>
@@ -221,22 +206,7 @@ function TebleComponent() {
           </div>
         </Row>
         <p className="col-md-12"></p>
-        <h3 className="text-center">
-          {"วัน "} {day} {"ที่ "} {datetime[2]} {"เดือน "} {month} {"พ.ศ. "}{" "}
-          {y + 543}
-        </h3>
-        <p className="col-md-12"></p>
         <div className="text-center">
-          ค้นหาตามวันที่
-            <DatePicker
-              selected={date}
-              onChange={(date) => setDate(date)}
-              dateFormat={`วันที่ ${date.getDate()}/${date.getMonth()+1}/${date.getFullYear() + 543}`}
-              maxDate={new Date()}
-              showYearDropdown
-            />
-          </div>
-        <div>
           <button
             className="btn btn-primary mr-2 "
             style={{ marginTop: 10 }}
@@ -248,7 +218,7 @@ function TebleComponent() {
         </div>
 
 
-        {table?.map((t) => {
+        {table?.sort((a, b) => a.table_Zone - b.table_Zone).map((t,index) => {
           return (
             <Col
               lg="3"
@@ -258,6 +228,7 @@ function TebleComponent() {
               key={t.table_ID}
               className="md-4"
             >
+             
               <div className="product__item">
                 <div className="product__content">
                   <h5>
@@ -273,7 +244,23 @@ function TebleComponent() {
                       {" "}
                       เปิดโต๊ะ
                     </button>
-
+                    {" "}
+                    <button
+                      className="btn btn-warning"
+                      onClick={() => updateTable(t.table_ID)}
+                    >
+                      {" "}
+                      แก้ไข
+                    </button>
+                    {" "}
+                    <button
+                      className="btn btn-danger"
+                      disabled={disableButton(t.table_ID)}
+                      onClick={(e) => deleteTable(t.table_ID)}
+                    >
+                      {" "}
+                      ลบ
+                    </button>
                   </div>
                 </div>
               </div>

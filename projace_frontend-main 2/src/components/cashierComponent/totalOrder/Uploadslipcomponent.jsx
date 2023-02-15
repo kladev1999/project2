@@ -10,7 +10,7 @@ function Uploadslipcomponent() {
   const [preview, setPreView] = useState([]);
   const [ImageUpload, SetImageUpload] = useState([]);
   const navigate = useNavigate();
-  const url = ("http://localhost:8080/file-upload-pay",{ headers: authHeader()});
+  const url = "http://localhost:8080/file-upload-pay"
 
   useEffect(() => {
     if (preview.length < 1) return;
@@ -46,7 +46,7 @@ function Uploadslipcomponent() {
     formData.append("file", ImageUpload[ImageUpload.length - 1]);
 
     axios
-      .post(url, formData)
+    .post(url, formData, { headers: authHeader() })
       .then((res) => {
         console.log("res", res);
       })
@@ -69,6 +69,7 @@ function Uploadslipcomponent() {
           <div className="form-group mb-8">
             <label className="form-label"> Picture :</label>
             <input
+              style={{marginLeft: "25px"}}
               type="file"
               multiple
               accept="image/*"
@@ -84,7 +85,7 @@ function Uploadslipcomponent() {
               {previewURL.map((ingSrc) => (
                 <img
                   src={ingSrc}
-                  style={{ marginTop: "10px" }}
+                  style={{ marginTop: "10px",marginLeft: "25px"}}
                   width="470"
                   height="470"
                   className="img-thumbnail"
@@ -94,6 +95,8 @@ function Uploadslipcomponent() {
           </div>
         </form>
       </div>
+      <div className="text-center">
+
       <button className="btn btn-success"
       style={{margin: "10px"}}
       onClick={(e) => handleClick(e)}
@@ -102,6 +105,7 @@ function Uploadslipcomponent() {
       <button className="btn btn-success"
         onClick={Back}
       >กลับ</button>
+      </div>
     </>
   );
 }

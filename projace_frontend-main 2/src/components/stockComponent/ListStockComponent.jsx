@@ -54,18 +54,16 @@ const ListStockComponent = () => {
   };
 
   const addStockType = () => {
-    navigate("/addStockType");
+    navigate("/MStockType");
   };
 
   const filterStock = stock.filter((stock) => {
-    if (search.length > 2) {
+    if (search.length > 1) {
       return stock.stockType_ID.stockType_Name
         .toLowerCase()
         .includes(search.toLowerCase());
-    } else if (search.length === 0) {
-      return stock.stockType_ID.stockType_Name
-        .toLowerCase()
-        .includes(search.toLowerCase());
+    }else{
+      return stock
     }
   });
 
@@ -90,6 +88,13 @@ const ListStockComponent = () => {
       </>
     )
   }
+
+  const BackupStock = () => {
+    
+    navigate("/BackupStock")
+
+  }
+  
 
   return (
     <div className="container">
@@ -119,6 +124,15 @@ const ListStockComponent = () => {
           aria-label="Search"
           onChange={(e) => searchInput(e.target.value)}
         />
+
+<button
+          className="btn btn-primary mr-2 "
+          style={{ marginLeft: "700px" }}
+          onClick={BackupStock}
+        >
+          {" "}
+          ประวัติสต๊อก
+        </button>
       </div>
 
       <br></br>
@@ -137,12 +151,12 @@ const ListStockComponent = () => {
             </tr>
           </thead>
           <tbody>
-            {filterStock.map((stocks) => (
+            {filterStock.map((stocks,i) => (
               <tr
                 key={stocks.stock_ID}
                 style={{ backgroundColor: getBackgroundColor(stocks) }}
               >
-                <td>{stocks.stock_ID}</td>
+                <td>{i+1}</td>
                 <td>{stocks.stockType_ID.stockType_Name}</td>
                 <td>{stocks.stock_Qty}</td>
                 <td>{stocks.stock_Cost}</td>

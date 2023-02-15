@@ -11,31 +11,28 @@ const Cart = ({ M_tatol }) => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const currentUser = AuthService.getCurrentUser();
-  const [order, setOrder] = useState(M_tatol)
-  console.log("ORDER TT = ", order)
+  const [order, setOrder] = useState(M_tatol);
+
+  console.log(currentUser)
 
   useEffect(() => {
-
-
-
     let menuID = [];
     let totalOrderID = [];
     let menu_Qty = [];
     let menu_Price = [];
+    let menu_Price_unit = [];
     setOrder(M_tatol)
-    console.log("order EF  = ", order)
     M_tatol.forEach((element) => {
       menuID.push(element.menu_ID);
       totalOrderID.push(element.totalOrder_ID);
       menu_Qty.push(element.menu_Qty);
       menu_Price.push(element.menu_Price);
+      menu_Price_unit.push(element.menu_Price_unit);
     });
     setmenu_Price(menu_Price);
     setOrderMenu_Qty(menu_Qty);
     setMenu_ID(menuID);
     setTotalOrder_ID(totalOrderID);
-    console.log("setOrderMenu_Qty EF  = ", menu_Qty)
-    console.log("setOrderMenu_Qty EF  = ", menu_Price)
   }, [M_tatol]);
 
   //const [OrderMenus, setOrderMenus] = useState([]);
@@ -47,17 +44,6 @@ const Cart = ({ M_tatol }) => {
   const [totalOrder_ID, setTotalOrder_ID] = useState([]);
 
   let TotalPrice = order?.reduce((prev, cur) => prev + cur.menu_Price, 0);
-
-  // const getOrderMenu = () => {
-  //   OrderMenuService.getOrderMenu()
-  //     .then((respone) => {
-  //       console.log(respone.data);
-  //     })
-  //     .catch((e) => {
-  //       console.log(e);
-  //     });
-  // };
-
 
 
   const saveOrderMenu = (menu_ID, orderMenu_Qty, menu_Price, totalOrder_ID) => {
@@ -117,7 +103,10 @@ const Cart = ({ M_tatol }) => {
         console.log(menu_ID);
 
         saveTotalPrice(TotalPrice, totalOrder_ID[0]);
-        navigate("/ListTotalOrderMenu/" + M_tatol[0].compoSite + "/" + totalOrder_ID[0]);
+
+
+          navigate("/ListTotalOrderMenu/" + M_tatol[0].compoSite + "/" + totalOrder_ID[0]+"/"+"0");
+
       }
       setIsLoading(false)
     }, 500)
@@ -200,6 +189,7 @@ const Cart = ({ M_tatol }) => {
                               <th>ชื่อ</th>
                               <th>ราคา</th>
                               <th>จำนวน</th>
+                              <th>ราคารวม</th>
                               <th>Delete</th>
                             </tr>
                           </thead>
@@ -215,11 +205,12 @@ const Cart = ({ M_tatol }) => {
                                     {index + 1}
                                   </td>
                                   <td className="text-center">{i.menu_Name}</td>
-                                  <td className="text-center">
-                                    {Intl.NumberFormat().format(i.menu_Price)}
-                                  </td>
+                                  <td className="text-center">{i.menu_Price_unit}</td>
                                   <td className="text-center"
                                   >{i.menu_Qty}
+                                  </td>
+                                  <td className="text-center">
+                                    {Intl.NumberFormat().format(i.menu_Price)}
                                   </td>
                                   <td className="text-center cart__item-del">
                                     <button className="btn btn-danger" onClick={() => {
