@@ -40,44 +40,41 @@ function ViewEmployeeComponent() {
 
       <div className="row">
         <div className="col-md-6 offset-md-3 border rounded p-4 mt-2 shadow">
-          <h2 className="text-center m-4">Employee Details</h2>
+          <h2 className="text-center m-4">ข้อมูลพนักงาน</h2>
           <div className="card">
             <div className="card-header">
-              Details of employee
+            
               <ul className="list-group list-group-flush">
               <li className="text-center">
                 <img src={pic+employee.image} alt="img" width="150" height="150" />
                 </li>
                 <li className="list-group-item">
-                  <b>Name:</b>
+                  <b>ชื่อ:</b>
                   &nbsp; {employee.name_Emp}
                 </li>
                 <li className="list-group-item">
-                  <b>UserName:</b>
+                  <b>ชื่อผู้ใช้:</b>
                   &nbsp; {employee.username}
                 </li>
                 <li className="list-group-item">
-                  <b>Phone:</b>
+                  <b>เบอร์โทรศัพท์:</b>
                   &nbsp; {employee.phone}
                 </li>
                 <li className="list-group-item">
-                  <b>Address:</b>
+                  <b>ที่อยู่:</b>
                   &nbsp; {employee.address}
                 </li>
                 <li className="list-group-item">
-                  <b>Line:</b>
+                  <b>ไลน์ไอดี:</b>
                   &nbsp; {employee.line}
                 </li>
-                <li className="list-group-item">
-                  <b>Role:</b>
-                  &nbsp; {employee.roles?.name}
-                </li>
+                
               </ul>
             </div>
           </div>
 
           <Link className="btn btn-primary my-2" to={"/employee"}>
-            Back
+            ย้อนกลับ
           </Link>
         </div>
       </div>

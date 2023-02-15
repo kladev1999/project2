@@ -288,7 +288,7 @@ const KitchenComponent = () => {
                         <th> จำนวน</th>
                         <th> เวลา</th>
                         <th> สถานะ </th>
-                        <th> Action </th>
+                        <th> เปลี่ยนถานะ  </th>
                       </tr>
                     </thead>
                     <tbody>
@@ -304,6 +304,8 @@ const KitchenComponent = () => {
         </div>
         </div>
       </Container>
+      <br />
+      <br />
       <br />
       <br />
       <br />
@@ -338,7 +340,7 @@ const KitchenComponent = () => {
                         <th> จำนวน</th>
                         <th> เวลา</th>
                         <th> สถานะ </th>
-                        <th> Action </th>
+                        <th> เปลี่ยนถานะ </th>
                       </tr>
                     </thead>
                     <tbody></tbody>

@@ -91,9 +91,9 @@ public class MenuController {
 				.orElseThrow(() -> new ResourceNotFoundException("menu not exist with id :" + menu_ID));
 		menu.setMenu_Name(menuDetails.getMenu_Name());
 		menu.setMenu_Price(menuDetails.getMenu_Price());
-		menu.setMenu_Qty(menuDetails.getMenu_Qty());
-		menu.setMenu_Cost(menuDetails.getMenu_Cost());
-		menu.setMenu_Status(menuDetails.getMenu_Status());
+//		menu.setMenu_Qty(menuDetails.getMenu_Qty());
+//		menu.setMenu_Cost(menuDetails.getMenu_Cost());
+//		menu.setMenu_Status(menuDetails.getMenu_Status());
 		
 		if(menuDetails.getMenu_Pic() == null){
 			menu.setMenu_Pic(datetime+".jpg");

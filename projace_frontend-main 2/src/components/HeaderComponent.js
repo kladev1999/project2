@@ -33,11 +33,14 @@ const HeaderComponent = () => {
 
   const logOut = (e) => {
     e.preventDefault();
-    AuthService.logout();
-    setShowUser(false);
-    setShowCook(false);
-    navigate("/Login");
-    setCurrentUser(undefined);
+    if(window.confirm("Are you sure you want to log out")){
+      AuthService.logout();
+      setShowUser(false);
+      setShowCook(false);
+      navigate("/Login");
+      setCurrentUser(undefined);
+    }
+    
 
     // window.location.reload();
   };
@@ -56,7 +59,7 @@ const HeaderComponent = () => {
             height="60"
            href="/profile"
           />
-          <Navbar.Brand href="/TotalOrder">Admin</Navbar.Brand>;
+          <Navbar.Brand href="/TotalOrder">ผู้ดูแล</Navbar.Brand>;
         </>
       );
     } else if (showUser) {
@@ -70,7 +73,7 @@ const HeaderComponent = () => {
             width="60"
             height="60"
           />
-          <Navbar.Brand href="/TableOrderEmp">พนักงาน</Navbar.Brand>;
+          <Navbar.Brand href="/TableOrderEmp">พนักงานรับรายการอาหาร</Navbar.Brand>;
         </>
       );
     } else {
@@ -84,7 +87,7 @@ const HeaderComponent = () => {
             width="60"
             height="60"
           />
-          <Navbar.Brand href="/Kitchen">ครัว</Navbar.Brand>;
+          <Navbar.Brand href="/Kitchen">พนักงานครัว</Navbar.Brand>;
         </>
       );
     }
@@ -105,44 +108,44 @@ const HeaderComponent = () => {
                   navbarScroll
                 >
                   <Nav.Link href="/stock" className="navbar-brand">
-                    stock
+                    สต๊อกวัตถุดิบ
                   </Nav.Link>
                   {/* <Nav.Link href="/monthCost" className="navbar-brand">
                     monthCost
                   </Nav.Link> */}
                   <Nav.Link href="/menu" className="navbar-brand">
-                    Menu
+                    เมนูอาหาร
                   </Nav.Link>
                   <Nav.Link href="/stockMenu" className="navbar-brand">
-                    StockMenu
+                    วัตถุดิบในเมนู
                   </Nav.Link>
                   <Nav.Link href="/TableOrderEmp" className="navbar-brand">
                     สั่งอาหาร
                   </Nav.Link>
                   <Nav.Link href="/table" className="navbar-brand">
-                    table
+                    โต๊ะ
                   </Nav.Link>
                   <Nav.Link href="/employee" className="navbar-brand">
-                    employee
+                    จัดการพนักงาน
                   </Nav.Link>
                   <Nav.Link href="/Kitchen" className="navbar-brand">
-                    Kitchen
+                    ครัว
                   </Nav.Link>
                   <Nav.Link href="/promotion" className="navbar-brand">
-                    promotion
+                    โปรโมชั่น
                   </Nav.Link>
                   <Nav.Link href="/IncomeExpense" className="navbar-brand">
-                    IncomeExpense
+                    รายงาน
                   </Nav.Link>
                   <Nav.Link href="/profile" className="navbar-brand">
-                    profile
+                    โปรไฟล์
                   </Nav.Link>
                   <Nav.Link
                     href="/login"
                     className="navbar-brand"
                     onClick={logOut}
                   >
-                    LogOut
+                    ออกจากระบบ
                   </Nav.Link>
                 </Nav>
               </Navbar.Collapse>
@@ -159,23 +162,23 @@ const HeaderComponent = () => {
                     สั่งอาหาร
                   </Nav.Link>
                   <Nav.Link href="/stock" className="navbar-brand">
-                    stock
+                    สต๊อกวัตถุดิบ
                   </Nav.Link>
                   <Nav.Link href="/table" className="navbar-brand">
-                    table
+                    โต๊ะ
                   </Nav.Link>
                   <Nav.Link href="/promotion" className="navbar-brand">
-                    promotion
+                    โปรโมชั่น
                   </Nav.Link>
                   <Nav.Link href="/profile" className="navbar-brand">
-                    profile
+                    โปรไฟล์
                   </Nav.Link>
                   <Nav.Link
                     href="/login"
                     className="navbar-brand"
                     onClick={logOut}
                   >
-                    LogOut
+                    ออกจากระบบ
                   </Nav.Link>
                 </Nav>
               </Navbar.Collapse>
@@ -189,17 +192,17 @@ const HeaderComponent = () => {
                   navbarScroll
                 >
                   <Nav.Link href="/Kitchen" className="navbar-brand">
-                    Kitchen
+                    ครัว
                   </Nav.Link>
                   <Nav.Link href="/profile" className="navbar-brand">
-                    profile
+                    โปรไฟล์
                   </Nav.Link>
                   <Nav.Link
                     href="/login"
                     className="navbar-brand"
                     onClick={logOut}
                   >
-                    LogOut
+                    ออกจากระบบ
                   </Nav.Link>
                 </Nav>
               </Navbar.Collapse>

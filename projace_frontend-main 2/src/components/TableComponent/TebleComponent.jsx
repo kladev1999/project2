@@ -243,7 +243,7 @@ function TebleComponent() {
             onClick={AddTable}
           >
             {" "}
-            Add Table
+           เพิ่มโต๊ะ
           </button>
         </div>
 
@@ -262,7 +262,7 @@ function TebleComponent() {
                 <div className="product__content">
                   <h5>
                     <h2>โต๊ะ {t.table_ID}</h2>
-                    <h4> Zone {t.table_Zone}</h4>
+                    <h4> โซน {t.table_Zone}</h4>
                   </h5>
                   <div className="text-center">
                     <button

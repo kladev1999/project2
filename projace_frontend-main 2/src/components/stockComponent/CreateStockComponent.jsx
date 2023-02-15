@@ -60,7 +60,7 @@ const CreateStockComponent = () => {
             <div className="card-body">
               <form>
                 <div>
-                  <label className="form-label"> StockType Name</label>
+                  <label className="form-label"> ชื่อวัตถุดิบ </label>
                   <select
                     className="custom-select"
                     style={{ width: "200px", marginLeft: "10px" }}
@@ -75,7 +75,7 @@ const CreateStockComponent = () => {
                   </select>
                 </div>
                 <div className="form-group mb-2">
-                  <label className="form-label"> Stock Qty</label>
+                  <label className="form-label"> จำนวนวัตถุดิบ </label>
                   <input
                     type="text"
                     placeholder="Enter Stock Qty"
@@ -87,7 +87,7 @@ const CreateStockComponent = () => {
                 </div>
 
                 <div className="form-group mb-2">
-                  <label className="form-label"> Stock Cost</label>
+                  <label className="form-label"> ต้นทุนวัตถุดิบ </label>
                   <input
                     type="text"
                     placeholder="Enter Stock Cost"
@@ -99,7 +99,7 @@ const CreateStockComponent = () => {
                 </div>
 
                 <div className="form-group mb-2">
-                  <label className="form-label"> Stock Min</label>
+                  <label className="form-label"> จำนวนคงเหลือขั้นต่ำ </label>
                   <input
                     type="text"
                     placeholder="Enter Stock Min"
@@ -116,7 +116,7 @@ const CreateStockComponent = () => {
                   onClick={(e) => saveStock(e)}
                   disabled={!fromValid}
                 >
-                  Submit{" "}
+                  ยืนยัน{" "}
                 </button>
 
                 <button
@@ -124,7 +124,7 @@ const CreateStockComponent = () => {
                   style={{ marginLeft: "5px" }}
                   onClick={() => navigate("/stock")}
                 >
-                  Cancel
+                  ยกเลิก
                 </button>
               </form>
             </div>

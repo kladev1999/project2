@@ -110,17 +110,13 @@ const ListMenuComponent = () => {
     let y = parseInt(d[0]) + 543;
     let day = d[2] + "/" + d[1] + "/" + y;
 
-    return (
-      <>
-        วันที่ {day} เวลา {time[0]}
-      </>
-    );
+    return <>{day}</>;
   };
 
   return (
     <>
       <div className="container">
-        <h2 className="text-center">Menu List</h2>
+        <h2 className="text-center">เมนูอาหาร</h2>
         <div className="">
           <button
             className="btn btn-primary mr-2 "
@@ -128,7 +124,7 @@ const ListMenuComponent = () => {
             onClick={addMenu}
           >
             {" "}
-            Add Menu
+            เพิ่มเมนู
           </button>
           <button
             className="btn btn-primary mr-2 "
@@ -136,45 +132,45 @@ const ListMenuComponent = () => {
             onClick={addMenuType}
           >
             {" "}
-            Add MenuType
+            เพิ่มชนิดเมนู
           </button>
-        <input
-          type="search"
-          placeholder="ค้นหา"
-          aria-label="Search"
-          onChange={(e) => searchInput(e.target.value)}
-        />
-        <select
-          className="custom-select"
-          style={{ width: "150px", marginLeft: "10px" }}
-          id="typeMenu_ID"
-          name="typeMenu_ID"
-          onChange={(e) => searchInput(e.target.value)}
-        >
-          {typeMenu.map((typeMenu, index) => (
-            <option key={index} value={typeMenu.typeMenu_Name}>
-              {typeMenu.typeMenu_Name}
-            </option>
-          ))}
-        </select>
-      </div>
+          <input
+            type="search"
+            placeholder="ค้นหา"
+            aria-label="Search"
+            onChange={(e) => searchInput(e.target.value)}
+          />
+          <select
+            className="custom-select"
+            style={{ width: "150px", marginLeft: "10px" }}
+            id="typeMenu_ID"
+            name="typeMenu_ID"
+            onChange={(e) => searchInput(e.target.value)}
+          >
+            {typeMenu.map((typeMenu, index) => (
+              <option key={index} value={typeMenu.typeMenu_Name}>
+                {typeMenu.typeMenu_Name}
+              </option>
+            ))}
+          </select>
+        </div>
 
-      <br></br>
         <br></br>
-        <div className="row">
+        <br></br>
+        <div className="row" style={{ textAlign: "center" }}>
           <table className="table table-striped table-bordered ">
             <thead>
               <tr>
-                <th> Menu ID </th>
-                <th> Menu Picture </th>
-                <th> Menu Name </th>
-                <th> Menu Price </th>
-                <th> Menu Qty </th>
+                <th> รหัสเมนู </th>
+                <th> รูปเมนู </th>
+                <th> ชื่อเมนู </th>
+                <th> ราคาเมนู </th>
+                {/* <th> Menu Qty </th>
                 <th> Menu Cost </th>
-                <th> Menu Status </th>
-                <th> Menu Type </th>
-                <th> Menu TimeStamp </th>
-                <th> Action </th>
+                <th> Menu Status </th> */}
+                <th> ชนิดเมนู </th>
+                <th> เวลาที่เพิ่มเมนู </th>
+                <th> จัดการเมนู </th>
               </tr>
             </thead>
             <tbody>
@@ -191,24 +187,17 @@ const ListMenuComponent = () => {
                   </td>
                   <td>{menus.menu_Name}</td>
                   <td>{menus.menu_Price}</td>
-                  <td>{menus.menu_Qty}</td>
+                  {/* <td>{menus.menu_Qty}</td>
                   <td>{menus.menu_Cost}</td>
-                  <td>{menus.menu_Status}</td>
+                  <td>{menus.menu_Status}</td> */}
                   <td>{menus.typeMenu_ID.typeMenu_Name}</td>
                   <td>{timestamp(menus.menu_TimeStamp)}</td>
                   <td>
                     <button
                       onClick={() => editMenu(menus.menu_ID)}
-                      className="btn btn-info"
+                      className="btn btn-primary"
                     >
-                      Update{" "}
-                    </button>
-                    <button
-                      style={{ marginLeft: "5px" }}
-                      onClick={() => deleteMenu(menus.menu_ID)}
-                      className="btn btn-danger"
-                    >
-                      Delete{" "}
+                      แก้ไข{" "}
                     </button>
 
                     <button
@@ -216,15 +205,22 @@ const ListMenuComponent = () => {
                       onClick={() => viewMenu(menus.menu_ID)}
                       className="btn btn-info"
                     >
-                      View{" "}
+                      ดูข้อมูล{" "}
                     </button>
 
                     <button
-                      style={{ marginTop: "5px" }}
+                      style={{ marginLeft: "5px" }}
                       onClick={() => editStockMenu(menus.menu_ID)}
-                      className="btn btn-info"
+                      className="btn btn-warning"
                     >
-                      Edit{" "}
+                      เพิ่มวัตถุดิบ{" "}
+                    </button>
+                    <button
+                      style={{ marginLeft: "5px" }}
+                      onClick={() => deleteMenu(menus.menu_ID)}
+                      className="btn btn-danger"
+                    >
+                      ลบ{" "}
                     </button>
                   </td>
                 </tr>
@@ -240,7 +236,7 @@ const ListMenuComponent = () => {
           disabled={1 == currentPage}
           onClick={Previous}
         >
-          Previous
+          ก่อนหน้า
         </button>
         <span id="pageNum" style={{ margin: "10px", fontSize: "20px" }}>
           {currentPage} / {parseInt(menuList.length / 5) + 1}
@@ -251,7 +247,7 @@ const ListMenuComponent = () => {
           disabled={parseInt(menuList.length / 5) + 1 == currentPage}
           onClick={Next}
         >
-          Next
+          ต่อไป
         </button>
       </div>
     </>

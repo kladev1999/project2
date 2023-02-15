@@ -79,10 +79,10 @@ function Promotion() {
                         <div className="card-body">
                             <from>
                                 <div className="form-group mb-2">
-                                    <label className="form-label"> Name :</label>
+                                    <label className="form-label"> ชื่อโปรโมชัน :</label>
                                     <input
                                         type="text"
-                                        placeholder="name"
+                                        placeholder="ชื่อโปรโมชัน"
                                         name="Name"
                                         className="form-control"
                                         onChange={(e) => setdiscount_Name(e.target.value)}
@@ -90,10 +90,10 @@ function Promotion() {
                                     </input>
                                 </div>
                                 <div className="form-group mb-2">
-                                    <label className="form-label"> Percent :</label>
+                                    <label className="form-label"> ส่วนลด (เปอร์เซ็น) :</label>
                                     <input
                                         type="text"
-                                        placeholder="Percent"
+                                        placeholder="ส่วนลด (เปอร์เซ็น)"
                                         name="Percent"
                                         className="form-control"
                                         onChange={(e) => setdiscount_Percent(e.target.value)}
@@ -155,10 +155,10 @@ function Promotion() {
                         <div className="card-body">
                             <from>
                                 <div className="form-group mb-2">
-                                    <label className="form-label"> NamePromotion :</label>
+                                    <label className="form-label"> ชื่อโปรโมชัน :</label>
                                     <input
                                         type="text"
-                                        placeholder="name"
+                                        placeholder="ชื่อโปรโมชัน"
                                         className="form-control"
                                         value={discount_Name}
                                         onChange={(e) => setdiscount_Name(e.target.value)}
@@ -166,10 +166,10 @@ function Promotion() {
                                     </input>
                                 </div>
                                 <div className="form-group mb-2">
-                                    <label className="form-label"> Percent :</label>
+                                    <label className="form-label"> ส่วนลด (เปอร์เซ็น) :</label>
                                     <input
                                         type="text"
-                                        placeholder="Percent"
+                                        placeholder="ส่วนลด (เปอร์เซ็น)"
                                         className="form-control"
                                         value={discount_Percent}
                                         onChange={(e) => setdiscount_Percent(e.target.value)}
@@ -203,7 +203,7 @@ function Promotion() {
 
     return (
         <>
-            <h1 className='text-center'>Promotion</h1>
+            <h1 className='text-center'>โปรโมชัน</h1>
             <button className='btn btn-outline-primary'
                 style={{ margin: "18px" }}
                 onClick={handleOpenAdd}
@@ -213,10 +213,10 @@ function Promotion() {
             <table className="table table-striped table-bordered">
             <thead>
                 <tr className='text-center'>
-                    <th >Discount ID</th>
-                    <th>Discount Name</th>
-                    <th>Discount Percent</th>
-                    <th>Action</th>
+                    <th >รหัสโปรโมชัน</th>
+                    <th>ชื่อโปรโมชัน</th>
+                    <th>ส่วนลด</th>
+                    <th>จัดการโปรโมชัน</th>
                 </tr>
                 </thead>
 

@@ -1,5 +1,8 @@
 import axios from "axios";
 import authHeader from "./Auth-HeaderService";
+
+const BASE_URL = "http://localhost:8080/OrderMenu/";
+
 const getOrderMenu = () =>{
     return axios.get("http://localhost:8080/OrderMenu/getOrderMenu",{ headers: authHeader()});
 }
@@ -64,6 +67,21 @@ const monthCost = () => {
     return axios.get("http://localhost:8080/OrderMenu/monthCost",{ headers: authHeader()});
 }
 
+const incomeAllMenu = () =>{
+    return axios.get("http://localhost:8080/OrderMenu/incomeAllDetailMenu",{ headers: authHeader()});
+}
+
+const incomeAllMenuTotal = () => {
+    return axios.get("http://localhost:8080/OrderMenu/incomeAllDetailMenus",{ headers: authHeader()});
+}
+
+const incomeByMenuID = (menu_ID,date) => {
+    return axios.get("http://localhost:8080/OrderMenu/incomeCost/"+menu_ID+"/"+date,{ headers: authHeader()});
+}
+const incomeAllByDate = (date) => {
+    return axios.get("http://localhost:8080/OrderMenu/incomeAllByDate/"+date,{ headers: authHeader()});
+}
+
 
 
 const OrderMenuService = {
@@ -81,7 +99,11 @@ const OrderMenuService = {
     updateStatus,
     mergeTable,
     cancelStatus,
-    monthCost
+    monthCost,
+    incomeAllMenu,
+    incomeAllMenuTotal,
+    incomeByMenuID,
+    incomeAllByDate
 }
 
 export default OrderMenuService;

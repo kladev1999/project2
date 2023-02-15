@@ -47,6 +47,9 @@ public class BackupStock implements Serializable{
 	@Column(length = 255)
 	private LocalDateTime backupStock_TimeStamp;
 	
+	@Column(length = 30)
+	private double backup_PricePerUnit;
+	
 	@ManyToOne
 	@JoinColumn(name = "stockType_ID")
     private StockType stockType_ID;

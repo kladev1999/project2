@@ -34,7 +34,7 @@ public class StockMenuController {
 	
 	@PostMapping("/addStockMenu")
 	public Stock_Menu createStock_Menu(@RequestBody Stock_Menu stock_menu) {
-		
+		System.out.println(stock_menu.getStockMenu_Qty());
 		stock_menu.setStockMenu_TimeStamp(LocalDateTime.now());
 		stock_menu.setStockMenu_Status("null");
 		stockMenuRepo.save(stock_menu);

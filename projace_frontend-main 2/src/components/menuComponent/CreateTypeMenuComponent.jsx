@@ -43,14 +43,16 @@ const CreateMenuTypeComponent = () => {
       <br />
       <div className="container">
         <div className="row">
+          <h2 className="text-center">เพิ่มชนิดเมนู</h2>
           <div className="card col-md-6 offset-md-3 offset-md-3">
+            
             <div className="card-body">
               <form>
                 <div className="form-group mb-2">
-                  <label className="form-label"> TypeMenu Name</label>
+                  <label className="form-label"> ชื่อชนิดเมนู</label>
                   <input
                     type="text"
-                    placeholder="Enter StockType Name"
+                    placeholder="กรุณากรอกชื่อชนิดเมนู"
                     name="typeMenu_Name"
                     className="form-control"
                     value={typeMenu.typeMenu_Name}
@@ -63,7 +65,7 @@ const CreateMenuTypeComponent = () => {
                   style={{ marginLeft: "5px" }}
                   onClick={saveTypeMenu}
                 >
-                  Submit{" "}
+                  ยืนยัน{" "}
                 </button>
 
                 <button
@@ -71,7 +73,7 @@ const CreateMenuTypeComponent = () => {
                   style={{ marginLeft: "5px" }}
                   onClick={() => navigate("/menu")}
                 >
-                  Cancel
+                  ยกเลิก
                 </button>
               </form>
             </div>

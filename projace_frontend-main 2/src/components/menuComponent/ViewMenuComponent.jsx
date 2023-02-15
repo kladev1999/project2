@@ -4,7 +4,7 @@ import MenuService from "../../services/MenuService";
 import authHeader from "../../services/Auth-HeaderService";
 const ViewMenuComponent = (props) => {
   const { menu_ID } = useParams();
-  let pic = ("http://localhost:8080/menu/getimages/",{ headers: authHeader()});
+  let pic = "http://localhost:8080/menu/getimages/"
   const navigate = useNavigate();
 
   const menuState = {
@@ -42,52 +42,46 @@ const ViewMenuComponent = (props) => {
     <div>
       <br></br>
       <div className="card col-md-6 offset-md-3">
-        <h3 className="text-center"> View Menu Details</h3>
+        <h3 className="text-center" style={{margin:"5px"}}> ข้อมูลเมนู </h3>
         <div className="card-body">
-        <div className="row">
-            <label> Menu Picture : </label>
-           <img src={pic+menu.menu_Pic} />
+        <div className="row" style={{margin:"5px"}}>
+            <label> รูปภาพเมนู : </label>
+           <img src={pic+menu.menu_Pic} 
+                      alt="img"
+                      width="100"
+                      height="300" />
           </div>
 
-          <div className="row">
-            <label> Menu ID : </label>
-            <div> {menu.menu_ID}</div>
+          <div className="row" style={{margin:"5px"}}>
+            <label> รหัสเมนู : {menu.menu_ID}</label>
           </div>
-          <div className="row">
-            <label> Type Menu : </label>
-            <div>{menu.typeMenu_ID.typeMenu_Name}</div>
-          </div>
-
-          <div className="row">
-            <label> Menu Name : </label>
-            <div> {menu.menu_Name}</div>
-          </div>
-          <div className="row">
-            <label> Menu Price : </label>
-            <div> {menu.menu_Price}</div>
+          <div className="row" style={{margin:"5px"}}>
+            <label> ชนิดเมนู : {menu.typeMenu_ID.typeMenu_Name}</label>
+          
           </div>
 
-          <div className="row">
-            <label> Menu Qty : </label>
-            <div> {menu.menu_Qty}</div>
+          <div className="row" style={{margin:"5px"}}>
+            <label> ชื่อเมนู :  {menu.menu_Name}</label>
           </div>
-          <div className="row">
+
+          <div className="row" style={{margin:"5px"}}>
+            <label> ราคาเมนู :{menu.menu_Price}</label>
+          </div>
+
+          
+          {/* <div className="row">
             <label> Menu Cost : </label>
             <div> {menu.menu_Cost}</div>
+          </div> */}
+          <div className="row" style={{margin:"5px"}}>
+            <label> Menu TimeStamp : {menu.menu_TimeStamp} </label>
           </div>
-          <div className="row">
-            <label> Menu TimeStamp : </label>
-            <div> {menu.menu_TimeStamp}</div>
-          </div>
-          <div className="row">
-            <label> Menu Status : </label>
-            <div> {menu.menu_Status}</div>
-          </div>
+
          
-          <div align="center">
-            <button className="btn btn-primary" onClick={goBack}>
+          <div align="center" style={{margin:"5px"}}>
+            <button className="btn btn-primary" onClick={goBack} style={{margin:"5px"}}>
               {" "}
-              Back{" "}
+              ย้อนกลับ{" "}
             </button>
           </div>
         </div>

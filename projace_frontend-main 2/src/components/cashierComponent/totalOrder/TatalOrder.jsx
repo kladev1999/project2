@@ -795,7 +795,7 @@ const TatalOrder = () => {
 
       return (
         <>
-          เวลา {time[0]}
+          {time[0]}
         </>
       )
     }
@@ -826,7 +826,7 @@ const TatalOrder = () => {
                 <th> สถานะ </th>
                 <th> โต๊ะที่</th>
                 <th> รวมโต๊ะ </th>
-                <th> Action </th>
+                <th> จัดการ </th>
               </tr>
             </thead>
 
@@ -951,7 +951,7 @@ const TatalOrder = () => {
 
   return (
     <>
-      <h2 className="text-center"> Total Order </h2>
+      <h2 className="text-center"> ข้อมูลทั้งหมด </h2>
       <div>
       <h3>
        {"วัน "} {day}{" "}

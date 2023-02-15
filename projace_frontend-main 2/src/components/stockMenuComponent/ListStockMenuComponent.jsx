@@ -68,21 +68,21 @@ const ListStockMenuComponent = () => {
 
     return (
       <>
-        วันที่ {day} เวลา {time[0]}
+        {day}
       </>
     )
   }
 
   return (
     <div className="container">
-      <h2 className="text-center"> StockMenu List </h2>
+      <h2 className="text-center"> รายการข้อมูลวัตถุดิบในเมนู </h2>
       <div>
         <button
           className="btn btn-primary mr-2 "
           style={{ marginRight: 5 }}
           onClick={backToMenu}
         >
-          Menu
+          เมนูอาหาร
         </button>
         <input
           type="search"
@@ -93,17 +93,17 @@ const ListStockMenuComponent = () => {
       </div>
 
       <br></br>
-      <div className="row">
+      <div className="row" style={{textAlign:"center"}}>
         <table className="table table-striped table-bordered">
           <thead>
             <tr>
               <th> StockMenu ID </th>
-              <th> StockMenu Qty </th>
-              <th> StockMenu Status </th>
-              <th> StockMenu TimeStamp </th>
-              <th> Menu Name </th>
-              <th> Stock Name </th>
-              <th> Action </th>
+              <th> จำนวนที่ใช้ในเมนู (กรัม) </th>
+              
+              <th> เวลาที่เพิ่ม </th>
+              <th> ชื่อเมนู </th>
+              <th> ชื่อวัตถุดิบ </th>
+              <th> จัดการรายการ </th>
             </tr>
           </thead>
 
@@ -112,7 +112,7 @@ const ListStockMenuComponent = () => {
               <tr key={stockMenu.stockMenu_ID}>
                 <td>{stockMenu.stockMenu_ID}</td>
                 <td>{stockMenu.stockMenu_Qty}</td>
-                <td>{stockMenu.stockMenu_Status}</td>
+                
                 <td>{timestamp(stockMenu.stockMenu_TimeStamp)}</td>
                 <td>{stockMenu.menu_ID.menu_Name}</td>
                 <td>{stockMenu.stockType_ID.stockType_Name}</td>
@@ -120,23 +120,17 @@ const ListStockMenuComponent = () => {
                   <button
                     style={{ marginLeft: "5px" }}
                     onClick={() => updateStockMenu(stockMenu.stockMenu_ID)}
-                    className="btn btn-info"
+                    className="btn btn-warning"
                   >
-                    Update
+                    แก้ไข
                   </button>
-                  <button
-                    style={{ marginLeft: "5px" }}
-                    onClick={() => viewStockMenu(stockMenu.stockMenu_ID)}
-                    className="btn btn-info"
-                  >
-                    View
-                  </button>
+                  
                   <button
                     style={{ marginLeft: "5px" }}
                     onClick={() => deleteStockMenu(stockMenu.stockMenu_ID)}
                     className="btn btn-danger"
                   >
-                    Delete
+                    ลบ
                   </button>
                 </td>
               </tr>

@@ -67,10 +67,10 @@ const UpdateMenuComponent = (props) => {
     typeMenu_ID: "",
     menu_Name: "",
     menu_Price: "",
-    menu_Qty: "",
+    // menu_Qty: "",
     menu_Pic: "",
-    menu_Cost: "",
-    menu_Status: "",
+    // menu_Cost: "",
+    // menu_Status: "",
   };
 
   const [menu, setMenu] = useState(menuState);
@@ -133,7 +133,7 @@ const UpdateMenuComponent = (props) => {
               </h4>
             </div>
             <div className="form-group">
-              <label htmlFor="description">Menu Name</label>
+              <label htmlFor="description">ชื่อเมนู</label>
               <input
                 type="text"
                 className="form-control"
@@ -144,7 +144,7 @@ const UpdateMenuComponent = (props) => {
               />
             </div>
             <div className="form-group">
-              <label htmlFor="description">Menu Price</label>
+              <label htmlFor="description">ราคาเมนู</label>
               <input
                 type="text"
                 className="form-control"
@@ -154,47 +154,14 @@ const UpdateMenuComponent = (props) => {
                 onChange={handleInputChange}
               />
             </div>
-            <div className="form-group">
-              <label htmlFor="description">Menu Cost</label>
-              <input
-                type="text"
-                className="form-control"
-                id="menu_Cost"
-                name="menu_Cost"
-                value={menu.menu_Cost}
-                onChange={handleInputChange}
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="description">Menu Qty</label>
-              <input
-                type="text"
-                className="form-control"
-                id="menu_Qty"
-                name="menu_Qty"
-                value={menu.menu_Qty}
-                onChange={handleInputChange}
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="description">Menu Status</label>
-              <input
-                type="text"
-                className="form-control"
-                id="menu_Status"
-                name="menu_Status"
-                value={menu.menu_Status}
-                onChange={handleInputChange}
-              />
-            </div>
+            
 
             <div className="form-group mb-2">
-              <label className="form-label"> Original : </label>
+              <label className="form-label"> ภาพเดิม : </label>
               <img src={pic + menu.menu_Pic} width="170" height="170" className="img-thumbnail" />
             </div>
             <div className="form-group mb-2">
-              <label className="form-label"> Menu Picture</label>
+              <label className="form-label"> รูปภาพเมนู</label>
               <input
                 type="file"
                 placeholder="Enter Menu Picture"
@@ -218,11 +185,11 @@ const UpdateMenuComponent = (props) => {
 
           </form>
           <button className="btn btn-danger mr-2" onClick={cancel}>
-            Cancel
+            ยกเลิก
           </button>
 
           <Button disabled={isLoading} variant="btn btn-outline-success" onClick={handleClick}>
-                  {isLoading ? 'Loading...' : 'Update'}
+                  {isLoading ? 'Loading...' : 'ยืนยัน'}
                   {isLoading && <Spinner animation="border" size="sm" />}
                 </Button>
         </div>

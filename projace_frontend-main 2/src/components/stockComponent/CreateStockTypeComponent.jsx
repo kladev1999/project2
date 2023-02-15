@@ -52,10 +52,10 @@ const CreateStockTypeComponent = () => {
             <div className="card-body">
               <form>
                 <div className="form-group mb-2">
-                  <label className="form-label"> StockType Name</label>
+                  <label className="form-label"> ชื่อวัตถุดิบ </label>
                   <input
                     type="text"
-                    placeholder="Enter StockType Name"
+                    placeholder="กรุณากรอกชื่อวัตถุดิบ"
                     name="stockType_Name"
                     className="form-control"
                     value={stockType.stockType_Name}
@@ -63,10 +63,10 @@ const CreateStockTypeComponent = () => {
                   ></input>
                 </div>
                 <div className="form-group mb-2">
-                  <label className="form-label"> StockType Unit</label>
+                  <label className="form-label"> หน่วยของวัตถุดิบ </label>
                   <input
                     type="text"
-                    placeholder="Enter StockType Unit"
+                    placeholder="กรุณากรอกหน่วยของวัตถุดิบ (กรัม, ขีด, กิโลกรัม, อื่น ๆ)"
                     name="stockType_Unit"
                     className="form-control"
                     value={stockType.stockType_Unit}
@@ -79,7 +79,7 @@ const CreateStockTypeComponent = () => {
                   style={{ marginLeft: "5px" }}
                   onClick={saveStockType}
                 >
-                  Submit{" "}
+                  ยืนยัน{" "}
                 </button>
 
                 <button
@@ -87,7 +87,7 @@ const CreateStockTypeComponent = () => {
                   style={{ marginLeft: "5px" }}
                   onClick={() => navigate("/stock")}
                 >
-                  Cancel
+                  ยกเลิก
                 </button>
               </form>
             </div>

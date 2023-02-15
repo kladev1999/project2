@@ -9,9 +9,9 @@ const CreateMenuComponent = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [menu_Name, setmenu_Name] = useState([]);
   const [menu_Price, setmenu_Price] = useState([]);
-  const [menu_Qty, setmenu_Qty] = useState([]);
-  const [menu_Cost, setmenu_Cost] = useState([]);
-  const [menu_Status, setmenu_Status] = useState([]);
+  // const [menu_Qty, setmenu_Qty] = useState([]);
+  // const [menu_Cost, setmenu_Cost] = useState([]);
+  // const [menu_Status, setmenu_Status] = useState([]);
   const [menu_Pic, setmenu_Pic] = useState([]);
   const [typeMenu_ID, setTypeMenu_ID] = useState([]);
   const [preview, setPreView] = useState([]);
@@ -44,9 +44,9 @@ const CreateMenuComponent = () => {
     const menu = {
       menu_Name,
       menu_Price,
-      menu_Qty,
-      menu_Cost,
-      menu_Status,
+      // menu_Qty,
+      // menu_Cost,
+      // menu_Status,
       typeMenu_ID: {
         typeMenu_ID
       }
@@ -113,7 +113,7 @@ const CreateMenuComponent = () => {
             <div className="card-body">
               <form>
                 <div>
-                  <label className="form-label"> MenuType Name</label>
+                  <label className="form-label"> ชนิดเมนู </label>
                   <select
                     className="custom-select"
                     style={{ width: "200px", marginLeft: "10px" }}
@@ -129,10 +129,10 @@ const CreateMenuComponent = () => {
                   </select>
                 </div>
                 <div className="form-group mb-2">
-                  <label className="form-label"> Menu Name</label>
+                  <label className="form-label"> ชื่อเมนู </label>
                   <input
                     type="text"
-                    placeholder="Enter Menu Name"
+                    placeholder="กรุณากรอกชื่อเมนู"
                     name="menu_Name"
                     className="form-control"
                     value={menu_Name}
@@ -141,10 +141,10 @@ const CreateMenuComponent = () => {
                 </div>
 
                 <div className="form-group mb-2">
-                  <label className="form-label"> Menu Price</label>
+                  <label className="form-label"> ราคาเมนู </label>
                   <input
                     type="text"
-                    placeholder="Enter Menu Price"
+                    placeholder="กรุณากรอกราคาเมนู"
                     name="menu_Price"
                     className="form-control"
                     value={menu_Price}
@@ -153,49 +153,10 @@ const CreateMenuComponent = () => {
                 </div>
 
                 <div className="form-group mb-2">
-                  <label className="form-label"> Menu Qty</label>
-                  <input
-                    type="text"
-                    placeholder="Enter Menu Qty"
-                    name="menu_Price"
-                    className="form-control"
-                    value={menu_Qty}
-                    onChange={(e) => setmenu_Qty(e.target.value)}
-                  ></input>
-                </div>
-
-                <div className="form-group mb-2">
-                  <label className="form-label"> Menu Cost</label>
-                  <input
-                    type="text"
-                    placeholder="Enter Menu Cost"
-                    name="menu_Cost"
-                    className="form-control"
-                    value={menu_Cost}
-                    onChange={(e) => setmenu_Cost(e.target.value)}
-                  ></input>
-                </div>
-
-
-                <div className="form-group mb-2">
-                  <label className="form-label"> Menu Status</label>
-                  <input
-                    type="text"
-                    placeholder="Enter Menu Status"
-                    name="menu_Status"
-                    className="form-control"
-                    value={menu_Status}
-                    onChange={(e) => setmenu_Status(e.target.value)}
-                  ></input>
-                </div>
-
-
-
-                <div className="form-group mb-2">
-                  <label className="form-label"> Menu Picture</label>
+                  <label className="form-label"> รูปภาพ</label>
                   <input
                     type="file"
-                    placeholder="Enter Menu Picture"
+                    placeholder="กรุณาเพิ่มรูปภาพ"
                     name="menu_Pic"
                     className="form-control"
                     // value={menu_Pic}
@@ -216,7 +177,7 @@ const CreateMenuComponent = () => {
                 </div>
 
                 <Button disabled={isLoading} variant="btn btn-outline-success" onClick={handleClick}>
-                  {isLoading ? 'Loading...' : 'Save'}
+                  {isLoading ? 'Loading...' : 'บันทึก'}
                   {isLoading && <Spinner animation="border" size="sm" />}
                 </Button>
 
@@ -225,7 +186,7 @@ const CreateMenuComponent = () => {
                   style={{ marginLeft: "5px" }}
                   onClick={() => navigate("/menu")}
                 >
-                  Cancel
+                  ยกเลิก
                 </button>
               </form>
             </div>

@@ -18,15 +18,11 @@ const Profile = () => {
           <p>สวัสดีคุณ {currentUser.name_Emp}</p>
         </h3>
       </header>
-      <button className="btn btn-info" style={{margin: "20px"}}>แก้ไขข้อมูลส่วนตัว</button>
+      {/* <button className="btn btn-info" style={{margin: "20px"}}>แก้ไขข้อมูลส่วนตัว</button> */}
       <p>
-        <strong>Token:</strong> {currentUser.accessToken.substring(0, 20)} ...{" "}
-        {currentUser.accessToken.substr(currentUser.accessToken.length - 20)}
+        <strong>รหัสพนักงาน:</strong> {currentUser.id}
       </p>
-      <p>
-        <strong>Id:</strong> {currentUser.id}
-      </p>
-      <strong>Authorities:</strong>
+      <strong>สถานะ:</strong>
       <ul>
         {currentUser.roles &&
           currentUser.roles.map((role, index) => <li key={index}>{role}</li>)}

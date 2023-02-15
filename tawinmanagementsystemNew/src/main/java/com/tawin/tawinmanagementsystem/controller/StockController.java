@@ -20,9 +20,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tawin.tawinmanagementsystem.entity.BackupStock;
+import com.tawin.tawinmanagementsystem.entity.MirrorStock;
 import com.tawin.tawinmanagementsystem.entity.Stock;
 import com.tawin.tawinmanagementsystem.exception.ResourceNotFoundException;
 import com.tawin.tawinmanagementsystem.repository.BackupStockRepository;
+import com.tawin.tawinmanagementsystem.repository.MirrorStockRepo;
 import com.tawin.tawinmanagementsystem.repository.StockRepository;
 
 //import Util.SecurityUtil;
@@ -36,6 +38,9 @@ public class StockController {
 	
 	@Autowired
 	BackupStockRepository backupRepo;
+	
+	@Autowired
+	MirrorStockRepo mirrorRepo;
 	
 	Stock stock;
 	
@@ -78,10 +83,26 @@ public class StockController {
 	    return stockRepo.stockCut(stockType_ID);
 	}
 	
+	
+	
 	@PostMapping("/addStock")
 	public Stock createStock(@RequestBody Stock stock) {
+		//MirrorStock mirror = new MirrorStock();
 		stock.setStock_TimeStamp(LocalDateTime.now());
+		stock.setPricePerUnit((double)stock.getStock_Cost()/stock.getStock_Qty());
+		
+//		mirror.setMirrorStock_ID(stock.getStock_ID());
+//		mirror.setMirrorStock_Cost(stock.getStock_Cost());
+//		mirror.setMirrorStock_Min(stock.getStock_Min());
+//		mirror.setMirrorStock_Qty(stock.getStock_Qty());
+//		mirror.setMirrorStock_TimeStamp(stock.getStock_TimeStamp());
+//		mirror.setMirrorPricePerUnit(stock.getPricePerUnit());
+//		mirror.setStockType_ID(stock.getStockType_ID());
+		
 		stockRepo.save(stock);
+		mirrorRepo.insertMirrorStock();
+		
+		
 		backupRepo.insertBackupStock();
 		return stock;
 	}

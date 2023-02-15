@@ -51,7 +51,7 @@ const UpdateStockComponent = (props) => {
     <div>
       {stock ? (
         <div className="edit-form">
-          <h2 style={{ textAlign: "center" }}>Stock Update</h2>
+          <h2 style={{ textAlign: "center" }}>อัพเดทวัตถุดิบ</h2>
           <form>
             <div className="form-group">
               <h4 style={{ textAlign: "center" }}>
@@ -64,7 +64,7 @@ const UpdateStockComponent = (props) => {
               </h4>
             </div>
             <div className="form-group">
-              <label htmlFor="description">Stock Qty</label>
+              <label htmlFor="description">จำนวนวัตถุดิบตงเหลือ</label>
               <input
                 type="text"
                 className="form-control"
@@ -75,7 +75,7 @@ const UpdateStockComponent = (props) => {
               />
             </div>
             <div className="form-group">
-              <label htmlFor="description">Stock Cost</label>
+              <label htmlFor="description">ต้นทุนวัตถุดิบ</label>
               <input
                 type="text"
                 className="form-control"
@@ -86,7 +86,7 @@ const UpdateStockComponent = (props) => {
               />
             </div>
             <div className="form-group">
-              <label htmlFor="description">Stock Min</label>
+              <label htmlFor="description">วัตถุดิบเหลือน้อยขั้นต่ำ</label>
               <input
                 type="text"
                 className="form-control"
@@ -98,14 +98,14 @@ const UpdateStockComponent = (props) => {
             </div>
           </form>
           <button className="btn btn-danger mr-2" onClick={cancel}>
-            Cancel
+            ยกเลิก
           </button>
           <button
             type="submit"
             className="btn btn-success"
             onClick={updateStock}
           >
-            Update
+            ยืนยัน
           </button>
         </div>
       ) : (

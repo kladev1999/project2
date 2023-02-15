@@ -179,7 +179,7 @@ const CreateEmployeeComponent = () => {
       return (
         <div>
           <div>
-            <h2 className="text-center">Update Employee</h2>
+            <h2 className="text-center">แก้ไขข้อมูลพนักงาน</h2>
           </div>
           <div className="input-roles">
             <div className="form-group mb-2">
@@ -202,7 +202,7 @@ const CreateEmployeeComponent = () => {
         </div>
       );
     } else {
-      return <h2 className="text-center">Add Employee</h2>;
+      return <h2 className="text-center">เพิ่มพนักงาน</h2>;
     }
   };
 
@@ -210,7 +210,7 @@ const CreateEmployeeComponent = () => {
     if (id) {
       return (
         <div className="form-group mb-2">
-          <label className="form-label"> Original : </label>
+          <label className="form-label"> ภาพเดิม : </label>
           <img
             src={pic + image}
             width="170"
@@ -224,7 +224,7 @@ const CreateEmployeeComponent = () => {
 
   const Newimage = () => {
     if (id) {
-      return <span>New </span>;
+      return <span> </span>;
     }
   };
 
@@ -238,27 +238,12 @@ const CreateEmployeeComponent = () => {
             {title()}
             <div className="card-body">
               <form onSubmit={handleClick}>
-                {/* <div className="form-group mb-2">
-                  <select
-                    className="custom-select"
-                    style={{ width: "300px", marginLeft: "10px" }}
-                    id="role_id"
-                    name="role_id"
-                    value={role_id.roleName}
-                    onChange={handleRole}
-                  >
-                    {role_id.map((role_id, index) => (
-                      <option key={index} value={role_id.roleName}>
-                        {role_id.roleName}
-                      </option>
-                    ))}
-                  </select>
-                </div> */}
+
                 <div className="form-group mb-2">
-                  <label className="form-label"> Name :</label>
+                  <label className="form-label"> ชื่อ :</label>
                   <input
                     type="text"
-                    placeholder="Name"
+                    placeholder="ชื่อ"
                     name="Name"
                     className="form-control"
                     value={name_Emp}
@@ -268,10 +253,10 @@ const CreateEmployeeComponent = () => {
                 </div>
 
                 <div className="form-group mb-2">
-                  <label className="form-label"> Username:</label>
+                  <label className="form-label"> ชื่อผู้ใช้งาน:</label>
                   <input
                     type="text"
-                    placeholder="Username"
+                    placeholder="ชื่อผู้ใช้งาน"
                     name="Username"
                     className="form-control"
                     value={username}
@@ -281,10 +266,10 @@ const CreateEmployeeComponent = () => {
                 </div>
 
                 <div className="form-group mb-2">
-                  <label className="form-label"> Password :</label>
+                  <label className="form-label"> รหัสผ่าน :</label>
                   <input
                     type="password"
-                    placeholder="Password"
+                    placeholder="รหัสผ่าน"
                     name="Password"
                     className="form-control"
                     value={password}
@@ -293,9 +278,9 @@ const CreateEmployeeComponent = () => {
                   ></input>
                 </div>
                 <div className="form-group mb-2">
-                  <label className="form-label"> Phone :</label>
+                  <label className="form-label"> เบอร์โทรศัพท์มือถือ :</label>
                   <input
-                    placeholder="Phone"
+                    placeholder="เบอร์โทรศัพท์มือถือ"
                     name="Phone"
                     className="form-control"
                     value={phone}
@@ -304,9 +289,9 @@ const CreateEmployeeComponent = () => {
                   ></input>
                 </div>
                 <div className="form-group mb-2">
-                  <label className="form-label"> Address :</label>
+                  <label className="form-label"> ที่อยู่ :</label>
                   <input
-                    placeholder="Address"
+                    placeholder="ที่อยู่"
                     name="Address"
                     className="form-control"
                     value={address}
@@ -314,9 +299,9 @@ const CreateEmployeeComponent = () => {
                   ></input>
                 </div>
                 <div className="form-group mb-2">
-                  <label className="form-label"> Line :</label>
+                  <label className="form-label"> ไลน์ไอดี :</label>
                   <input
-                    placeholder="Line"
+                    placeholder="ไลน์ไอดี"
                     name="Line"
                     className="form-control"
                     value={line}
@@ -327,12 +312,12 @@ const CreateEmployeeComponent = () => {
                 {Updateimg()}
 
                 <div className="form-group mb-2">
-                  <label className="form-label"> {Newimage()}Picture :</label>
+                  <label className="form-label"> {Newimage()}ภาพใหม่ :</label>
                   <input
                     type="file"
                     multiple
                     accept="image/*"
-                    placeholder="Picture"
+                    placeholder="รูปภาพ"
                     name="image"
                     className="form-control"
                     // value={image}
@@ -357,14 +342,14 @@ const CreateEmployeeComponent = () => {
                   variant="btn btn-outline-success"
                   onClick={handleClick}
                 >
-                  {isLoading ? "Loading..." : "Save"}
+                  {isLoading ? "Loading..." : "ยืนยัน"}
                   {isLoading && <Spinner animation="border" size="sm" />}
                 </Button>
                 <Link to="/employee" className="btn btn-outline-danger mx-2">
                   {" "}
-                  Cancel{" "}
+                  ยกเลิก{" "}
                 </Link>
-                <button className="fluid ui button blue">Submit</button>
+               
               </form>
             </div>
           </div>

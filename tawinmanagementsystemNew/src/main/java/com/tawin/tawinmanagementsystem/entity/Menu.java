@@ -42,14 +42,14 @@ public class Menu implements Serializable{
 	@Column(length = 255)
 	private String menu_Pic;
 	
-	@Column(nullable = false,length = 10)
-	private Integer menu_Qty;
+//	@Column(nullable = false,length = 10)
+//	private Integer menu_Qty;
+//	
+//	@Column(nullable = false,length = 10)
+//	private Integer menu_Cost;
 	
-	@Column(nullable = false,length = 10)
-	private Integer menu_Cost;
-	
-	@Column(nullable = false,length = 50)
-	private String menu_Status;
+//	@Column(nullable = false,length = 50)
+//	private String menu_Status;
 	
 	@Column(length = 200)
 	private LocalDateTime menu_TimeStamp;

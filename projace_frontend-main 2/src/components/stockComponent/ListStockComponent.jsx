@@ -86,14 +86,14 @@ const ListStockComponent = () => {
 
     return (
       <>
-        วันที่ {day} เวลา {time[0]}
+        {day} 
       </>
     )
   }
 
   return (
     <div className="container">
-      <h2 className="text-center">Stock List</h2>
+      <h2 className="text-center">ข้อมูลสต๊อก</h2>
       <div className="">
         <button
           className="btn btn-primary mr-2 "
@@ -101,7 +101,7 @@ const ListStockComponent = () => {
           onClick={addStock}
         >
           {" "}
-          Add Stock
+          เพิ่มสต๊อก
         </button>
 
         <button
@@ -110,7 +110,7 @@ const ListStockComponent = () => {
           onClick={addStockType}
         >
           {" "}
-          Add StockType
+          เพิ่มชื่อวัตถุดิบ
         </button>
 
         <input
@@ -122,17 +122,18 @@ const ListStockComponent = () => {
       </div>
 
       <br></br>
-      <div className="row">
-        <table className="table table-striped table-bordered">
+      <div className="row" style={{textAlign:"center"}}>
+        <table className="table table-striped table-bordered" >
           <thead>
             <tr>
-              <th> Stock ID </th>
-              <th> StockType Name </th>
-              <th> Stock Qty </th>
-              <th> Stock Cost </th>
-              <th> Stock Min </th>
-              <th> Stock TimeStamp </th>
-              <th> Action </th>
+              <th> รหัสวัตถุดิบ </th>
+              <th> ชื่อวัตถุดิบ </th>
+              <th> จำนวนคงเหลือ </th>
+              <th> ต้นทุนวัตถุดิบ </th>
+              <th> วัตถุดิบตงเหลือขั้นต่ำ </th>
+              <th> ต้นทุนวัตถุดิบ </th>
+              <th> วันที่เพิ่มวัตถุดิบ </th>
+              <th> จัดการวัตถุดิบ </th>
             </tr>
           </thead>
           <tbody>
@@ -146,27 +147,29 @@ const ListStockComponent = () => {
                 <td>{stocks.stock_Qty}</td>
                 <td>{stocks.stock_Cost}</td>
                 <td>{stocks.stock_Min}</td>
+                <td>{stocks.pricePerUnit}</td>
                 <td>{timestamp(stocks.stock_TimeStamp) }</td>
                 <td>
                   <button
                     onClick={() => editStock(stocks.stock_ID)}
-                    className="btn btn-info"
+                    className="btn btn-warning"
                   >
-                    Update{" "}
+                    แก้ไข{" "}
                   </button>
-                  <button
-                    style={{ marginLeft: "5px" }}
-                    onClick={() => deleteStock(stocks.stock_ID)}
-                    className="btn btn-danger"
-                  >
-                    Delete{" "}
-                  </button>
-                  <button
+                  
+                  {/* <button
                     style={{ marginLeft: "5px" }}
                     onClick={() => viewStock(stocks.stock_ID)}
                     className="btn btn-info"
                   >
                     View{" "}
+                  </button> */}
+                  <button
+                    style={{ marginLeft: "5px" }}
+                    onClick={() => deleteStock(stocks.stock_ID)}
+                    className="btn btn-danger"
+                  >
+                    ลบ{" "}
                   </button>
                 </td>
               </tr>

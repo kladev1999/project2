@@ -193,7 +193,7 @@ function ListTotalOrdermenu() {
                     <th className="text-center"> จำนวน </th>
                     <th className="text-center"> ราคา </th>
                     <th className="text-center"> พนักงานที่รับ </th>
-                    <th className="text-center"> Action </th>
+                    <th className="text-center"> จัดการ </th>
                   </tr>
                 </thead>
 
