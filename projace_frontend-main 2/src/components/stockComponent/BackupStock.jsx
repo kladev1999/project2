@@ -22,7 +22,7 @@ function BackupStock() {
     };
   
     const deleteStock = (stock_ID) => {
-      if (window.confirm("Are you sure you want to delete")) {
+      if (window.confirm("คุณต้องการที่จะลบหรือไม่")) {
         StockService.deleteStock(stock_ID)
           .then((response) => {
             getAllStocks();
@@ -100,12 +100,12 @@ function BackupStock() {
           <table className="table table-striped table-bordered">
             <thead>
               <tr>
-                <th> Stock ID </th>
-                <th> StockType Name </th>
-                <th> Stock Qty </th>
-                <th> Stock Cost </th>
-                <th> Stock Min </th>
-                <th> Stock TimeStamp </th>
+                <th> รหัสสต๊อก </th>
+                <th> ชื่อสต๊อก </th>
+                <th> จำนวน </th>
+                <th> ต้นทุน </th>
+                <th> จำนวนเหลือน้อยที่แจ้งเตือน </th>
+                <th> เวลาที่เพิ่ม </th>
               </tr>
             </thead>
             <tbody>

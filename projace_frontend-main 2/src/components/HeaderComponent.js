@@ -280,12 +280,12 @@ const HeaderComponent = () => {
                 >
                   <MenuItem>
                     <Typography onClick={proFile} textAlign="center">
-                      Profile!
+                      บัญชีผู้ใช้
                     </Typography>
                   </MenuItem>
                   <MenuItem>
                     <Typography onClick={logOut} textAlign="center">
-                      Logout!
+                      ออกจากระบบ
                     </Typography>
                   </MenuItem>
                 </Menu>
@@ -306,16 +306,16 @@ const HeaderComponent = () => {
             {showAdminBoard && (
               <List>
                 {[
-                  "Home",
-                  "Menu",
-                  "Stock",
-                  "StockMenu",
-                  "Table",
-                  "Employee",
-                  "Promotion",
-                  "Kitchen",
-                  "BarCashier",
-                  "IncomeExpense",
+                  "หน้าหลัก",
+                  "เมนูอาหาร",
+                  "วัตถุดิบ",
+                  "วัตถุดิบในเมนู",
+                  "โต๊ะ",
+                  "พนักงาน",
+                  "โปรโมชั่น",
+                  "ครัว",
+                  "บาร์น้ำ",
+                  "รายรับ - รายจ่าย",
                 ].map((text, index) => (
                   <ListItem key={text} disablePadding sx={{ display: "block" }}>
                     <ListItemButton

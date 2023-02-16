@@ -72,7 +72,7 @@ function TebleComponent() {
   };
 
   const deleteTabel = (table_ID) => {
-    if (window.confirm("Are you sure you want to delete table")) {
+    if (window.confirm("คุณต้องการที่จะลบโต๊ะหรือไม่ ?")) {
       TableService.deleteTable(table_ID)
         .then(() => {
           getAllTebles();
@@ -167,7 +167,7 @@ function TebleComponent() {
   };
 
   const deleteTable = (params) => {
-    if(window.confirm('Are you sure you want to delete')){
+    if(window.confirm('คุณต้องการที่จะลบโต๊ะหรือไม่ ?')){
       TableService.deleteTable(params).then(() => {
         getAllTebles();
       })
@@ -232,8 +232,8 @@ function TebleComponent() {
               <div className="product__item">
                 <div className="product__content">
                   <h5>
-                    <h2>โต๊ะ {t.table_ID}</h2>
-                    <h4> โซน {t.table_Zone}</h4>
+                    <h2>โต๊ะ {t.table_Zone}</h2>
+                    {/* <h4> โซน {t.table_Zone}</h4> */}
                   </h5>
                   <div className="text-center">
                     <button

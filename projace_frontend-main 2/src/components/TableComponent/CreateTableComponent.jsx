@@ -17,7 +17,7 @@ function CreateTableComponent() {
   }
 
   const validationSchema = Yup.object().shape({
-    table: Yup.string().required("name is required"),
+    table: Yup.string().required("กรุณากรอกโต๊ะ"),
   });
 
   const formOptions = { resolver: yupResolver(validationSchema) };
@@ -79,15 +79,15 @@ const getAllTebles = () => {
       <div className="container">
         <div className="row">
           <div className="card col-md-6 offset-md-3 offset-md-3">
-          <h3>add Table</h3>
+          <h3>เพิ่มโต๊ะ</h3>
             <div className="card-body">
             {user && (
               <form>
                 <div className="form-group mb-2">
-                  <label className="form-label"> Table Zone:</label>
+                  <label className="form-label"> โซนโต๊ะ:</label>
                   <input
                     type="text"
-                    placeholder="tableZone"
+                    placeholder="โซนโต๊ะ"
                   
                     name="ชื่อโต๊ะ"
                     value={table_Zone}
@@ -102,8 +102,8 @@ const getAllTebles = () => {
                       {errors.table?.message}
                     </div>
                 </div>
-                <button className="btn btn-success" onClick={handleSubmit(saveTable)} > Submit </button>
-                <Link to="/table" className="btn btn-danger"> Cancel </Link>
+                <button className="btn btn-success" onClick={handleSubmit(saveTable)} style={{marginRight:"5px"}} > ยืนยัน </button>
+                <Link to="/table" className="btn btn-danger"> ยกเลิก </Link>
               </form>
  )}
               {!user && (

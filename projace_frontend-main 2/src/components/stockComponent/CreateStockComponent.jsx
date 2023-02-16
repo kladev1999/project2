@@ -54,7 +54,7 @@ const CreateStockComponent = () => {
   }, [stock_Qty,stock_Cost,stock_Min]);
 
   const validationSchema = Yup.object().shape({
-    stockType_ID: Yup.string().required("Type is required"),
+    stockType_ID: Yup.string().required("กรุณาระบุชื่อวัตถุดิบ"),
   });
   const formOptions = { resolver: yupResolver(validationSchema) };
 
@@ -112,7 +112,7 @@ const CreateStockComponent = () => {
                   <input
                     type="text"
                     className="form-control"
-                    placeholder="Enter Stock Qty"
+                    placeholder="กรุณากรอกจำนวนวัตถุดิบ"
                     name="stock_Qty"
                     value={stock_Qty}
                     onChange={(e) => setStock_Qty(e.target.value)}
@@ -123,7 +123,7 @@ const CreateStockComponent = () => {
                   <label className="form-label"> ต้นทุนวัตถุดิบ </label>
                   <input
                     type="text"
-                    placeholder="Enter Stock Cost"
+                    placeholder="กรุณากรอกต้นทุนวัตถุดิบ"
                     name="stock_Cost"
                     className="form-control"
                     value={stock_Cost}
@@ -135,7 +135,7 @@ const CreateStockComponent = () => {
                   <label className="form-label"> จำนวนคงเหลือขั้นต่ำ </label>
                   <input
                     type="text"
-                    placeholder="Enter Stock Min"
+                    placeholder="กรุณากรอกจำนวนคงเหลือขั้นต่ำ"
                     name="stock_Min"
                     className="form-control"
                     value={stock_Min}

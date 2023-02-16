@@ -14,17 +14,16 @@ import com.tawin.tawinmanagementsystem.entity.Menu;
 import com.tawin.tawinmanagementsystem.entity.Order_Menu;
 import com.tawin.tawinmanagementsystem.entity.Stock;
 import com.tawin.tawinmanagementsystem.entity.Stock_Menu;
+import javax.persistence.EntityManager;
 
 public interface Order_MenuRepository extends JpaRepository<Order_Menu, Integer> {
-	
 
-        @Query(value = "SELECT * \n"
-        		+ "FROM order_menu \n"
-        		+ "INNER JOIN total_order \n"
-        		+ "ON order_menu.total_order_id = total_order.total_order_id \n"
-        		+ "WHERE compo_site = :compoSite AND total_order_status = :statusTable \n"
-        		+ "ORDER BY order_menu.status_id AND order_menu.order_menu_time_stamp ASC", nativeQuery = true)
-        List<Order_Menu> findByTotalOrder_ID(@Param("compoSite") Integer compoSite,@Param("statusTable") Integer statusTable);
+	@Query(value = "SELECT * \n" + "FROM order_menu \n" + "INNER JOIN total_order \n"
+			+ "ON order_menu.total_order_id = total_order.total_order_id \n"
+			+ "WHERE compo_site = :compoSite AND total_order_status = :statusTable \n"
+			+ "ORDER BY order_menu.status_id AND order_menu.order_menu_time_stamp ASC", nativeQuery = true)
+	List<Order_Menu> findByTotalOrder_ID(@Param("compoSite") Integer compoSite,
+			@Param("statusTable") Integer statusTable);
 
 	@Query(value = "SELECT o.menu_id,m.menu_name,m.menu_pic FROM order_menu o inner join menu m on o.menu_id = m.menu_id group by menu_id order by SUM(order_menu_qty) DESC LIMIT 5", nativeQuery = true)
 	List<Object> Bestseller();
@@ -36,7 +35,7 @@ public interface Order_MenuRepository extends JpaRepository<Order_Menu, Integer>
 	List<Order_Menu> Bestsellermenu();
 
 	@Query(value = "SELECT DISTINCT a.stock_type_id FROM stock_menu b  ,stock a WHERE  a.stock_type_id = b.stock_type_id  AND b.menu_id = :menu_ID", nativeQuery = true)
-	public List<String> findStock(@Param("menu_ID") Long menu_ID);
+	public List<Long> findStock(@Param("menu_ID") Long menu_ID);
 
 	// ตัดสต๊อกโดยการรับค่า stockType_ID เข้ามา
 	// ตัวนี้เวิร์คลองแล้ว
@@ -46,25 +45,32 @@ public interface Order_MenuRepository extends JpaRepository<Order_Menu, Integer>
 			+ "(SELECT a.stock_qty - b.stock_menu_qty FROM stock a,stock_menu b WHERE  a.stock_type_id = b.stock_type_id AND a.stock_type_id = :stockType_ID GROUP BY a.stock_type_id HAVING MIN(a.stock_time_stamp)) "
 			+ "WHERE stock.stock_type_id = :stockType_ID AND stock.stock_time_stamp = (SELECT MIN(stock.stock_time_stamp) FROM stock WHERE stock_type_id = :stockType_ID);", nativeQuery = true)
 	public int stockCutLoop(@Param("stockType_ID") String stockType_ID);
-	
-	
-	@Query(value = "SET @@sql_mode = '';\n"
-			+ "SELECT a.stock_qty - b.stock_menu_qty\n"
-			+ "FROM stock a,stock_menu b\n"
-			+ "WHERE  a.stock_type_id = b.stock_type_id AND a.stock_type_id = 4\n"
-			+ "GROUP BY a.stock_type_id \n"
-			+ "HAVING MIN(a.stock_time_stamp);",nativeQuery = true)
-	public int beforeUpdateStock(String stockType_ID);
+
+	@Modifying
+	@Transactional
+	@Query(value = "SET @@sql_mode = ''; SELECT (a.stock_qty - b.stock_menu_qty) FROM stock a, stock_menu b WHERE a.stock_type_id = b.stock_type_id AND a.stock_type_id = 4 AND a.stock_time_stamp = (SELECT MIN(stock_time_stamp)  FROM stock WHERE stock.stock_type_id = 4   GROUP BY stock.stock_type_id) GROUP BY a.stock_type_id;\n", nativeQuery = true)
+	public int beforeUpdateStock(Long stockType_ID);
+
+//	@Modifying
+//	@Transactional
+//	@Query(value = "SET @@sql_mode='';\n"
+//			+ "	SELECT CAST(a.stock_qty - b.stock_menu_qty AS SIGNED) as result\n"
+//			+ "	FROM stock a\n"
+//			+ "	INNER JOIN stock_menu b ON a.stock_type_id = b.stock_type_id\n"
+//			+ "	WHERE a.stock_type_id = :stockType_ID\n"
+//			+ "	AND a.stock_time_stamp = (SELECT MIN(stock_time_stamp) FROM stock WHERE stock.stock_type_id = :stockType_ID)\n"
+//			+ "	GROUP BY a.stock_type_id"
+//			,nativeQuery = true)
+//	public int beforeUpdateStock(@Param("stockType_ID") String stockType_ID);
+//	
 
 	@Query(value = "SELECT (a.price_per_unit * b.stock_menu_qty) \n" + "FROM stock a,stock_menu b \n"
 			+ "WHERE  a.stock_type_id = b.stock_type_id AND a.stock_type_id = :stockType_ID AND b.menu_id = :menu_ID\n"
 			+ "AND a.stock_time_stamp = (SELECT MIN(a.stock_time_stamp) \n"
 			+ "                              FROM stock a \n"
 			+ "                              WHERE a.stock_type_id = :stockType_ID)", nativeQuery = true)
-	public int findCostMenu(String stockType_ID, Long menu_ID);
+	public int findCostMenu(Long stockType_ID, Long menu_ID);
 
-	
-	
 //	@Query(value = "SET @@sql_mode = '';"+"SELECT (a.stock_qty - b.stock_menu_qty)\n"
 //			+ "  FROM stock a,stock_menu b\n" + "  WHERE  a.stock_type_id = b.stock_type_id    AND \n"
 //			+ "  a.stock_type_id = :stockType_ID AND menu_id = :menu_ID\n" + "  GROUP BY a.stock_type_id\n"
@@ -73,24 +79,21 @@ public interface Order_MenuRepository extends JpaRepository<Order_Menu, Integer>
 
 	@Modifying
 	@Transactional
-	@Query(value="UPDATE stock\n"
-			+ "SET stock_qty = :num\n"
+	@Query(value = "UPDATE stock\n" + "SET stock_qty = :num\n"
 			+ "WHERE stock_type_id = :stockType_ID AND stock_time_stamp = \n"
-			+ "(SELECT min_ts FROM (SELECT MIN(stock_time_stamp) AS min_ts FROM stock WHERE stock_type_id = :stockType_ID) AS temp)",nativeQuery = true)
-	public void updateStock(int num,String stockType_ID);
-	
-	@Query(value = "SET @@sql_mode = '';"
-			+ ""+"SELECT (a.stock_qty - b.stock_menu_qty)\n"
+			+ "(SELECT min_ts FROM (SELECT MIN(stock_time_stamp) AS min_ts FROM stock WHERE stock_type_id = :stockType_ID) AS temp)", nativeQuery = true)
+	public void updateStock(int num, String stockType_ID);
+
+	@Query(value = "SET @@sql_mode = '';" + "" + "SELECT (a.stock_qty - b.stock_menu_qty)\n"
 			+ "  FROM stock a,stock_menu b\n" + "  WHERE  a.stock_type_id = b.stock_type_id    AND \n"
 			+ "  a.stock_type_id = :stockType_ID AND menu_id = :menu_ID\n" + "  GROUP BY a.stock_type_id\n"
 			+ "  HAVING MIN(a.stock_time_stamp);", nativeQuery = true)
 	public int findStock_Nagative_Qty(@Param("stockType_ID") String stockType_ID, @Param("menu_ID") Long menu_ID);
-	
-	
+
 	@Query(value = "SET @@sql_mode = '';" + "SELECT  stock_time_stamp \n" + "    FROM stock a,stock_menu b\n"
 			+ "    WHERE  a.stock_type_id = b.stock_type_id    AND \n" + "  a.stock_type_id = :stockType_ID \n"
 			+ "  GROUP BY a.stock_type_id \n" + "  HAVING MIN(a.stock_time_stamp);", nativeQuery = true)
-	public String findStock_Nagative_TimeStamp(@Param("stockType_ID") String stockType_ID);
+	public String findStock_Nagative_TimeStamp(@Param("stockType_ID") Long stockType_ID);
 
 	// เพิ่มสต๊อกโดยการรับค่า stockType_ID เข้ามา
 	// ตัวนี้เวิร์คลองแล้ว
@@ -102,7 +105,7 @@ public interface Order_MenuRepository extends JpaRepository<Order_Menu, Integer>
 			+ "WHERE stock.stock_type_id = :stockType_ID "
 			+ "AND stock.stock_time_stamp = (SELECT MIN(stock.stock_time_stamp) "
 			+ "FROM stock WHERE stock_type_id = :stockType_ID)", nativeQuery = true)
-	public int stockAddLoop(@Param("stockType_ID") String stockType_ID);
+	public int stockAddLoop(@Param("stockType_ID") Long stockType_ID);
 
 	// หา stockTimeStamp แล้วก็ลบ record ออก
 	@Modifying
@@ -146,7 +149,7 @@ public interface Order_MenuRepository extends JpaRepository<Order_Menu, Integer>
 
 	@Modifying
 	@Transactional
-	@Query(value = "UPDATE order_menu " + "SET order_menu.status_id = 3 "
+	@Query(value = "UPDATE order_menu " + "SET order_menu.status_id = 4 "
 			+ "WHERE order_menu.order_menu_id = :orderMenu_ID", nativeQuery = true)
 	public int cancelStatus(@Param("orderMenu_ID") Long orderMenu_ID);
 
@@ -202,14 +205,12 @@ public interface Order_MenuRepository extends JpaRepository<Order_Menu, Integer>
 			+ "AND  EXTRACT(YEAR FROM order_menu.order_menu_time_stamp) = :year", nativeQuery = true)
 	public int findMenuDate(Long menu_ID, String day, String month, String year);
 
-	//แสดงรายรับรายจ่ายทั้งหมด
-	@Query(value = "SELECT SUM(order_menu.order_menu_qty)\n"
-			+ "FROM order_menu\n"
-			+ "WHERE order_menu.menu_id = :menu_ID\n"
-			+ "GROUP BY order_menu.menu_id", nativeQuery = true)
+	// แสดงรายรับรายจ่ายทั้งหมด
+	@Query(value = "SELECT SUM(order_menu.order_menu_qty)\n" + "FROM order_menu\n"
+			+ "WHERE order_menu.menu_id = :menu_ID\n" + "GROUP BY order_menu.menu_id", nativeQuery = true)
 	public int findAllDetails(Long menu_ID);
 
-	//แสดงรายรับรายจ่ายทั้งหมด
+	// แสดงรายรับรายจ่ายทั้งหมด
 	@Query(value = "SELECT SUM(order_menu.order_menu_qty)\n" + "FROM order_menu\n"
 			+ "WHERE order_menu.menu_id = :menu_ID ", nativeQuery = true)
 	public int findAllDetail(Long menu_ID);
@@ -239,5 +240,11 @@ public interface Order_MenuRepository extends JpaRepository<Order_Menu, Integer>
 
 	@Query(value = "SELECT menu.menu_name FROM menu WHERE menu.menu_id = :menu_ID", nativeQuery = true)
 	public String findMenuByID(Long menu_ID);
+
+	@Modifying
+	@Transactional
+	@Query(value = "UPDATE order_menu " + "SET order_menu.status_id = 3 "
+			+ "WHERE order_menu.order_menu_id = :orderMenu_ID", nativeQuery = true)
+	public int finishedStatus(@Param("orderMenu_ID") Long orderMenu_ID);
 
 }

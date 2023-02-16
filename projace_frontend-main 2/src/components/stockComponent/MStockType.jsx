@@ -40,14 +40,14 @@ function MStockType() {
     return (
         <div className='container'>
                 <div className="py-4">
-                    <h2 className="text-center"> List stockType </h2>
-                    <Link to="/addStockType" className="btn btn-primary mb-2" > Add stockType </Link>
+                    <h2 className="text-center"> ชื่อวัตถุดิบ </h2>
+                    <Link to="/addStockType" className="btn btn-primary mb-2" > เพิ่มชื่อวัตถุดิบ </Link>
                     <table className='table table-striped table-bordered '>
                         <thead>
                             <tr>
-                                <th >ID</th>
-                                <th >Name</th>
-                                <th>Actions</th>
+                                <th >รหัสวัตถุดิบ</th>
+                                <th >ชื่อวัตถุดิบ</th>
+                                <th>การจัดการ</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -79,7 +79,7 @@ function MStockType() {
                     </table>
                 </div>
                 <Link className="btn btn-primary my-2" to={"/stock"}>
-                  Back
+                  กลับ
                 </Link>
             </div>
             

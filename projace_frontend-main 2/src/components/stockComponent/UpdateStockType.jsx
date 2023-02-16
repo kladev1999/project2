@@ -14,8 +14,8 @@ function UpdateStockType() {
     const navigate = useNavigate();
 
     const validationSchema = Yup.object().shape({
-        stockType_Name: Yup.string().required("stockType_Name is required"),
-        stockType_Unit: Yup.string().required("stockType_Unit is required"),
+        stockType_Name: Yup.string().required("กรุณากรอกชื่อวัตถุดิบ"),
+        stockType_Unit: Yup.string().required("กรุณากรอกหน่วย"),
       });
       const formOptions = { resolver: yupResolver(validationSchema) };
     
@@ -75,15 +75,15 @@ return (
     <div className="container">
       <div className="row">
         <div className="card col-md-6 offset-md-3 offset-md-3">
-        <h3>Update StockType</h3>
+        <h3>อัพเดทชื่อวัตถุดิบ</h3>
           <div className="card-body">
           {user && (
             <form>
               <div className="form-group mb-2">
-                <label className="form-label"> StockType :</label>
+                <label className="form-label"> ชื่อวัตถุดิบ :</label>
                 <input
                   type="text"
-                  placeholder="StockType"
+                  placeholder="กรุณากรอกชื่อวัตถุดิบ"
                   name="StockType"
                   value={stockType}
                   {...register('stockType_Name')}
@@ -98,10 +98,10 @@ return (
                     </div>
               </div>
               <div className="form-group mb-2">
-                <label className="form-label"> StockType :</label>
+                <label className="form-label"> หน่วย :</label>
                 <input
                   type="text"
-                  placeholder="StockType"
+                  placeholder="กรุณากรอกหน่วย"
                   name="StockType"
                   value={stockType_Unit}
                   {...register('stockType_Unit')}
@@ -115,9 +115,9 @@ return (
                       {errors.stockType_Unit?.message}
                     </div>
               </div>
-              <button className="btn btn-success" onClick={handleSubmit(StockType)} > Update </button>
+              <button className="btn btn-success" onClick={handleSubmit(StockType)} > ยืนยัน </button>
               {" "}
-              <Link to="/MStockType" className="btn btn-danger"> Cancel </Link>
+              <Link to="/MStockType" className="btn btn-danger"> ยกเลิก </Link>
             </form>
 )}
             {!user && (

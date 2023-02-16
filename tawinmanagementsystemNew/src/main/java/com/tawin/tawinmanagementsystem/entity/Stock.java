@@ -20,9 +20,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Data
 @Entity
 @Transactional
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "stock")
@@ -54,6 +54,7 @@ public class Stock implements Serializable{
 	@JoinColumn(name = "stockType_ID")
     private StockType stockType_ID;
 
+	
    
 	
 }

@@ -11,9 +11,10 @@ function ListTotalOrdermenuEmp() {
 
   const [checkPay, setCheckPay] = useState([]);
 
+
   let TotalPrice = list?.reduce(
     (prev, cur) => 
-    cur.status_ID.status_ID !== 3 ?
+    cur.status_ID.status_ID !== 4 ?
     prev + cur.menu_ID.menu_Price * cur.orderMenu_Qty : prev+0,
     0
   );
@@ -114,6 +115,9 @@ function ListTotalOrdermenuEmp() {
       );
     }
   };
+  const toStock = () =>{
+    navigate("/stock");
+  }
 
   const ChechBNT = () => {
     if (list.length > 0) {
@@ -125,6 +129,13 @@ function ListTotalOrdermenuEmp() {
             className="btn btn-outline-primary"
           >
             กลับ
+          </button>
+          <button
+          style={{marginRight: "5px" }}
+          onClick={() => toStock()}
+          className="btn btn-outline-warning"
+          >
+            วัตถุดิบ
           </button>
         </div>
       );

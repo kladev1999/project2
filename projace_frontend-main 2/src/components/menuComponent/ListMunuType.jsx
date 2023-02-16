@@ -40,14 +40,14 @@ function ListMunuType() {
     return (
         <div className='container'>
                 <div className="py-4">
-                    <h2 className="text-center"> List stockType </h2>
-                    <Link to="/addMenuType" className="btn btn-primary mb-2" > Add MenuType </Link>
+                    <h2 className="text-center"> ชนิดเมนู </h2>
+                    <Link to="/addMenuType" className="btn btn-primary mb-2" > เพิ่มชนิดเมนู </Link>
                     <table className='table table-striped table-bordered '>
                         <thead>
                             <tr>
-                                <th >ID</th>
-                                <th >Name</th>
-                                <th>Actions</th>
+                                <th >รหัสชนิดเมนู</th>
+                                <th >ชื่อชนิดเมนู</th>
+                                <th>การจัดการ</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -79,7 +79,7 @@ function ListMunuType() {
                     </table>
                 </div>
                 <Link className="btn btn-primary my-2" to={"/menu"}>
-                  Back
+                  กลับ
                 </Link>
             </div>
             

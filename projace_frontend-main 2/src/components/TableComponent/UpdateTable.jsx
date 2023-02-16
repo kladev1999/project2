@@ -14,7 +14,7 @@ function UpdateTable() {
     const navigate = useNavigate();
 
     const validationSchema = Yup.object().shape({
-        table: Yup.string().required("name is required"),
+        table: Yup.string().required("กรุณากรอกโต๊ะ"),
       });
 
       const formOptions = { resolver: yupResolver(validationSchema) };
@@ -71,12 +71,12 @@ function UpdateTable() {
     <div className="container">
       <div className="row">
         <div className="card col-md-6 offset-md-3 offset-md-3">
-        <h3>Update Table</h3>
+        <h3>แก้ไขโต๊ะ</h3>
           <div className="card-body">
           {user && (
             <form>
               <div className="form-group mb-2">
-                <label className="form-label"> Table :</label>
+                <label className="form-label"> โต๊ะ :</label>
                 <input
                   type="text"
                   placeholder="ชื่อโต๊ะ"
@@ -93,9 +93,9 @@ function UpdateTable() {
                       {errors.table?.message}
                     </div>
               </div>
-              <button className="btn btn-success" onClick={handleSubmit(saveTable)} > Update </button>
+              <button className="btn btn-success" onClick={handleSubmit(saveTable)} style={{marginRight:"5px"}} > ยืนยัน </button>
               {" "}
-              <Link to="/table" className="btn btn-danger"> Cancel </Link>
+              <Link to="/table" className="btn btn-danger"> ยกเลิก </Link>
             </form>
 )}
             {!user && (

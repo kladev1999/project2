@@ -138,7 +138,7 @@ function Checkbill() {
       </div>
       <div className="text-center" style={{ margin: "10px" }}>
         <button className="btn btn-outline-dark" onClick={handlePrint}>
-          Print this out!
+          พิมพ์ใบเสร็จ
         </button>
       </div>
       <div
@@ -161,24 +161,16 @@ function Checkbill() {
 
                   <div class="col-md-6 text-right">
                     <h2>ใบเสร็จชำระเงิน</h2>
-                    <p class="text-muted">Due to: {days[2]}  {month}  {days[3]}</p>
+                    <p class="text-muted">วันที่: {days[2]}  {month}  {days[3]}</p>
                   </div>
                 </div>
 
                 <hr class="my-1" />
 
                 <div class="row pb-8 p-3">
-                  <div class="col-md-6">
-                    <h4>ข้อมูลลูกค้า</h4>
-                    <p class="mb-1">John Doe, Mrs Emma Downson</p>
-                  </div>
 
                   <div class="col-md-6 text-right">
                     <h4>รายละเอียดการขาย</h4>
-
-                    <p class="mb-1">
-                      <span class="text-muted">Name: </span>{" "}
-                    </p>
                   </div>
                 </div>
 
@@ -239,7 +231,7 @@ function Checkbill() {
                   </div>
 
                   <div class="py-3 px-5 text-right">
-                    <div class="mb-2">Discount</div>
+                    <div class="mb-2">ส่วนลด</div>
                     <div class="h2 font-weight-light">{discount}%</div>
                   </div>
 

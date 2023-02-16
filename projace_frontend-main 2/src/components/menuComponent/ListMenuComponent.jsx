@@ -182,9 +182,6 @@ const ListMenuComponent = () => {
                 <th> รูปเมนู </th>
                 <th> ชื่อเมนู </th>
                 <th> ราคาเมนู </th>
-                {/* <th> Menu Qty </th>
-                <th> Menu Cost </th>
-                <th> Menu Status </th> */}
                 <th> ชนิดเมนู </th>
                 <th> เวลาที่เพิ่มเมนู </th>
                 <th> จัดการเมนู </th>
@@ -204,8 +201,6 @@ const ListMenuComponent = () => {
                   </td>
                   <td>{menus.menu_Name}</td>
                   <td>{menus.menu_Price}</td>
-                  <td>{menus.menu_Qty}</td>
-                  <td>{menus.menu_Type}</td>
                   <td>{menus.typeMenu_ID.typeMenu_Name}</td>
                   <td>{timestamp(menus.menu_TimeStamp)}</td>
                   <td>

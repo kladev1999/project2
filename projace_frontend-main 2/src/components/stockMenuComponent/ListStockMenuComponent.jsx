@@ -99,7 +99,6 @@ const ListStockMenuComponent = () => {
             <tr>
               <th> StockMenu ID </th>
               <th> จำนวนที่ใช้ในเมนู (กรัม) </th>
-              
               <th> เวลาที่เพิ่ม </th>
               <th> ชื่อเมนู </th>
               <th> ชื่อวัตถุดิบ </th>
@@ -117,13 +116,13 @@ const ListStockMenuComponent = () => {
                 <td>{stockMenu.menu_ID.menu_Name}</td>
                 <td>{stockMenu.stockType_ID.stockType_Name}</td>
                 <td>
-                  <button
+                  {/* <button
                     style={{ marginLeft: "5px" }}
                     onClick={() => updateStockMenu(stockMenu.stockMenu_ID)}
                     className="btn btn-warning"
                   >
                     แก้ไข
-                  </button>
+                  </button> */}
                   
                   <button
                     style={{ marginLeft: "5px" }}

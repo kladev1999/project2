@@ -31,7 +31,7 @@ public class StockType implements Serializable{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long stockType_ID;
+	private int stockType_ID;
 	private String stockType_Name;
 	private String stockType_Unit;
 	

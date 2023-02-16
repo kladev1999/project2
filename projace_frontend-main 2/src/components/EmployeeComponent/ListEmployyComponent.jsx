@@ -21,7 +21,7 @@ function ListEmployyComponent() {
   };
 
   const deleteEmployee = (id) => {
-    if (window.confirm("you wont to delete this employee?")) {
+    if (window.confirm("คุณต้องการที่จะลบพนักงานหรือไม่ ?")) {
       EmployeeService.deleteEmployee(id)
         .then((response) => {
           getAllEmployee();

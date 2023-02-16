@@ -12,7 +12,7 @@ function UpdateMenutype() {
   const navigate = useNavigate();
 
   const validationSchema = Yup.object().shape({
-    Menutype: Yup.string().required("Menutype is required"),
+    Menutype: Yup.string().required("กรุณากรอกชนิดเมนู"),
     
   });
   const formOptions = { resolver: yupResolver(validationSchema) };
@@ -62,15 +62,15 @@ function UpdateMenutype() {
       <div className="container">
         <div className="row">
           <div className="card col-md-6 offset-md-3 offset-md-3">
-            <h3>Update StockType</h3>
+            <h3>อัพเดทชนิดเมนู</h3>
             <div className="card-body">
               {user && (
                 <form>
                   <div className="form-group mb-2">
-                    <label className="form-label"> StockType :</label>
+                    <label className="form-label"> ชนิดเมนู :</label>
                     <input
                       type="text"
-                      placeholder="StockType"
+                      placeholder="ชนิดเมนู"
                       name="MenuType"
                       value={Menutype}
                       {...register('Menutype')}
@@ -88,11 +88,11 @@ function UpdateMenutype() {
                     onClick={handleSubmit(MenuType)}
                   >
                     {" "}
-                    Update{" "}
+                    ยืนยัน{" "}
                   </button>{" "}
                   <Link to="/ListMunuType" className="btn btn-danger">
                     {" "}
-                    Cancel{" "}
+                    ยกเลิก{" "}
                   </Link>
                 </form>
               )}

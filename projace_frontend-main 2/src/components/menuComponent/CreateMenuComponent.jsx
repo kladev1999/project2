@@ -14,8 +14,6 @@ const CreateMenuComponent = () => {
   const [menu_Name, setmenu_Name] = useState([]);
   const [menu_Price, setmenu_Price] = useState([]);
   // const [menu_Qty, setmenu_Qty] = useState([]);
-  // const [menu_Cost, setmenu_Cost] = useState([]);
-  // const [menu_Status, setmenu_Status] = useState([]);
   const [menu_Pic, setmenu_Pic] = useState([]);
   const [typeMenu_ID, setTypeMenu_ID] = useState([]);
   const [preview, setPreView] = useState([]);
@@ -36,13 +34,10 @@ const CreateMenuComponent = () => {
   };
 
   const validationSchema = Yup.object().shape({
-    menu_Name: Yup.string().required("Name is required"),
-    menu_Price: Yup.number("Price number is use only number").required(
-      "Price is required"
-    ),
-    menu_Qty: Yup.number("is use only number").required("is required"),
-    typeMenu_ID: Yup.string().required("typeMenu_ID is required"),
-    menu_Type: Yup.string().required("menu_Type is required"),
+    menu_Name: Yup.string().required("กรุณากรอกชื่อเมนู"),
+    menu_Price: Yup.number("กรุณากรอกเฉพาะตัวเลข").required("กรุณากรอกราคา"),
+    typeMenu_ID: Yup.string().required("กรุณาระบุประเภทเมนู"),
+    menu_Type: Yup.string().required("กรุณาระบุชนิดเมนู"),
   });
   const formOptions = { resolver: yupResolver(validationSchema) };
 
@@ -60,7 +55,6 @@ const CreateMenuComponent = () => {
           menu_Name: "",
           menu_Type: "",
           menu_Price: "",
-          menu_Qty: "",
           typeMenu_ID: "",
         }),
       300
@@ -187,7 +181,7 @@ const CreateMenuComponent = () => {
                     <label className="form-label">ชื่อเมนู</label>
                     <input
                       type="text"
-                      placeholder="Enter Menu Name"
+                      placeholder="กรุณากรอกชื่อเมนู"
                       name="menu_Name"
                       value={menu_Name}
                       {...register("menu_Name")}
@@ -205,7 +199,7 @@ const CreateMenuComponent = () => {
                     <label className="form-label"> ราคา</label>
                     <input
                       type="text"
-                      placeholder="Enter Menu Price"
+                      placeholder="กรุณากรอกราคาเมนู"
                       name="menu_Price"
                       value={menu_Price}
                       {...register("menu_Price")}
@@ -216,24 +210,6 @@ const CreateMenuComponent = () => {
                     ></input>
                     <div className="invalid-feedback">
                       {errors.menu_Price?.message}
-                    </div>
-                  </div>
-
-                  <div className="form-group mb-2">
-                    <label className="form-label">จำนวน</label>
-                    <input
-                      type="text"
-                      placeholder="Enter Menu Qty"
-                      name="menu_Qty"
-                      value={menu_Qty}
-                      {...register("menu_Qty")}
-                      className={`form-control ${
-                        errors.menu_Qty ? "is-invalid" : ""
-                      }`}
-                      onChange={(e) => setmenu_Qty(e.target.value)}
-                    ></input>
-                    <div className="invalid-feedback">
-                      {errors.menu_Qty?.message}
                     </div>
                   </div>
 
@@ -265,7 +241,7 @@ const CreateMenuComponent = () => {
                     variant="btn btn-outline-success"
                     onClick={handleSubmit(handleClick)}
                   >
-                    {isLoading ? "Loading..." : "Save"}
+                    {isLoading ? "Loading..." : "ยืนยัน"}
                     {isLoading && <Spinner animation="border" size="sm" />}
                   </Button>
 
@@ -274,7 +250,7 @@ const CreateMenuComponent = () => {
                     style={{ marginLeft: "5px" }}
                     onClick={() => navigate("/menu")}
                   >
-                    Cancel
+                    ยกเลิก
                   </button>
                 </form>
               )}

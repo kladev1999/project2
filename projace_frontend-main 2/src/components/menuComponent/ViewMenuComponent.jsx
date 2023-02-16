@@ -74,7 +74,7 @@ const ViewMenuComponent = (props) => {
             <div> {menu.menu_Cost}</div>
           </div> */}
           <div className="row" style={{margin:"5px"}}>
-            <label> Menu TimeStamp : {menu.menu_TimeStamp} </label>
+            <label> เวลาที่เพิ่มเมนู : {menu.menu_TimeStamp} </label>
           </div>
 
          

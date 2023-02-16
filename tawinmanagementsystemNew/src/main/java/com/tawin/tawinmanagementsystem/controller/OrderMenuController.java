@@ -7,9 +7,17 @@ import java.sql.DriverManager;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.SystemPropertyUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,10 +32,12 @@ import com.tawin.tawinmanagementsystem.entity.Income;
 import com.tawin.tawinmanagementsystem.entity.Menu;
 import com.tawin.tawinmanagementsystem.entity.Order_Menu;
 import com.tawin.tawinmanagementsystem.entity.Stock;
+import com.tawin.tawinmanagementsystem.entity.StockType;
 import com.tawin.tawinmanagementsystem.entity.Stock_Menu;
 import com.tawin.tawinmanagementsystem.exception.ResourceNotFoundException;
 import com.tawin.tawinmanagementsystem.repository.Order_MenuRepository;
 import com.tawin.tawinmanagementsystem.repository.StockRepository;
+import com.tawin.tawinmanagementsystem.repository.StockTypeRepository;
 import com.tawin.tawinmanagementsystem.repository.Stock_MenuRepository;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -35,17 +45,18 @@ import com.tawin.tawinmanagementsystem.repository.Stock_MenuRepository;
 @RequestMapping("/OrderMenu")
 public class OrderMenuController {
 
-	
-	
 	@Autowired
 	Order_MenuRepository orderMenuRepo;
 	Stock stock;
-	
+
 	@Autowired
 	Stock_MenuRepository stockMenuRepo;
-	
+
 	@Autowired
 	StockRepository stockRepo;
+
+	@Autowired
+	StockTypeRepository stockTypeRepo;
 
 	@GetMapping("/getOrderMenu")
 	public List<Order_Menu> getOrderMenu() {
@@ -89,9 +100,9 @@ public class OrderMenuController {
 	}
 
 	@GetMapping("/getListOrderMenu/{totalOrder_ID}/{statusTable}")
-	public List<Order_Menu> getStockTypeByIDd(@PathVariable Integer totalOrder_ID,@PathVariable Integer statusTable) {
+	public List<Order_Menu> getStockTypeByIDd(@PathVariable Integer totalOrder_ID, @PathVariable Integer statusTable) {
 
-		return (List<Order_Menu>) orderMenuRepo.findByTotalOrder_ID(totalOrder_ID,statusTable);
+		return (List<Order_Menu>) orderMenuRepo.findByTotalOrder_ID(totalOrder_ID, statusTable);
 	}
 
 	@PutMapping("/updateOrderMenu/{orderMenu_ID}")
@@ -122,8 +133,8 @@ public class OrderMenuController {
 
 	// หาวัตถุดิบ
 	@GetMapping("/loopList/{menu_ID}")
-	public List<String> getListInt(@PathVariable Long menu_ID) {
-		return (List<String>) orderMenuRepo.findStock(menu_ID);
+	public List<Long> getListInt(@PathVariable Long menu_ID) {
+		return (List<Long>) orderMenuRepo.findStock(menu_ID);
 	}
 
 	@GetMapping("/loopCost/{menu_ID}")
@@ -201,7 +212,7 @@ public class OrderMenuController {
 		List<Long> ss = orderMenuRepo.findMenu();
 		ArrayList<Income> income = new ArrayList<Income>();
 		for (int index = 0; index < ss.size(); index++) {
-			income.add(incomeOneMenu(ss.get(index),date));
+			income.add(incomeOneMenu(ss.get(index), date));
 		}
 		return income;
 	}
@@ -325,41 +336,169 @@ public class OrderMenuController {
 
 	// Loop หาวัตถุดิบ พร้อมตัดสต๊อก
 	// ตัวนี้เวิร์คลองแล้ว
+//	@GetMapping("/cutLoopStock/{menu_ID}/{qtyMenu}")
+//	public String loopStockCut(@PathVariable Long menu_ID, @PathVariable int qtyMenu) {
+//		int menuID;
+//		int qty_nagative = 0;
+//
+//		for (int q = 0; q < qtyMenu; q++) {
+//			for (int i = 0; i < getListInt(menu_ID).size(); i++) {
+//				qty_nagative = orderMenuRepo.findStock_Nagative_Qty(getListInt(menu_ID).get(i), menu_ID);
+//				if (qty_nagative <= 0) {
+//					findStock_Nagative(menu_ID, i, qty_nagative);
+//				} else {
+////					System.out.println(orderMenuRepo.beforeUpdateStock(getListInt(menu_ID).get(i)));
+//					// System.out.println(qty_stock);
+//					// orderMenuRepo.stockCutLoop(getListInt(menu_ID).get(i));
+//				}
+//				qty_nagative = 0;
+//			}
+//		}
+//		try {
+//			menuID = orderMenuRepo.menuFind(menu_ID);
+//		} catch (Exception e) {
+//			return "Menu_ID not found";
+//		}
+//
+//		return "Menu_ID OK";
+//	}
+
+	
+	// Loop หาวัตถุดิบ พร้อมตัดสต๊อก
+	// ตัวนี้เวิร์คลองแล้ว
 	@GetMapping("/cutLoopStock/{menu_ID}/{qtyMenu}")
 	public String loopStockCut(@PathVariable Long menu_ID, @PathVariable int qtyMenu) {
-		int menuID;
-		int qty_nagative = 0;
-		
+		int stocktypeid = 5;
 		for (int q = 0; q < qtyMenu; q++) {
 			for (int i = 0; i < getListInt(menu_ID).size(); i++) {
-				qty_nagative = orderMenuRepo.findStock_Nagative_Qty(getListInt(menu_ID).get(i), menu_ID);
-				if (qty_nagative <= 0) {
-					findStock_Nagative(menu_ID, i, qty_nagative);
-				} else {
-//					System.out.println(orderMenuRepo.beforeUpdateStock(getListInt(menu_ID).get(i)));
-					//System.out.println(qty_stock);
-					//orderMenuRepo.stockCutLoop(getListInt(menu_ID).get(i));
+				int qtyStock = 0;
+				int qtyStock_Menu = 0;
+				int qtyNagative = 0;
+				LocalDateTime qty_timeStamp = LocalDateTime.now();
+				List<Stock> stock = stockRepo.findAll();
+				List<Stock_Menu> stock_menu = stockMenuRepo.findAll();
+
+				Stock stockUpdate = null;
+				Stock stockNagative = null;
+
+				for (int a = 0; a < stock_menu.size(); a++) {
+					if (stock_menu.get(a).getStockType_ID().getStockType_ID() == getListInt(menu_ID).get(i)
+							&& stock_menu.get(a).getMenu_ID().getMenu_ID() == menu_ID) {
+						qtyStock_Menu = stock_menu.get(a).getStockMenu_Qty();
+						break;
+					}
 				}
-				qty_nagative = 0;
+				for (int b = 0; b < stock.size(); b++) {
+					if (stock.get(b).getStockType_ID().getStockType_ID() == getListInt(menu_ID).get(i)) {
+						qtyStock = stock.get(b).getStock_Qty();
+						stockUpdate = stockRepo.findById(stock.get(b).getStock_ID())
+								.orElseThrow(() -> new ResourceNotFoundException("Stock not exist with id :" + 2));
+						if (stock.get(b).getStock_Qty() <= 0 || stock.get(b).getStock_Qty() - qtyStock_Menu <= 0) {
+							qtyNagative = stock.get(b).getStock_Qty();
+							qty_timeStamp = stock.get(b).getStock_TimeStamp();
+							stockRepo.delete(stockUpdate);
+							System.out.println(qtyNagative * -1);
+							for (int k = 0; k < stock.size(); k++) {
+								if (stock.get(k).getStock_TimeStamp().isAfter(qty_timeStamp)
+										&& stock.get(k).getStockType_ID().getStockType_ID() == getListInt(menu_ID)
+												.get(i)
+										&& stock.get(k).getStock_Qty() >= 0
+										|| stock.get(k).getStock_Qty() - qtyStock_Menu > 0 && stock.get(k)
+												.getStockType_ID().getStockType_ID() == getListInt(menu_ID).get(i)) {
+									stockNagative = stockRepo.findById(stock.get(k).getStock_ID()).orElseThrow(
+											() -> new ResourceNotFoundException("Stock not exist with id :" + 2));
+									stockNagative.setStock_Qty(stockNagative.getStock_Qty() - qtyNagative);
+
+									stockRepo.save(stockNagative);
+
+									break;
+								}
+							}
+						}
+
+						else {
+							stockUpdate.setStock_Qty(qtyStock - qtyStock_Menu);
+							stockRepo.save(stockUpdate);
+						}
+						break;
+
+					}
+
+				}
+
 			}
 		}
 		try {
-			menuID = orderMenuRepo.menuFind(menu_ID);
+
 		} catch (Exception e) {
 			return "Menu_ID not found";
 		}
 
 		return "Menu_ID OK";
 	}
-	@GetMapping("/checkValues/{menu_ID}")
-	public int checkValue(@PathVariable Long menu_ID) {
-		int qty = 0;
-	for (int i = 0; i < getListInt(menu_ID).size(); i++) {
-			qty = orderMenuRepo.beforeUpdateStock(getListInt(menu_ID).get(i));
 
-		}
-		return qty;
-	}
+//	@GetMapping("/test")
+//	public int cutStock() {
+//		Long menu_ID = (long) 19;
+//		int stocktypeid = 5;
+//
+//		int qtyStock = 0;
+//		int qtyStock_Menu = 0;
+//		int qtyNagative = 0;
+//		LocalDateTime qty_timeStamp = LocalDateTime.now();
+//		List<Stock> stock = stockRepo.findAll();
+//		List<Stock_Menu> stock_menu = stockMenuRepo.findAll();
+//
+//		Stock stockUpdate = null;
+//		Stock stockNagative = null;
+//		for (int i = 0; i < stock_menu.size(); i++) {
+//			if (stock_menu.get(i).getStockType_ID().getStockType_ID() == stocktypeid
+//					&& stock_menu.get(i).getMenu_ID().getMenu_ID() == menu_ID) {
+//				qtyStock_Menu = stock_menu.get(i).getStockMenu_Qty();
+//				break;
+//			}
+//		}
+//		for (int i = 0; i < stock.size(); i++) {
+//			if (stock.get(i).getStockType_ID().getStockType_ID() == stocktypeid) {
+//				qtyStock = stock.get(i).getStock_Qty();
+//				stockUpdate = stockRepo.findById(stock.get(i).getStock_ID())
+//						.orElseThrow(() -> new ResourceNotFoundException("Stock not exist with id :" + 2));
+//				if (stock.get(i).getStock_Qty() <= 0 || stock.get(i).getStock_Qty() - qtyStock_Menu <= 0) {
+//					qtyNagative = stock.get(i).getStock_Qty();
+//					qty_timeStamp = stock.get(i).getStock_TimeStamp();
+//					stockRepo.delete(stockUpdate);
+//					System.out.println(qtyNagative * -1);
+//					for (int k = 0; k < stock.size(); k++) {
+//						if (stock.get(k).getStock_TimeStamp().isAfter(qty_timeStamp)
+//								&& stock.get(k).getStockType_ID().getStockType_ID() == stocktypeid
+//								&& stock.get(k).getStock_Qty() >= 0
+//								|| stock.get(k).getStock_Qty() - qtyStock_Menu > 0
+//										&& stock.get(k).getStockType_ID().getStockType_ID() == stocktypeid) {
+//							stockNagative = stockRepo.findById(stock.get(k).getStock_ID())
+//									.orElseThrow(() -> new ResourceNotFoundException("Stock not exist with id :" + 2));
+//							stockNagative.setStock_Qty(stockNagative.getStock_Qty() - qtyNagative);
+//							System.out.println(qtyNagative);
+//							stockRepo.save(stockNagative);
+//							System.out.println(stock.get(k).getStock_ID());
+//							break;
+//						}
+//					}
+//				}
+//
+//				else {
+//					stockUpdate.setStock_Qty(qtyStock - qtyStock_Menu);
+//					stockRepo.save(stockUpdate);
+//				}
+//				break;
+//
+//			}
+//
+//		}
+//
+//		return qtyStock - qtyStock_Menu;
+//	}
+
+
 
 	// Loop หาวัตถุดิบพร้อมเพิ่มสต๊อก
 	@GetMapping("/addLoppStock/{menu_ID}")

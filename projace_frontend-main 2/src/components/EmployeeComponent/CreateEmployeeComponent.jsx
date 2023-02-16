@@ -35,9 +35,7 @@ const CreateEmployeeComponent = () => {
     { id: "3", value: "3", label: "ROLE_COOK" },
   ];
   const handleChange = (e) => {
-    console.log("name", e.target.files[0].name);
-    console.log(e.target.files);
-
+    
     setPreView([...e.target.files]);
 
     let img = [...ImageUpload];
@@ -146,7 +144,7 @@ const CreateEmployeeComponent = () => {
         setAddress(response.data.address);
         setLine(response.data.line);
         SetImage(response.data.image);
-        // setRole(response.data.roles.name);
+        
       })
       .catch((error) => {
         console.log(error);
@@ -154,12 +152,12 @@ const CreateEmployeeComponent = () => {
   };
 
   const validationSchema = Yup.object().shape({
-    name: Yup.string().min(5).required("name is required"),
-    username: Yup.string().min(5).required("Username is required"),
-    password: Yup.string().min(8).required("password is required"),
-    phone: Yup.number("Phone number is use only number").min(10).required("phone is required"),
-    address: Yup.string().required("address is required"),
-    line: Yup.string().required("password is required"),
+    name: Yup.string().min(5).required("กรุณากรอกชื่อพนักงาน"),
+    username: Yup.string().min(5).required("กรุณากรอกชื่อผู้ใช้งาน"),
+    password: Yup.string().min(8).required("กรุณากรอกรหัสผ่าน"),
+    phone: Yup.number("กรุณากรอกเฉพาะตัวเลข").min(10).required("กรุณากรอกเบอร์โทรศัพท์"),
+    address: Yup.string().required("กรุณากรอกที่อยู่"),
+    line: Yup.string().required("กรุณากรอกไอดีไลน์"),
   });
   const formOptions = { resolver: yupResolver(validationSchema) };
 
@@ -204,7 +202,7 @@ const CreateEmployeeComponent = () => {
       return (
         <div>
           <div>
-            <h2 className="text-center">แก้ไขข้อมูลพนักงาน</h2>
+            <h2 className="text-center">แก้ไขพนักงาน</h2>
           </div>
           <div className="input-roles">
             <div className="form-group mb-2">
@@ -236,7 +234,7 @@ const CreateEmployeeComponent = () => {
     if (id) {
       return (
         <div className="form-group mb-2">
-          <label className="form-label"> ภาพเดิม : </label>
+          <label className="form-label"> รูปเดิม : </label>
           <img
             src={pic + image}
             width="170"
@@ -250,7 +248,7 @@ const CreateEmployeeComponent = () => {
 
   const Newimage = () => {
     if (id) {
-      return <span> </span>;
+      return <span>รูปใหม่ </span>;
     }
   };
   return (
@@ -262,123 +260,156 @@ const CreateEmployeeComponent = () => {
           <div className="card col-md-6 offset-md-3 offset-md-3">
             {title()}
             <div className="card-body">
-              <form onSubmit={handleClick}>
+              {user && (
+                <form onSubmit={handleSubmit(handleClick)}>
+                  <div className="form-group mb-2">
+                    <label className="form-label"> ชื่อ :</label>
+                    <input
+                      name="name_Emp"
+                      type="text"
+                      value={name_Emp}
+                      {...register('name')}
+                      className={`form-control ${
+                        errors.name ? 'is-invalid' : ''
+                      }`}
+                      onChange={(e) => setName(e.target.value)}
+                    />
+                    <div className="invalid-feedback">
+                      {errors.name?.message}
+                    </div>
+                  </div>
 
-                <div className="form-group mb-2">
-                  <label className="form-label"> ชื่อ :</label>
-                  <input
-                    type="text"
-                    placeholder="ชื่อ"
-                    name="Name"
-                    className="form-control"
-                    value={name_Emp}
-                    onChange={(e) => setName(e.target.value)}
-                    required
-                  ></input>
-                </div>
+                  <div className="form-group mb-2">
+                    <label className="form-label"> ชื่อผู้ใช้ :</label>
+                    <input
+                      name="username"
+                      type="text"
+                      value={username}
+                      {...register("username")}
+                      className={`form-control ${
+                        errors.username ? "is-invalid" : ""
+                      }`}
+                      onChange={(e) => setUsername(e.target.value)}
+                    />
+                    <div className="invalid-feedback">
+                      {errors.username?.message}
+                    </div>
+                  </div>
 
-                <div className="form-group mb-2">
-                  <label className="form-label"> ชื่อผู้ใช้งาน:</label>
-                  <input
-                    type="text"
-                    placeholder="ชื่อผู้ใช้งาน"
-                    name="Username"
-                    className="form-control"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    required
-                  ></input>
-                </div>
+                  <div className="form-group mb-2">
+                    <label className="form-label"> รหัสผ่าน :</label>
+                    <input
+                      name="password"
+                      type="password"
+                      value={password}
+                      {...register("password")}
+                      className={`form-control ${
+                        errors.password ? "is-invalid" : ''
+                      }`}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <div className="invalid-feedback">
+                      {errors.password?.message}
+                    </div>
+                    
+                  </div>
+                  <div className="form-group mb-2">
+                    <label className="form-label"> เบอร์โทรศัพท์ :</label>
+                    <input
+                      name="phone"
+                      type="text"
+                      value={phone}
+                      {...register("phone")}
+                      className={`form-control ${
+                        errors.phone ? "is-invalid" : ""
+                      }`}
+                      onChange={(e) => setPhone(e.target.value)}
+                    />
+                    <div className="invalid-feedback">
+                      {errors.phone?.message}
+                    </div>
 
-                <div className="form-group mb-2">
-                  <label className="form-label"> รหัสผ่าน :</label>
-                  <input
-                    type="password"
-                    placeholder="รหัสผ่าน"
-                    name="Password"
-                    className="form-control"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                  ></input>
-                </div>
-                <div className="form-group mb-2">
-                  <label className="form-label"> เบอร์โทรศัพท์มือถือ :</label>
-                  <input
-                    placeholder="เบอร์โทรศัพท์มือถือ"
-                    name="Phone"
-                    className="form-control"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    required
-                  ></input>
-                </div>
-                <div className="form-group mb-2">
-                  <label className="form-label"> ที่อยู่ :</label>
-                  <input
-                    placeholder="ที่อยู่"
-                    name="Address"
-                    className="form-control"
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)}
-                  ></input>
-                </div>
-                <div className="form-group mb-2">
-                  <label className="form-label"> ไลน์ไอดี :</label>
-                  <input
-                    placeholder="ไลน์ไอดี"
-                    name="Line"
-                    className="form-control"
-                    value={line}
-                    onChange={(e) => setLine(e.target.value)}
-                  ></input>
-                </div>
+                  </div>
+                  <div className="form-group mb-2">
+                    <label className="form-label"> ที่อยู่ :</label>
+                    <input
+                      name="address"
+                      type="text"
+                      value={address}
+                      {...register("address")}
+                      className={`form-control ${
+                        errors.address ? "is-invalid" : ""
+                      }`}
+                      onChange={(e) => setAddress(e.target.value)}
+                    />
+                    <div className="invalid-feedback">
+                      {errors.address?.message}
+                    </div>
+                  </div>
+                  <div className="form-group mb-2">
+                    <label className="form-label"> ไอดีไลน์ :</label>
+                    <input
+                      name="line"
+                      type="text"
+                      value={line}
+                      {...register("line")}
+                      className={`form-control ${
+                        errors.line ? "is-invalid" : ""
+                      }`}
+                      onChange={(e) => setLine(e.target.value)}
+                    />
+                    <div className="invalid-feedback">
+                      {errors.line?.message}
+                    </div>
+                  </div>
 
-                {Updateimg()}
+                  {Updateimg()}
 
-                <div className="form-group mb-2">
-                  <label className="form-label"> {Newimage()}ภาพใหม่ :</label>
-                  <input
-                    type="file"
-                    multiple
-                    accept="image/*"
-                    placeholder="รูปภาพ"
-                    name="image"
-                    className="form-control"
-                    // value={image}
-                    onChange={handleChange}
-                    // onChange={(e) => handleChange(e)
-                  ></input>
+                  <div className="form-group mb-2">
+                    <label className="form-label"> {Newimage()}รูปภาพ :</label>
+                    <input
+                      type="file"
+                      multiple
+                      accept="image/*"
+                      placeholder="Picture"
+                      name="image"
+                      className="form-control"
+                      // value={image}
+                      onChange={handleChange}
+                      // onChange={(e) => handleChange(e)
+                    ></input>
+                  </div>
+
+                  <div className="form-group mb-3">
+                    {previewURL.map((ingSrc) => (
+                      <img
+                        src={ingSrc}
+                        width="170"
+                        height="170"
+                        className="img-thumbnail"
+                      />
+                    ))}
+                  </div>
+
+                  <Button
+                    disabled={isLoading}
+                    variant="btn btn-outline-success"
+                    onClick={handleSubmit(handleClick)}
+                  >
+                    {isLoading ? "Loading..." : "ยืนยัน"}
+                    {isLoading && <Spinner animation="border" size="sm" />}
+                  </Button>
+                  <Link to="/employee" className="btn btn-outline-danger mx-2">
+                    {" "}
+                    ยกเลิก{" "}
+                  </Link>
+                </form>
+              )}
+              {!user && (
+                <div className="text-center p-3">
+                  <span className="spinner-border spinner-border-lg align-center"></span>
                 </div>
-
-                <div className="form-group mb-3">
-                  {previewURL.map((ingSrc) => (
-                    <><img
-                      src={ingSrc}
-                      width="170"
-                      height="170"
-                      className="img-thumbnail" /><div className="invalid-feedback">
-                        {errors.name?.message}
-                      </div></>
-                  ))
-                    }
-
-                </div>
-
-                <Button
-                  disabled={isLoading}
-                  variant="btn btn-outline-success"
-                  onClick={handleClick}
-                >
-                  {isLoading ? "Loading..." : "ยืนยัน"}
-                  {isLoading && <Spinner animation="border" size="sm" />}
-                </Button>
-                <Link to="/employee" className="btn btn-outline-danger mx-2">
-                  {" "}
-                  ยกเลิก{" "}
-                </Link>
-               
-              </form>
+              )}
             </div>
           </div>
         </div>

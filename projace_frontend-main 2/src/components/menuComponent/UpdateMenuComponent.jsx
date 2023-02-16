@@ -21,13 +21,12 @@ const UpdateMenuComponent = (props) => {
   let navigate = useNavigate();
 
   const validationSchema = Yup.object().shape({
-    menu_Name: Yup.string().required("Name is required"),
-    menu_Price: Yup.number("Price number is use only number").required(
-      "Price is required"
+    menu_Name: Yup.string().required("กรุณากรอกชื่อเมนู"),
+    menu_Price: Yup.number("กรุณากรอกตัวเลข").required(
+      "กรุณากรอกราคาเมนู"
     ),
-    typeMenu_ID: Yup.string().required("typeMenu_ID is required"),
-    menu_Qty: Yup.number("is use only number").required("is required"),
-    menu_Type: Yup.string().required("menu_Type is required"),
+    typeMenu_ID: Yup.string().required("กรุณาระบุประเภทเมนู"),
+    menu_Type: Yup.string().required("กรุณาระบุชนิดเมนู"),
   });
   const formOptions = { resolver: yupResolver(validationSchema) };
 
@@ -44,7 +43,6 @@ const UpdateMenuComponent = (props) => {
         setUser({
           menu_Name: menu.menu_Name,
           menu_Price: menu.menu_Price,
-          menu_Qty: menu.menu_Qty,
           menu_Type: menu.menu_Type,
           menu_Pic: menu.menu_Pic,
           typeMenu_ID: menu.typeMenu_ID.typeMenu_ID,
@@ -109,7 +107,6 @@ const UpdateMenuComponent = (props) => {
     typeMenu_ID: "",
     menu_Name: "",
     menu_Price: "",
-    // menu_Qty: "",
     menu_Pic: "",
     menu_Type: "",
   };
@@ -166,11 +163,11 @@ const UpdateMenuComponent = (props) => {
   return (
     <div>
       <div className="edit-form">
-        <h2 style={{ textAlign: "center" }}>Menu Update</h2>
+        <h2 style={{ textAlign: "center" }}>อัพเดทเมนู</h2>
         {user && (
           <form>
             <div>
-              <label className="form-label"> ประเภทเมนู</label>
+              <label className="form-label"> ประเภทเมนู </label>
               <select
                 style={{ width: "200px", marginLeft: "10px" }}
                 name="typeMenu_ID"
@@ -249,21 +246,6 @@ const UpdateMenuComponent = (props) => {
                 {errors.menu_Price?.message}
               </div>
             </div>
-            <div className="form-group">
-              <label htmlFor="description">Menu Qty</label>
-              <input
-                type="text"
-                id="menu_Qty"
-                name="menu_Qty"
-                value={menu.menu_Qty}
-                {...register("menu_Qty")}
-                className={`form-control ${
-                  errors.menu_Qty ? "is-invalid" : ""
-                }`}
-                onChange={handleInputChange}
-              />
-              <div className="invalid-feedback">{errors.menu_Qty?.message}</div>
-            </div>
             <div className="form-group mb-2">
               <label className="form-label"> Original : </label>
               <img
@@ -295,7 +277,7 @@ const UpdateMenuComponent = (props) => {
               ))}
             </div>
             <button className="btn btn-danger mr-2" onClick={cancel}>
-              Cancel
+              ยกเลิก
             </button>
 
             <Button
@@ -303,7 +285,7 @@ const UpdateMenuComponent = (props) => {
               variant="btn btn-outline-success"
               onClick={handleSubmit(handleClick)}
             >
-              {isLoading ? "Loading..." : "Update"}
+              {isLoading ? "Loading..." : "ยืนยัน"}
               {isLoading && <Spinner animation="border" size="sm" />}
             </Button>
           </form>

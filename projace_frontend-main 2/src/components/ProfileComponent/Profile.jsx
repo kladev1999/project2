@@ -28,11 +28,7 @@ const Profile = () => {
       <p>
         <strong>รหัสพนักงาน:</strong> {currentUser.id}
       </p>
-      <p>
-        <strong>Id:</strong> {currentUser.id}
-        <strong>Id:</strong> {currentUser.roles === 'ROLE_USER'}
-      </p>
-      <strong>Authorities:</strong>
+      <strong>ตำแหน่ง:</strong>
       <ul>
         {currentUser.roles &&
           currentUser.roles.map((role, index) => <li key={index}>{role}</li>)}

@@ -69,10 +69,10 @@ const UpdateStockComponent = (props) => {
   };
 
   const validationSchema = Yup.object().shape({
-    stockType_ID: Yup.string().required("Type is required"),
-    stock_Qty: Yup.number("must be num").required("Qty is required"),
-    stock_Cost: Yup.number("must be num").required("Cost is required"),
-    stock_Min: Yup.number("must be num").required("Min is required"),
+    stockType_ID: Yup.string().required("กรุณาระบุชื่อวัตถุดิบ"),
+    stock_Qty: Yup.number("กรุณากรอกตัวเลข").required("กรุณากรอกจำนวนวัตถุดิบ"),
+    stock_Cost: Yup.number("กรุณากรอกตัวเลข").required("กรุณากรอกต้นทุน"),
+    stock_Min: Yup.number("กรุณากรอกตัวเลข").required("กรุณากรอกจำนวนคงเหลือขั้นต่ำ"),
   });
   const formOptions = { resolver: yupResolver(validationSchema) };
 
@@ -100,13 +100,13 @@ const UpdateStockComponent = (props) => {
     <div>
       {stock ? (
         <div className="edit-form">
-          <h2 style={{ textAlign: "center" }}>Stock Update</h2>
+          <h2 style={{ textAlign: "center" }}>อัพเดทวัตถุดิบ</h2>
           {user && (
             <form>
               <div className="form-group">
                 <h4 style={{ textAlign: "center" }}>
                   <div>
-                    <label className="form-label"> StockType Name</label>
+                    <label className="form-label"> ชื่อวัตถุดิบ </label>
                     <select
                       style={{ width: "200px", marginLeft: "10px" }}
                       name="stockType_ID"
@@ -131,7 +131,7 @@ const UpdateStockComponent = (props) => {
                 </h4>
               </div>
               <div className="form-group">
-                <label htmlFor="description">Stock Qty</label>
+                <label htmlFor="description">จำนวนวัตถุดิบ</label>
                 <input
                   type="text"
                   id="stock_Qty"
@@ -148,7 +148,7 @@ const UpdateStockComponent = (props) => {
                 </div>
               </div>
               <div className="form-group">
-                <label htmlFor="description">Stock Cost</label>
+                <label htmlFor="description">ต้นทุนวัตถุดิบ</label>
                 <input
                   type="text"
                   id="stock_Cost"
@@ -165,7 +165,7 @@ const UpdateStockComponent = (props) => {
                 </div>
               </div>
               <div className="form-group">
-                <label htmlFor="description">Stock Min</label>
+                <label htmlFor="description">จำนวนคงเหลือขั้นต่ำ</label>
                 <input
                   type="text"
                   id="stock_Min"
@@ -195,7 +195,7 @@ const UpdateStockComponent = (props) => {
             className="btn btn-success"
             onClick={handleSubmit(updateStock)}
           >
-            Update
+            ยืนยัน
           </Button>
         </div>
       ) : (
