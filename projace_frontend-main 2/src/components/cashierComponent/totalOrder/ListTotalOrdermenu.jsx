@@ -3,21 +3,29 @@ import { useParams, useNavigate } from "react-router-dom";
 import TotalOrderService from "../../../services/TotalOrderService";
 import { Container, Row, Col } from "react-grid-system";
 import OrderMenuService from "../../../services/OrderMenuService";
+import AuthService from "../../../services/Auth-service";
 function ListTotalOrdermenu() {
   const { compoSite, table_ID, totalOrder_ID, statusTable } = useParams();
   const navigate = useNavigate();
   const [totalOrder, setTotalOrder] = useState([]);
   const [list, setlist] = useState([]);
+  const currentUser = AuthService.getCurrentUser();
 
   const [checkPay, setCheckPay] = useState([]);
 
-  let TotalPrice = list?.reduce(
-    (prev, cur) =>
-      cur.status_ID.status_ID !== 4
-        ? prev + cur.menu_ID.menu_Price * cur.orderMenu_Qty
-        : prev + 0,
-    0
-  );
+  let TotalPrice = 0;
+
+  if (list[0]?.totalOrder_ID.discount_ID === null) {
+    TotalPrice = list?.reduce(
+      (prev, cur) =>
+        cur.status_ID.status_ID !== 4
+          ? prev + cur.menu_ID.menu_Price * cur.orderMenu_Qty
+          : prev + 0,
+      0
+    );
+  } else {
+    TotalPrice = list[0]?.totalOrder_ID.totalPrice;
+  }
 
   const getListOrderMenu = useCallback(() => {
     TotalOrderService.getTotalListOrderById(compoSite, statusTable)
@@ -90,6 +98,12 @@ function ListTotalOrdermenu() {
           {value.status_ID.status}
         </td>
       );
+    } else if (value.status_ID.status_ID === 2) {
+      return (
+        <td className="text-center" style={{ backgroundColor: "#49dfff" }}>
+          {value.status_ID.status}
+        </td>
+      );
     } else {
       return (
         <td className="text-center" style={{ backgroundColor: "#ffc847" }}>
@@ -156,40 +170,59 @@ function ListTotalOrdermenu() {
         .catch((e) => {
           console.log(e);
         });
+
+      OrderMenuService.Cancel(orderMenu_ID, currentUser.name_Emp)
+        .then((response) => {})
+        .catch((e) => {
+          console.log(e);
+        });
     }
   };
-  // const cutStock = (status, menu_ID, qty) => {
-  //   console.log(qty);
-  //   if (status?.status_ID?.status_ID === 1) {
-  //     OrderMenuService.loopStockCut(menu_ID, qty)
-  //       .then((response) => {
-  //         console.log(response.data);
-  //       })
-  //       .catch((error) => {
-  //         console.log(error);
-  //       });
-  //   }
-  // };
 
-  const finishedlStatus = (orderMenu_ID, name, menu_ID, qty) => {
+  const finishedlStatus = (orderMenu_ID, name) => {
     console.log(name);
-    console.log("asdkalsdaskld = ",qty);
     if (window.confirm(`${name} เสร็จแล้ว!!`)) {
       OrderMenuService.finishedlStatus(orderMenu_ID)
         .then((response) => {})
         .catch((e) => {
           console.log(e);
         });
-      OrderMenuService.loopStockCut(menu_ID, qty)
-        .then((response) => {
-          console.log(response.data);
-        })
-        .catch((error) => {
-          console.log(error);
+
+      OrderMenuService.Cancel(orderMenu_ID, currentUser.name_Emp)
+        .then((response) => {})
+        .catch((e) => {
+          console.log(e);
         });
     }
   };
 
+  const CancelEmp = (name_Emp, status) => {
+    if (name_Emp === "") {
+      return <>-</>;
+    } else if (status === 4) {
+      return <>ยกเลิกโดย {name_Emp}</>;
+    } else if (status === 3) {
+      return <>เสริฟโดย {name_Emp}</>;
+    } else if (status === 1) {
+      return <>{name_Emp} กำลังทำ</>;
+    } else if (status === 2) {
+      return <>{name_Emp} พร้อมเสริฟ</>;
+    }
+  };
+
+  const discount = () => {
+
+
+    if(list.length == 0){
+      return <>ราคารวม 0</>
+    }
+    if (list[0]?.totalOrder_ID.discount_ID === null) {
+     return <>ราคารวม {Intl.NumberFormat().format(TotalPrice)}</>
+    } else {
+      return <>ราคารวม {Intl.NumberFormat().format(TotalPrice)} (ลด {list[0]?.totalOrder_ID?.discount_ID?.discount_Percent}% )</>
+    }
+  }
+  
   return (
     <Container>
       {title()}
@@ -218,6 +251,7 @@ function ListTotalOrdermenu() {
                     <th className="text-center"> ราคา </th>
                     <th className="text-center"> พนักงานที่รับ </th>
                     <th className="text-center"> จัดการ </th>
+                    <th className="text-center"> Action </th>
                   </tr>
                 </thead>
 
@@ -252,9 +286,7 @@ function ListTotalOrdermenu() {
                             onClick={() =>
                               finishedlStatus(
                                 d.orderMenu_ID,
-                                d.menu_ID.menu_Name,
-                                d.menu_ID.menu_ID,
-                                d.orderMenu_Qty
+                                d.menu_ID.menu_Name
                               )
                             }
                           >
@@ -275,6 +307,7 @@ function ListTotalOrdermenu() {
                             ยกเลิก{" "}
                           </button>
                         </td>
+                        <td>{CancelEmp(d.cencel, d.status_ID.status_ID)}</td>
                       </tr>
                     );
                   })}
@@ -284,7 +317,7 @@ function ListTotalOrdermenu() {
 
             <h2 className="text-end">
               {UpdateTotalPrice(TotalPrice)}
-              ราคารวม {Intl.NumberFormat().format(TotalPrice)}
+              {discount()}
             </h2>
             {ChechBNT()}
           </Col>

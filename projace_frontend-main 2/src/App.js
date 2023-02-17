@@ -151,7 +151,7 @@ function App() {
             element={<CreateEmployeeComponent />}
           ></Route>
           <Route path="/Role" element={<ListRoleComponent />}></Route>
-          <Route path="/Checkbill/:compoSite/:status" element={<Checkbill />}></Route>
+          <Route path="/Checkbill/:compoSite/:status/:totalOrder_ID" element={<Checkbill />}></Route>
           <Route path="/AddRole" element={<AddRoleComponent />}></Route>
           <Route
             path="/edit-AddRole/:id"

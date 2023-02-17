@@ -3,9 +3,11 @@ import { useEffect, useState, useCallback } from "react";
 import OrderMenuService from "../../services/OrderMenuService";
 import { Container } from "reactstrap";
 import DatePicker from "react-datepicker";
+import AuthService from "../../services/Auth-service";
 const KitchenComponent = () => {
   const [orderKitchen, setOrderKitchen] = useState([]);
   const [search, searchInput] = useState("");
+  const currentUser = AuthService.getCurrentUser();
   const WAIT_TIME = 3000;
   const [date, setDate] = useState(new Date());
   let s = date.toString();
@@ -86,17 +88,73 @@ const KitchenComponent = () => {
     };
   }, [OrderKitchen]);
 
-  const updateState = (orderMenu_ID, status, menu_ID, qty) => () => {
-    OrderMenuService.updateStatus(orderMenu_ID)
-      .then((response) => {
-        OrderKitchen();
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-    cutStock(status, menu_ID, qty);
-  };
+  const updateState = (orderMenu_ID, status,name, menu_ID, qty) => () => {
 
+    console.log("sssssss",status)
+
+
+    if(status === 0){
+      if(window.confirm(`${name} กำลังทำ!!`)){
+        
+        OrderMenuService.updateStatus(orderMenu_ID)
+        .then((response) => {
+          OrderKitchen();
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+        
+        OrderMenuService.Cancel(orderMenu_ID, currentUser.name_Emp)
+        .then((response) => {
+          console.log("Update",orderMenu_ID)
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+      }
+    }else if (status === 1){
+      if(window.confirm(`${name} พร้อมเสริฟ!!`)){
+        
+        OrderMenuService.updateStatus(orderMenu_ID)
+        .then((response) => {
+          OrderKitchen();
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+        
+        OrderMenuService.Cancel(orderMenu_ID, currentUser.name_Emp)
+        .then((response) => {
+          console.log("Update",orderMenu_ID)
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+      }
+    }
+    else if(status === 2){
+      if(window.confirm(`${name} เสริฟแล้ว!!`)){
+        
+        OrderMenuService.updateStatus(orderMenu_ID)
+        .then((response) => {
+          OrderKitchen();
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+        
+        OrderMenuService.Cancel(orderMenu_ID, currentUser.name_Emp)
+        .then((response) => {
+          console.log("Update",orderMenu_ID)
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+        cutStock(status, menu_ID, qty);
+      }
+    }
+    };
+    
   const cancel = (orderMenu_ID) => () => {
     if (window.confirm("คุณต้องการยกเลิกหรือไม่!!")) {
       OrderMenuService.cancelStatus(orderMenu_ID)
@@ -107,14 +165,18 @@ const KitchenComponent = () => {
         .catch((e) => {
           console.log(e);
         });
+
+      OrderMenuService.Cancel(orderMenu_ID, currentUser.name_Emp)
+        .then((response) => {})
+        .catch((e) => {
+          console.log(e);
+        });
     }
   };
   const filterStock = orderKitchen.filter((ok) => {
-  
-      return ok.totalOrder_ID.table_ID.table_Zone
+    return ok.totalOrder_ID.table_ID.table_Zone
       .toLowerCase()
       .includes(search.toLowerCase());
-    
   });
 
   const getBackgroundColor = (value) => {
@@ -123,6 +185,11 @@ const KitchenComponent = () => {
       color = "#A7D489";
     } else if (value.status_ID.status_ID === 4) {
       color = "#FF6961";
+    } else if (value.status_ID.status_ID === 2) {
+      color = "#49dfff";
+    }
+    else if(value.status_ID.status_ID !== 4 && value.status_ID.status_ID !== 3 && value.status_ID.status_ID !== 0){
+      color = "#ffc847";
     }
     return color;
   };
@@ -140,27 +207,49 @@ const KitchenComponent = () => {
     }
   };
 
+ const CancelEmp = (name_Emp, status) => {
+    if (name_Emp === "") {
+      return <>-</>;
+    } else if (status === 4) {
+      return <>ยกเลิกโดย {name_Emp}</>;
+    } else if (status === 3) {
+      return <>เสริฟโดย {name_Emp}</>;
+    }
+    else if (status === 1) {
+      return <>{name_Emp} กำลังทำ</>;
+    }
+    else if (status === 2) {
+      return <>{name_Emp} พร้อมเสริฟ</>;
+    }
+  };
+
+
   const timestamp = (data) => {
     let timestamp = data.split("T");
     let time = timestamp[1].split(".");
     let d = timestamp[0].split("-");
     let y = parseInt(d[0]) + 543;
 
-    return (
-      <>
-        เวลา {time[0]}
-      </>
-    );
+    return <>เวลา {time[0]}</>;
   };
 
   useEffect(() => {
     OrderKitchen();
   }, [dateData]);
 
+  
+
+
   const watingCook = (k, index) => {
-    if (k.status_ID.status_ID !== 4 && k.status_ID.status_ID !== 3 && k.menu_ID.menu_Type !== 1 ) {
+    if (
+      k.status_ID.status_ID !== 4 &&
+      k.status_ID.status_ID !== 3 &&
+      k.menu_ID.menu_Type !== 1
+    ) {
       return (
-        <tr style={{ backgroundColor: getBackgroundColor(k) }}>
+        <tr
+          style={{ backgroundColor: getBackgroundColor(k), marginTop: "50px" }}
+        >
           <th>{index + 1}</th>
           <td>{k.totalOrder_ID.table_ID.table_Zone}</td>
           <td>{k.menu_ID.menu_Name}</td>
@@ -172,10 +261,11 @@ const KitchenComponent = () => {
               <button
                 type="button"
                 class="btn btn-primary"
-                disabled={getBackgroundColor(k)}
+                // disabled={getBackgroundColor(k)}
                 onClick={updateState(
                   k.orderMenu_ID,
-                  k,
+                  k.status_ID.status_ID,
+                  k.menu_ID.menu_Name,
                   k.menu_ID.menu_ID,
                   k.orderMenu_Qty
                 )}
@@ -186,36 +276,41 @@ const KitchenComponent = () => {
                 type="button"
                 style={{ marginLeft: "5px" }}
                 class="btn btn-danger"
-                disabled={getBackgroundColor(k)}
+                // disabled={getBackgroundColor(k)}
                 onClick={cancel(k.orderMenu_ID)}
               >
                 ยกเลิก
               </button>
             </div>
           </td>
+          <td>{CancelEmp(k.cencel,k.status_ID.status_ID)}</td>
         </tr>
       );
     }
   };
 
   const finishedCook = (k, index) => {
-    if (k.status_ID.status_ID === 4 && k.menu_ID.menu_Type === 0 || k.status_ID.status_ID === 3 && k.menu_ID.menu_Type === 0) {
-
+    if (
+      (k.status_ID.status_ID === 4 && k.menu_ID.menu_Type === 0) ||
+      (k.status_ID.status_ID === 3 && k.menu_ID.menu_Type === 0)
+    ) {
       return (
-        <tr style={{ backgroundColor: getBackgroundColor(k) ,marginTop: "50px" }}>
+        <tr
+          style={{ backgroundColor: getBackgroundColor(k), marginTop: "50px" }}
+        >
           <th>{index + 1}</th>
           <td>{k.totalOrder_ID.table_ID.table_Zone}</td>
           <td>{k.menu_ID.menu_Name}</td>
           <td>{k.orderMenu_Qty}</td>
           <td>{timestamp(k.orderMenu_TimeStamp)}</td>
-          <td>{k.status_ID.status}</td>
+          <td>{k.status_ID.status_ID}</td>
           <td>
             <div>
               <button
                 type="button"
                 class="btn btn-primary"
                 disabled={getBackgroundColor(k)}
-                onClick={updateState(k.orderMenu_ID)}
+                onClick={updateState(k.orderMenu_ID,k.status_ID.status_ID)}
               >
                 {k.status_ID.status}
               </button>
@@ -230,6 +325,7 @@ const KitchenComponent = () => {
               </button>
             </div>
           </td>
+          <td>{CancelEmp(k.cencel,k.status_ID.status_ID)}</td>
         </tr>
       );
     }
@@ -238,73 +334,77 @@ const KitchenComponent = () => {
   return (
     <Container style={{ textAlign: "Center" }}>
       <Container>
-      <div style={{ width: "100%", height: "500px" }}>
-        <h2 className="bg-success text-white" style={{ padding: 5, margin: 5 }}>
-          ครัว
-        </h2>
+        <div style={{ width: "100%", height: "500px" }}>
+          <h2
+            className="bg-success text-white"
+            style={{ padding: 5, margin: 5 }}
+          >
+            ครัว
+          </h2>
 
-        <h2 class="text-center"> ทำยังไม่เสร็จ </h2>
-        <input
-          style={{ marginTop: 10 }}
-          type="search"
-          placeholder="ค้นหาโต๊ะ..."
-          aria-label="Search"
-          onChange={(e) => searchInput(e.target.value)}
-        />
-        <p className="col-md-12"></p>
-        <h3>
-          {"วัน "} {day} {"ที่ "} {datetime[2]} {"เดือน "} {month} {"พ.ศ. "}{" "}
-          {y + 543}
-        </h3>
-        <div
-          className="card overflow-auto"
-          style={{ width: "100%", height: "400px", marginTop: "10px" }}
-        >
-          <br></br>
-          <div className="text-start">
-          ค้นหาตามวันที่
-            <DatePicker
-              selected={date}
-              onChange={(date) => setDate(date)}
-              dateFormat="dd/MM/yyyy"
-              maxDate={new Date()}
-              showYearDropdown
-            />
-          </div>
+          <h2 class="text-center"> ทำยังไม่เสร็จ </h2>
+          <input
+            style={{ marginTop: 10 }}
+            type="search"
+            placeholder="ค้นหาโต๊ะ..."
+            aria-label="Search"
+            onChange={(e) => searchInput(e.target.value)}
+          />
+          <p className="col-md-12"></p>
+          <h3>
+            {"วัน "} {day} {"ที่ "} {datetime[2]} {"เดือน "} {month} {"พ.ศ. "}{" "}
+            {y + 543}
+          </h3>
           <div
             className="card overflow-auto"
             style={{ width: "100%", height: "400px", marginTop: "10px" }}
           >
             <br></br>
+            <div className="text-start">
+              ค้นหาตามวันที่
+              <DatePicker
+                selected={date}
+                onChange={(date) => setDate(date)}
+                dateFormat="dd/MM/yyyy"
+                maxDate={new Date()}
+                showYearDropdown
+              />
+            </div>
             <div
-              className="card-header"
-              style={{ display: "flex", justifyContent: "center" }}
+              className="card overflow-auto"
+              style={{ width: "100%", height: "400px", marginTop: "10px" }}
             >
-              <ul className="list-group list-group-flush">
-                <li className="list-group-item">
-                  <table className="table table-striped table-bordered">
-                    <thead>
-                      <tr>
-                        <th> ลำดับที่ </th>
-                        <th> โต๊ะที่</th>
-                        <th> รายการที่สั่ง</th>
-                        <th> จำนวน</th>
-                        <th> เวลา</th>
-                        <th> สถานะ </th>
-                        <th> เปลี่ยนถานะ  </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {filterStock?.map((k, index) => {
-                        return watingCook(k, index);
-                      })}
-                    </tbody>
-                  </table>
-                </li>
-              </ul>
+              <br></br>
+              <div
+                className="card-header"
+                style={{ display: "flex", justifyContent: "center" }}
+              >
+                <ul className="list-group list-group-flush">
+                  <li className="list-group-item">
+                    <table className="table table-striped table-bordered">
+                      <thead>
+                        <tr>
+                          <th> ลำดับที่ </th>
+                          <th> โต๊ะที่</th>
+                          <th> รายการที่สั่ง</th>
+                          <th> จำนวน</th>
+                          <th> เวลา</th>
+                          <th> สถานะ </th>
+                          <th> Action </th>
+                          <th> Action </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {filterStock?.map((k, index) => {
+                          return watingCook(k, index);
+                        })}
+                      </tbody>
+                    </table>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
-        </div>
         </div>
       </Container>
       <br />
@@ -313,8 +413,11 @@ const KitchenComponent = () => {
       <br />
       <br />
       <Container>
-        <div >
-          <h2 class="text-center" style={{marginTop: "40px"}}> เสิร์ฟแล้ว </h2>
+        <div>
+          <h2 class="text-center" style={{ marginTop: "40px" }}>
+            {" "}
+            เสิร์ฟแล้ว{" "}
+          </h2>
           <input
             style={{ marginTop: 10, width: "150px" }}
             type="search"
@@ -343,7 +446,8 @@ const KitchenComponent = () => {
                         <th> จำนวน</th>
                         <th> เวลา</th>
                         <th> สถานะ </th>
-                        <th> เปลี่ยนถานะ </th>
+                        <th> Action </th>
+                        <th> Action </th>
                       </tr>
                     </thead>
                     <tbody></tbody>
@@ -356,9 +460,8 @@ const KitchenComponent = () => {
             </div>
           </div>
         </div>
-        </Container>
       </Container>
-    
+    </Container>
   );
 };
 

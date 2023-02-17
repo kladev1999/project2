@@ -15,6 +15,8 @@ const TatalOrder = () => {
   const [totalOrder, setTotalOrder] = useState([]);
   const compo = [];
 
+  let P = 0
+
   const [getMoveTable, SetGetMoveTable] = useState();
   const [search, searchInput] = useState("");
   const navigate = useNavigate();
@@ -233,7 +235,7 @@ const TatalOrder = () => {
   };
 
   const editMixtable = (value) => {
-    if (value.table_ID.table_ID != value.compoSite) {
+    if (value.table_ID.table_Zone != value.compoSite) {
       return (
         <button
           style={{ marginLeft: "3px" }}
@@ -250,7 +252,9 @@ const TatalOrder = () => {
           style={{ marginLeft: "3px" }}
           onClick={() => handleShowMixTable(value)}
           disabled={
-            DisBTNmixTable(value.compoSite , value.totalOrder_Status) || value.totalOrder_Status === "1"
+            DisBTNmixTable(value.compoSite , value.totalOrder_Status) 
+            || value.totalOrder_Status === "1"
+            || value.totalOrder_image !== null
           }
           className="btn btn-info"
         >
@@ -273,7 +277,7 @@ const TatalOrder = () => {
     <Modal.Title>ต้องการลบหรือไม่!!</Modal.Title>
   </Modal.Header>
   <Modal.Body>
-    ต้องการลบข้อมูลโต๊ะที่ {data?.table_ID?.table_ID} หรือไม่!
+    ต้องการลบข้อมูลโต๊ะที่ {data?.table_ID?.table_Zone} หรือไม่!
   </Modal.Body>
   <Modal.Footer>
     <Button variant="secondary" onClick={handleClose}>
@@ -464,8 +468,8 @@ const TatalOrder = () => {
         if (pointTable == null) {
           window.alert("กรุณาเลือกโต๊ะที่ต้องการย้าย!!");
         } else {
-          TableService.MoveTable(pointTable, totalOrder_ID).then(() => {});
-          OrderMenuService.mergeTable(totalOrder_ID, pointTable).then(() => {
+          TableService.MoveTable(pointTable?.table_ID, totalOrder_ID).then(() => {});
+          OrderMenuService.mergeTable(totalOrder_ID, pointTable?.table_Zone).then(() => {
             setShowMove(false);
             getAllTotalOrder();
             GetMoveTable();
@@ -496,13 +500,13 @@ const TatalOrder = () => {
                 {getMoveTable?.map((value, index) => {
                   return (
                     <fieldset>
-                      <div>
+                      <div className="text-center">
                         <input
                           type="radio"
                           id="louie"
                           name="drone"
                           value={null}
-                          onChange={() => setPointTable(value.table_ID)}
+                          onChange={() => setPointTable(value)}
                         />
                         <label>
                           โต๊ะ {value.table_Zone}
@@ -563,7 +567,7 @@ const TatalOrder = () => {
     const [pointTable, setPointTable] = useState(null);
 
     const getMixTebles = () => {
-      TableService.MixTable(data?.table_ID?.table_ID,dateData)
+      TableService.MixTable(data?.table_ID?.table_Zone,dateData)
         .then((response) => {
           setTabel(response.data);
           console.log("mix", response.data);
@@ -627,8 +631,8 @@ const TatalOrder = () => {
                           type="radio"
                           id="louie"
                           name="drone"
-                          value={t.table_ID.table_ID}
-                          onClick={() => setPointTable(t.table_ID.table_ID)}
+                          value={t.table_ID.table_Zone}
+                          onClick={() => setPointTable(t.table_ID.table_Zone)}
                         />
                         <label>
                           โต๊ะ {t.table_ID.table_Zone}
@@ -697,7 +701,7 @@ const TatalOrder = () => {
       setTimeout(() => {
         OrderMenuService.mergeTable(
           data?.totalOrder_ID,
-          data?.table_ID?.table_ID
+          data?.table_ID?.table_Zone
         ).then(() => {
           setShowEditMix(false);
           getAllTotalOrder();
@@ -776,8 +780,8 @@ const TatalOrder = () => {
     );
   };
 
-  const Checkbill = (compoSite,status) => {
-    navigate("/Checkbill/" + compoSite+"/"+status);
+  const Checkbill = (compoSite,status,totalOrder_ID) => {
+    navigate("/Checkbill/" + compoSite+"/"+status+"/"+totalOrder_ID);
   };
 
   const mystyle = {
@@ -792,7 +796,7 @@ const TatalOrder = () => {
   };
 
   const statusMixTable = (value) => {
-    if (value.table_ID.table_ID == value.compoSite) {
+    if (value.table_ID.table_Zone == value.compoSite) {
       return <p className="text-center">-</p>;
     } else {
       return <p>รวมกับโต๊ะที่ {value.compoSite}</p>;
@@ -886,8 +890,8 @@ const TatalOrder = () => {
                         )
                       }
                       disabled={
-                        totalOrder.compoSite != totalOrder.table_ID.table_ID ||
-                        totalOrder.totalOrder_Status === "1"
+                        totalOrder.compoSite != totalOrder.table_ID.table_Zone ||
+                        totalOrder.totalOrder_Status === "1" || totalOrder.totalOrder_image !== null
                       }
                       className="btn btn-outline-primary"
                     >
@@ -903,7 +907,8 @@ const TatalOrder = () => {
                         )
                       }
                       disabled={
-                        totalOrder.compoSite != totalOrder.table_ID.table_ID
+                        totalOrder.compoSite != totalOrder.table_ID.table_Zone
+                        
                       }
                       className="btn btn-outline-secondary"
                     >
@@ -915,8 +920,9 @@ const TatalOrder = () => {
                     <button
                       style={{ marginLeft: "3px" }}
                       disabled={
-                        totalOrder.compoSite != totalOrder.table_ID.table_ID ||
+                        totalOrder.compoSite != totalOrder.table_ID.table_Zone ||
                         totalOrder.totalOrder_Status === "1" || DisBTNmixTable(totalOrder.compoSite , totalOrder.totalOrder_Status)
+                         || totalOrder.totalOrder_image !== null
                       }
                       onClick={
                         (e) => handleShowModeTable(totalOrder)
@@ -929,10 +935,10 @@ const TatalOrder = () => {
                     <button
                       style={{ marginLeft: "5px" }}
                       disabled={
-                        totalOrder.compoSite != totalOrder.table_ID.table_ID||
-                        totalOrder.totalOrder_Status === "1"
+                        totalOrder.compoSite != totalOrder.table_ID.table_Zone||
+                        totalOrder.totalOrder_Status === "1" 
                       }
-                      onClick={() => Checkbill(totalOrder.compoSite,totalOrder.totalOrder_Status)}
+                      onClick={() => Checkbill(totalOrder.compoSite,totalOrder.totalOrder_Status,totalOrder.totalOrder_ID)}
                       className="btn btn-outline-primary"
                     >
                       เช็คบิล
@@ -941,7 +947,7 @@ const TatalOrder = () => {
                       style={{ marginLeft: "3px" }}
                       variant="btn btn-outline-dark"
                       disabled={
-                        totalOrder.compoSite != totalOrder.table_ID.table_ID 
+                        totalOrder.compoSite != totalOrder.table_ID.table_Zone 
                       }
                       onClick={() => handleShowpay(totalOrder)}
                     >
@@ -952,7 +958,7 @@ const TatalOrder = () => {
                       style={{ marginLeft: "3px" }}
                       variant="danger"
                       disabled={
-                        totalOrder.compoSite != totalOrder.table_ID.table_ID ||
+                        totalOrder.compoSite != totalOrder.table_ID.table_Zone ||
                         DisBTNmixTable(totalOrder.compoSite , totalOrder.totalOrder_Status)
                       }
                       onClick={() => handleShow(totalOrder)}

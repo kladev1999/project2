@@ -27,6 +27,10 @@ const addOrderMenus = (OrderMenus) =>{
 const getOrderMenuByID = (OrderMenu_ID) =>{
     return axios.get("http://localhost:8080/OrderMenu/getOrderMenu/"+ OrderMenu_ID,{ headers: authHeader()});
 }
+
+const Cancel = (OrderMenu_ID,Emp) =>{
+    return axios.get("http://localhost:8080/OrderMenu/Cancel/"+ OrderMenu_ID+"/"+Emp,{ headers: authHeader()});
+}
 const updateOrderMenu = (OrderMenu_ID,OrderMenu) =>{
     return axios.put("http://localhost:8080/OrderMenu/updateOrderMenu/"+ OrderMenu_ID,OrderMenu,{ headers: authHeader()});
 }
@@ -104,11 +108,8 @@ const OrderMenuService = {
     updateStatus,
     mergeTable,
     cancelStatus,
-    monthCost,
-    incomeAllMenu,
-    incomeAllMenuTotal,
-    incomeByMenuID,
-    incomeAllByDate
+    Cancel,
+    monthCost
 }
 
 export default OrderMenuService;
