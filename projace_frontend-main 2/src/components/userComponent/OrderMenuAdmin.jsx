@@ -259,7 +259,8 @@ function OrderMenuAdmin() {
         },
         status_ID: {
           status_ID: 0,
-        }
+        },
+        cencel: ''
       };
       console.log("Or = ", OrderMenu);
       OrderMenuService.addOrderMenu(OrderMenu)
@@ -304,7 +305,7 @@ function OrderMenuAdmin() {
           saveTotalPrice(TotalPrice, totalOrder_ID);
   
   
-            navigate("/ListTotalOrderMenuEmp/" + compoSite + "/" + totalOrder_ID+"/"+"0");
+            navigate("/ListTotalOrderMenu/" + compoSite + "/" + totalOrder_ID+"/"+"0");
   
         }
         setIsLoading(false)

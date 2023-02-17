@@ -257,7 +257,8 @@ function OrderMenuEmp() {
         },
         status_ID: {
           status_ID: 0,
-        }
+        },
+        cencel: ''
       };
       console.log("Or = ", OrderMenu);
       OrderMenuService.addOrderMenu(OrderMenu)

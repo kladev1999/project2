@@ -102,7 +102,7 @@ function TebleComponent() {
     
   }
 
-  const checkInTable = (e, table_ID) => {
+  const checkInTable = (e, table_Zone,table_ID) => {
     e.preventDefault();
     const totalOrderState = {
       totalPrice,
@@ -110,7 +110,7 @@ function TebleComponent() {
       id: {
         id: currentUser.id,
       },
-      compoSite: table_ID,
+      compoSite: table_Zone,
       table_ID: {
         table_ID,
       },
@@ -238,7 +238,7 @@ function TebleComponent() {
                     <button
                       className="btn btn-primary"
                       disabled={disableButton(t.table_ID)}
-                      onClick={(e) => checkInTable(e, t.table_ID)}
+                      onClick={(e) => checkInTable(e, t.table_Zone,t.table_ID)}
                     >
                       {" "}
                       เปิดโต๊ะ

@@ -58,9 +58,9 @@ const getMoveTable = () => {
   );
 };
 
-const MoveTable = (table, totalOrder_ID) => {
+const MoveTable = (pointTable, totalOrder_ID) => {
   return axios.get(
-    "http://localhost:8080/table/moveTable/" + table + "/" + totalOrder_ID,
+    "http://localhost:8080/table/moveTable/" + pointTable + "/" + totalOrder_ID,
     { headers: authHeader() }
   );
 };

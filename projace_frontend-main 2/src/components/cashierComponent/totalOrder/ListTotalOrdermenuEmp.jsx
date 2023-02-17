@@ -1,25 +1,34 @@
-import React, { useEffect, useState,useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import TotalOrderService from "../../../services/TotalOrderService";
 import { Container, Row, Col } from "react-grid-system";
 import OrderMenuService from "../../../services/OrderMenuService";
+import AuthService from "../../../services/Auth-service";
 function ListTotalOrdermenuEmp() {
-  const { compoSite, table_ID, totalOrder_ID,statusTable } = useParams();
+  const { compoSite, table_ID, totalOrder_ID, statusTable } = useParams();
   const navigate = useNavigate();
   const [totalOrder, setTotalOrder] = useState([]);
   const [list, setlist] = useState([]);
+  const currentUser = AuthService.getCurrentUser();
 
   const [checkPay, setCheckPay] = useState([]);
 
-  let TotalPrice = list?.reduce(
-    (prev, cur) => 
-    cur.status_ID.status_ID !== 3 ?
-    prev + cur.menu_ID.menu_Price * cur.orderMenu_Qty : prev+0,
-    0
-  );
+  let TotalPrice = 0;
+
+  if (list[0]?.totalOrder_ID.discount_ID === null) {
+    TotalPrice = list?.reduce(
+      (prev, cur) =>
+        cur.status_ID.status_ID !== 4
+          ? prev + cur.menu_ID.menu_Price * cur.orderMenu_Qty
+          : prev + 0,
+      0
+    );
+  } else {
+    TotalPrice = list[0]?.totalOrder_ID.totalPrice;
+  }
 
   const getListOrderMenu = useCallback(() => {
-    TotalOrderService.getTotalListOrderById(compoSite,statusTable)
+    TotalOrderService.getTotalListOrderById(compoSite, statusTable)
       .then((response) => {
         setlist(response.data);
         console.log("list = ", response.data);
@@ -27,7 +36,7 @@ function ListTotalOrdermenuEmp() {
       .catch((error) => {
         console.log("Something went wrong", error);
       });
-    }, []);
+  }, []);
 
   const UpdateTotalPrice = (Price) => {
     TotalOrderService.updateTotalprice(Price, totalOrder_ID).then(
@@ -59,13 +68,12 @@ function ListTotalOrdermenuEmp() {
     getTotalOrder(compoSite);
   }, [compoSite, list.length]);
 
-
   useEffect(() => {
-    const id = setInterval(getListOrderMenu,1000);
-    return() => {
+    const id = setInterval(getListOrderMenu, 1000);
+    return () => {
       clearInterval(id);
-    }
-  },[getListOrderMenu])
+    };
+  }, [getListOrderMenu]);
 
   const checkStatus = () => {
     TotalOrderService.checkPay()
@@ -84,16 +92,24 @@ function ListTotalOrdermenuEmp() {
           {value.status_ID.status}
         </td>
       );
-    } else if(value.status_ID.status_ID === 4){
+    } else if (value.status_ID.status_ID === 4) {
       return (
         <td className="text-center" style={{ backgroundColor: "#FF6961" }}>
           {value.status_ID.status}
         </td>
       );
-    }
-    
-    else {
-      return <td className="text-center" style={{ backgroundColor: "#ffc847" }} >{value.status_ID.status}</td>;
+    } else if (value.status_ID.status_ID === 2) {
+      return (
+        <td className="text-center" style={{ backgroundColor: "#49dfff" }}>
+          {value.status_ID.status}
+        </td>
+      );
+    } else {
+      return (
+        <td className="text-center" style={{ backgroundColor: "#ffc847" }}>
+          {value.status_ID.status}
+        </td>
+      );
     }
   };
 
@@ -148,33 +164,49 @@ function ListTotalOrdermenuEmp() {
   };
 
   const cancel = (orderMenu_ID) => () => {
-    if(window.confirm("คุณต้องการยกเลิกหรือไม่!!")){
-    
+    if (window.confirm("คุณต้องการยกเลิกหรือไม่!!")) {
       OrderMenuService.cancelStatus(orderMenu_ID)
-      .then((response) => {
-      })
-      .catch((e) => {
-        console.log(e);
-      });
+        .then((response) => {})
+        .catch((e) => {
+          console.log(e);
+        });
+      OrderMenuService.Cancel(orderMenu_ID, currentUser.name_Emp)
+        .then((response) => {})
+        .catch((e) => {
+          console.log(e);
+        });
     }
-      };
+  };
 
-      const finishedlStatus = (orderMenu_ID,name) => {
-        console.log(name)
-        if(window.confirm(`${name} เสร็จแล้ว!!`)){
+  const finishedlStatus = (orderMenu_ID, name) => {
+    console.log(name);
+    if (window.confirm(`${name} เสร็จแล้ว!!`)) {
+      OrderMenuService.finishedlStatus(orderMenu_ID)
+        .then((response) => {})
+        .catch((e) => {
+          console.log(e);
+        });
+      OrderMenuService.Cancel(orderMenu_ID, currentUser.name_Emp)
+        .then((response) => {})
+        .catch((e) => {
+          console.log(e);
+        });
+    }
+  };
 
-          OrderMenuService.finishedlStatus(orderMenu_ID)
-          .then((response) => {
-            
-          })
-          .catch((e) => {
-            console.log(e);
-          });
-        }
-        
-        
-      }
-      
+  const CancelEmp = (name_Emp, status) => {
+    if (name_Emp === "") {
+      return <>-</>;
+    } else if (status === 4) {
+      return <>ยกเลิกโดย {name_Emp}</>;
+    } else if (status === 3) {
+      return <>เสริฟโดย {name_Emp}</>;
+    } else if (status === 1) {
+      return <>{name_Emp} กำลังทำ</>;
+    } else if (status === 2) {
+      return <>{name_Emp} พร้อมเสริฟ</>;
+    }
+  };
 
   return (
     <Container>
@@ -204,56 +236,66 @@ function ListTotalOrdermenuEmp() {
                     <th className="text-center"> ราคา </th>
                     <th className="text-center"> พนักงานที่รับ </th>
                     <th className="text-center"> Action </th>
+                    <th className="text-center"> Action </th>
                   </tr>
                 </thead>
 
                 <tbody>
                   {list?.map((d, index) => {
+                    return (
+                      <tr>
+                        <th className="text-center">{index + 1}</th>
+                        <td className="text-center">
+                          {d.totalOrder_ID.table_ID.table_Zone}
+                        </td>
+                        {/* <td className="text-center">{d.status_ID.status}</td> */}
+                        {status(d)}
 
-                 return (
-
-                 
-                    <tr>
-                      <th className="text-center">{index + 1}</th>
-                      <td className="text-center">
-                        {d.totalOrder_ID.table_ID.table_Zone}
-                      </td>
-                      {/* <td className="text-center">{d.status_ID.status}</td> */}
-                      {status(d)}
-                 
-                      <td className="text-center">
-                        {timestamp(d.orderMenu_TimeStamp)}
-                      </td>
-                      <td className="text-center">{d.menu_ID.menu_Name}</td>
-                      <td className="text-center">{d.orderMenu_Qty}</td>
-                      <td className="text-center">
-                        {d.menu_ID.menu_Price * d.orderMenu_Qty}
-                      </td>
-                      <td className="text-center">{d.id.name_Emp}</td>
-                      <td>
-                        <button
-                          type="button"
-                          class="btn btn-success"
-                          disabled={d.status_ID.status_ID === 4 || d.status_ID.status_ID === 3}
-                          onClick={() => finishedlStatus(d.orderMenu_ID,d.menu_ID.menu_Name)}
-                        >
-                          {" "}
-                          เสริฟแล้ว
-                        </button>
-                        <button
-                          type="button"
-                          style={{marginLeft: "5px"}}
-                          class="btn btn-danger"
-                          disabled={d.status_ID.status_ID === 4 || d.status_ID.status_ID === 3}
-                          onClick={cancel(d.orderMenu_ID)}
-                        >
-                          {" "}
-                          ยกเลิก{" "}
-                        </button>
-                      </td>
-                    </tr>
-                   
-                    )})}
+                        <td className="text-center">
+                          {timestamp(d.orderMenu_TimeStamp)}
+                        </td>
+                        <td className="text-center">{d.menu_ID.menu_Name}</td>
+                        <td className="text-center">{d.orderMenu_Qty}</td>
+                        <td className="text-center">
+                          {d.menu_ID.menu_Price * d.orderMenu_Qty}
+                        </td>
+                        <td className="text-center">{d.id.name_Emp}</td>
+                        <td>
+                          <button
+                            type="button"
+                            class="btn btn-success"
+                            disabled={
+                              d.status_ID.status_ID === 4 ||
+                              d.status_ID.status_ID === 3
+                            }
+                            onClick={() =>
+                              finishedlStatus(
+                                d.orderMenu_ID,
+                                d.menu_ID.menu_Name
+                              )
+                            }
+                          >
+                            {" "}
+                            เสริฟแล้ว
+                          </button>
+                          <button
+                            type="button"
+                            style={{ marginLeft: "5px" }}
+                            class="btn btn-danger"
+                            disabled={
+                              d.status_ID.status_ID === 4 ||
+                              d.status_ID.status_ID === 3
+                            }
+                            onClick={cancel(d.orderMenu_ID)}
+                          >
+                            {" "}
+                            ยกเลิก{" "}
+                          </button>
+                        </td>
+                        <td>{CancelEmp(d.cencel, d.status_ID.status_ID)}</td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             )}
