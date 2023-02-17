@@ -31,6 +31,9 @@ public class Order_Menu {
 	
 	@Column(nullable = false,length = 10)
 	private Integer orderMenu_Qty;
+
+	@Column(nullable = false,length = 10)
+	private String cencel;
 	
 	
 	@Column(nullable = false,length = 200)

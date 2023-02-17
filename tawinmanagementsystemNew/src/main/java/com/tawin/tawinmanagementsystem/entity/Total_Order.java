@@ -37,7 +37,7 @@ public class Total_Order {
 	private Integer totalPrice;
 
 	@Column(nullable = false, length = 5)
-	private Integer compoSite;
+	private String compoSite;
 
 	@Column(nullable = false, length = 50)
 	private String totalOrder_Status;

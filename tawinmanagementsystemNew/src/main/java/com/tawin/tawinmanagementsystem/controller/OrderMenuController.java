@@ -75,7 +75,7 @@ public class OrderMenuController {
 	}
 
 	@GetMapping("/getListOrderMenu/{totalOrder_ID}/{statusTable}")
-	public List<Order_Menu> getStockTypeByIDd(@PathVariable Integer totalOrder_ID,@PathVariable Integer statusTable) {
+	public List<Order_Menu> getStockTypeByIDd(@PathVariable String totalOrder_ID,@PathVariable Integer statusTable) {
 
 		return (List<Order_Menu>) orderMenuRepo.findByTotalOrder_ID(totalOrder_ID,statusTable);
 	}
@@ -171,6 +171,11 @@ public class OrderMenuController {
 		return orderMenuRepo.cancelStatus(orderMenu_ID);
 	}
 
+	@GetMapping("/Cancel/{orderMenu_ID}/{Emp}")
+	public int cancel(@PathVariable Long orderMenu_ID,@PathVariable String Emp) {
+		return orderMenuRepo.Cancel(orderMenu_ID,Emp);
+	}
+
 	@GetMapping("/finished/{orderMenu_ID}")
 	public int finishedStatus(@PathVariable Long orderMenu_ID) {
 		return orderMenuRepo.finishedStatus(orderMenu_ID);
@@ -178,9 +183,9 @@ public class OrderMenuController {
 
 // การรวมโต๊ะ
 	@GetMapping("/mergeTable/{totalOrder_ID}/{pointTable}")
-	public int mergeTable(@PathVariable int totalOrder_ID, @PathVariable int pointTable) {
+	public int mergeTable(@PathVariable int totalOrder_ID, @PathVariable String pointTable) {
 		orderMenuRepo.mergeTable(totalOrder_ID, pointTable);
-		return pointTable;
+		return orderMenuRepo.mergeTable(totalOrder_ID, pointTable);
 	}
 	
 	@GetMapping("/dayCost")

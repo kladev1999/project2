@@ -16,8 +16,8 @@ public interface Total_OrderRepository extends JpaRepository<Total_Order, Intege
 
 	@Query(value = "SELECT * "
 			+ "FROM total_order "
-			+ "WHERE table_id NOT IN (SELECT table_id FROM total_order WHERE compo_site = :compo_site) AND total_order_status = 0 AND table_id = compo_site AND total_order_time_stamp like :Datetime%", nativeQuery = true)
-	List<Total_Order> findByMixTable_ID(@Param("compo_site") Integer compo_site,@Param("Datetime") String Datetime);
+			+ "WHERE table_id NOT IN (SELECT table_id FROM total_order WHERE compo_site = :compo_site) AND total_order_status = 0 AND total_order_time_stamp like :Datetime%", nativeQuery = true)
+	List<Total_Order> findByMixTable_ID(@Param("compo_site") String compo_site,@Param("Datetime") String Datetime);
 
 	@Query(value = "SELECT * FROM total_order where total_order_time_stamp like :Datetime% order by total_order_status ASC", nativeQuery = true)
 	List<Total_Order> getDatetime(@Param("Datetime") String Datetime);
@@ -46,7 +46,7 @@ public interface Total_OrderRepository extends JpaRepository<Total_Order, Intege
 	@Modifying
 	@Transactional
 	@Query(value = "UPDATE total_order SET total_order_status = 1 WHERE compo_site = :compo_site", nativeQuery = true)
-	public int Update_StatusPay(@Param("compo_site") Integer compo_site);
+	public int Update_StatusPay(@Param("compo_site") String compo_site);
 
 	// @Modifying
 	// @Transactional
@@ -68,6 +68,11 @@ public interface Total_OrderRepository extends JpaRepository<Total_Order, Intege
 			+ "FROM total_order \n"
 			+ "WHERE total_order.total_order_status = :status", nativeQuery = true)
 	public List<Total_Order> checkPay(int status);
+
+	@Modifying
+    @Transactional
+    @Query(value = "UPDATE total_order SET discount_id = :discount_id WHERE total_order_id = :total_order_id",nativeQuery = true)
+    public void updateDiscount(@Param("discount_id") Integer discount_id,@Param("total_order_id")Integer total_order_id);
 
 	// @Modifying
 	// @Transactional

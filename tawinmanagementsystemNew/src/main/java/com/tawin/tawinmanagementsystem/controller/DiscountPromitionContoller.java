@@ -40,6 +40,8 @@ public class DiscountPromitionContoller {
 	}
 
 	
+
+	
 	
 	@PostMapping("/addDiscount")
 	public DiscountPromotion addDiscount(@RequestBody DiscountPromotion disPromo) {

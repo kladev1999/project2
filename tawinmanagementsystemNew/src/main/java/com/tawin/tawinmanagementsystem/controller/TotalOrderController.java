@@ -110,7 +110,7 @@ public class TotalOrderController {
 	}
 
 	@GetMapping("/UpdateStatusPay/{compo_site}")
-	public int Update_StatusPay(@PathVariable int compo_site) {
+	public int Update_StatusPay(@PathVariable String compo_site) {
 		return totalOrderRepo.Update_StatusPay(compo_site);
 	}
 
@@ -143,13 +143,19 @@ public class TotalOrderController {
 		return pointTable;
 	}
 
+	@GetMapping("/UpdateDiscount/{discount_id}/{totalOrder_ID}")
+	public int UpdateDiscount(@PathVariable Integer discount_id,@PathVariable Integer totalOrder_ID) {
+		totalOrderRepo.updateDiscount(discount_id, totalOrder_ID);
+		return discount_id;
+	}
+
 	// @GetMapping("/findMixTable/{compo_site}")
 	// public List<Total_Order> findMixTable_ID(@PathVariable int compo_site) {
 	// 	return totalOrderRepo.findByMixTable_ID(compo_site);
 	// }
 
 	@GetMapping("/getMixTable/{compo_site}/{Datetime}")
-	public List<Total_Order> getMixtable(@PathVariable Integer compo_site,@PathVariable String Datetime) {
+	public List<Total_Order> getMixtable(@PathVariable String compo_site,@PathVariable String Datetime) {
 		return (List<Total_Order>) totalOrderRepo.findByMixTable_ID(compo_site,Datetime);
 	}
 
