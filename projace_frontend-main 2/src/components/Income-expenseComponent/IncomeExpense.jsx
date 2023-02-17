@@ -4,8 +4,15 @@ import TotalOrderService from "../../services/TotalOrderService";
 import OrderMenuService from "../../services/OrderMenuService";
 import { Button, Spinner } from "react-bootstrap";
 import Dropdown from "react-bootstrap/Dropdown";
+import { Container, Row, Col } from "react-grid-system";
 function IncomeExpense() {
   const [selectedDate, setSelectedDate] = useState({
+    day: "",
+    month: "",
+    year: "",
+  });
+
+  const [selectedDateEnd, setSelectedDateEnd] = useState({
     day: "",
     month: "",
     year: "",
@@ -49,7 +56,37 @@ function IncomeExpense() {
     dateData = selectedDate.year + "-" + selectedDate.month;
   }
 
-  console.log(dateDatalable);
+  let dateDatalableEnd = "";
+  let dateDataEnd = "";
+
+  let dateEnd = "";
+  if (
+    selectedDateEnd.day === "" &&
+    selectedDateEnd.month === "" &&
+    selectedDateEnd.year === ""
+  ) {
+    dateDatalableEnd = [];
+  } else if (selectedDateEnd.month === "") {
+    dateDataEnd = selectedDateEnd.year;
+    dateDatalableEnd = [
+      "01",
+      "02",
+      "03",
+      "04",
+      "05",
+      "06",
+      "07",
+      "08",
+      "09",
+      "10",
+      "11",
+      "12",
+    ];
+  } else if (selectedDateEnd.day === "") {
+    dateDataEnd = selectedDateEnd.year + "-" + selectedDateEnd.month;
+  }
+
+  console.log(dateDatalableEnd);
 
 
 
@@ -68,7 +105,7 @@ function IncomeExpense() {
       const response = await Promise.resolve(
         OrderMenuService.incomeAllMenuTotal()
       );
-      console.log("Response data: ", response.data);
+      console.log("Response data profit cost: ", response.data);
       setProFitAndCost(response.data);
     } catch (error) {
       console.log(error);
@@ -85,10 +122,111 @@ function IncomeExpense() {
     }
   };
 
+  const getIncomeAllByDate = async (date) =>{
+    try{
+      const response = await Promise.resolve(OrderMenuService.incomeAllByDate(date));
+      const response2 = await Promise.resolve(OrderMenuService.incomeAllDate(date));
+      setIncomeAll(null);
+      setIncomeAll(response.data);
 
-  const grap = (dataDate) => {
+
+      console.log(response2.data);
+      // setProFitAndCost(null);
+      setProFitAndCost(response2.data);
+    }catch(error){
+      console.log(error);
+    }
+  }
+
+  const getIncomeBetweenDate = async (startDate,endDate) =>{
+    try{
+        const response = await Promise.resolve(OrderMenuService.incomeAllBetweenByDate(startDate,endDate));
+        const response2 = await Promise.resolve(OrderMenuService.incomeBetweenAllMenu(startDate,endDate));
+
+        setIncomeAll(null);
+        setIncomeAll(response.data);
+
+        setProFitAndCost(response2.data);
+    }catch(error){
+      console.log(error);
+    }
+  }
+
+
+  const grap = (dataDateStart) => {
+    let dateDatalableStart = "";
+    let dateDataStart = "";
+    if (dataDateStart.day === "" && dataDateStart.month === "" && dataDateStart.year === "") {
+      dateDatalableStart = [];
+    } else if (
+      dataDateStart.day !== "" &&
+      dataDateStart.month !== "" &&
+      dataDateStart.year !== ""
+    ) {
+      dateDataStart = dataDateStart.year + "-" + dataDateStart.month + "-" + dataDateStart.day;
+      dateDatalableStart = dataDateStart.day;
+    } else if (dataDateStart.month === "") {
+      dateDataStart = dataDateStart.year;
+      dateDatalableStart = [
+        "01",
+        "02",
+        "03",
+        "04",
+        "05",
+        "06",
+        "07",
+        "08",
+        "09",
+        "10",
+        "11",
+        "12",
+      ];
+    } else if (dataDateStart.day === "") {
+      dateDataStart = dataDateStart.year + "-" + dataDateStart.month;
+      dateDatalableStart = days;
+    }
+
+    console.log(dateDataStart);
+
+    date = dateData;
+  };
+
+  const grapEnd = (dataDate,dataDateStart) => {
     let dateDatalable = "";
     let dateData = "";
+    let dateDatalableStart = "";
+    let dateDataStart = "";
+    if (dataDateStart.day === "" && dataDateStart.month === "" && dataDateStart.year === "") {
+      dateDatalableStart = [];
+    } else if (
+      dataDateStart.day !== "" &&
+      dataDateStart.month !== "" &&
+      dataDateStart.year !== ""
+    ) {
+      dateDataStart = dataDateStart.year + "-" + dataDateStart.month + "-" + dataDateStart.day;
+      dateDatalableStart = dataDateStart.day;
+    } else if (dataDateStart.month === "") {
+      dateDataStart = dataDateStart.year;
+      dateDatalableStart = [
+        "01",
+        "02",
+        "03",
+        "04",
+        "05",
+        "06",
+        "07",
+        "08",
+        "09",
+        "10",
+        "11",
+        "12",
+      ];
+    } else if (dataDateStart.day === "") {
+      dateDataStart = dataDateStart.year + "-" + dataDateStart.month;
+      dateDatalableStart = days;
+    }
+
+
     if (dataDate.day === "" && dataDate.month === "" && dataDate.year === "") {
       dateDatalable = [];
     } else if (
@@ -119,13 +257,28 @@ function IncomeExpense() {
       dateDatalable = days;
     }
 
-    console.log(dateData);
+    console.log("Start",dateDataStart);
+    console.log("End",dateData);
 
     date = dateData;
+    // getIncomeAllByDate(dateDataStart);
+    if(dateData.length === 0){
+      getIncomeAllByDate(dateDataStart);
+    }else if(dateData.length > 0){
+      getIncomeBetweenDate(dateDataStart,dateData);
+    }
   };
 
 
 
+  useEffect(() => {
+    let year = selectedDate.year;
+    let month = selectedDate.month;
+    let daysInMonth = new Date(year, month, 0).getDate();
+    let daysArr = Array.from({ length: daysInMonth }, (_, i) => i + 1);
+    setDays(daysArr);
+  }, [selectedDate]);
+  
   useEffect(() => {
     let year = selectedDate.year;
     let month = selectedDate.month;
@@ -146,6 +299,8 @@ function IncomeExpense() {
     <>
       <div className="row">
         <div className="text-center" style={{ margin: "40px" }}>
+          <div>
+            เริ่มต้น:
           <select
             value={selectedDate.day}
             disabled={selectedDate.month === ""}
@@ -194,8 +349,62 @@ function IncomeExpense() {
               </option>
             ))}
           </select>
+          </div>
+
+          <div>
+            สิ้นสุด: 
+          <select
+            value={selectedDateEnd.day}
+            disabled={selectedDateEnd.month === ""}
+            onChange={(e) =>
+              setSelectedDateEnd({ ...selectedDateEnd, day: e.target.value })
+            }
+          >
+            <option value="">วันที่</option>
+            {days.map((day) => (
+              <option key={day} value={day}>
+                {day}
+              </option>
+            ))}
+          </select>
+
+          <select
+            style={{ margin: "10px" }}
+            value={selectedDateEnd.month}
+            disabled={selectedDateEnd.year === ""}
+            onChange={(e) =>
+              setSelectedDateEnd({ ...selectedDateEnd, month: e.target.value })
+            }
+          >
+            <option value="">เดือน</option>
+            {Array.from({ length: 12 }, (_, i) =>
+              new Date(null, i).toLocaleString("default", { month: "2-digit" })
+            ).map((month, index) => (
+              <option key={month} value={month}>
+                {month}
+              </option>
+            ))}
+          </select>
+          <select
+            value={selectedDateEnd.year}
+            onChange={(e) =>
+              setSelectedDateEnd({ ...selectedDateEnd, year: e.target.value })
+            }
+          >
+            <option value="">ปี</option>
+            {Array.from(
+              { length: 10 },
+              (_, i) => new Date().getFullYear() - i
+            ).map((year) => (
+              <option key={year} value={year}>
+                {year}
+              </option>
+            ))}
+          </select>
+          </div>
+          
           <div className="text-center">
-            <Button variant="success" onClick={() => grap(selectedDate)}>
+            <Button variant="success" onClick={() => grapEnd(selectedDateEnd,selectedDate)}>
               {"ตกลง"}
             </Button>
           </div>
@@ -213,7 +422,6 @@ function IncomeExpense() {
               <th>ต้นทุนเมนูรวม (บาท)</th>
               <th>ขายได้รวม (บาท)</th>
               <th>กำไรทั้งหมด (บาท)</th>
-              <th>จัดการ</th>
             </tr>
           </thead>
           <tbody>
@@ -227,27 +435,30 @@ function IncomeExpense() {
                 <td>{income?.totalCost}</td>
                 <td>{income?.totalSell}</td>
                 <td>{income?.proFit}</td>
-                <td>
-                  <button
-                    onClick={() => getIncomeByIDMenu(income.menu_ID,date)}
-                    className="btn btn-warning"
-                  >
-                    ดูข้อมูล
-                  </button>
-                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      <div>
-        <h2 style={{ color: "red" }}>
-          รายได้ทั้งหมด = {Intl.NumberFormat().format(proFitAndCost[0])} บาท
-        </h2>
-        <h2 style={{ color: "green" }}>
-          กำไรทั้งหมด = {Intl.NumberFormat().format(proFitAndCost[1])} บาท
-        </h2>
-      </div>
+     <Container>
+        <Row>
+        <h4 style={{ color: "#F4656D" ,margin:"5px",padding:"5px"}}>
+          รายได้ทั้งหมด = {Intl.NumberFormat()?.format(proFitAndCost[0])} บาท
+        </h4>
+        <h4 style={{ color: "#656868" ,margin:"5px",padding:"5px"}}>
+          ต้นทุนทั้งหมด = {Intl.NumberFormat()?.format(proFitAndCost[4])} บาท
+        </h4>
+        <h4 style={{ color: "black",margin:"5px",padding:"5px" }}>
+          ส่วนลดทั้งหมด = {Intl.NumberFormat()?.format(proFitAndCost[2])} บาท
+        </h4>
+        <h4 style={{ color: "#659AD2",margin:"5px",padding:"5px" }}>
+          กำไรทั้งหมด = {Intl.NumberFormat()?.format(proFitAndCost[1])} บาท
+        </h4>
+        <h4 style={{ color: "#729897",margin:"5px",padding:"5px" }}>
+          กำไรทั้งหมดหลังจากหักส่วนลด = {Intl.NumberFormat()?.format(proFitAndCost[3])} บาท
+        </h4>
+        </Row>
+        </Container>
     </>
   );
 }

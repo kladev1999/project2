@@ -104,7 +104,7 @@ function Checkbill() {
 
   const updateDiscount = () => {
     if(window.confirm("คุณต้องการเพิ่มโปรโมชัน")){
-      TotalOrderService.UpdateDiscount(discount?.discount_ID,totalOrder_ID).then(() => {
+      TotalOrderService.UpdateDiscount(discount?.discount_ID,totalOrder_ID,distotal).then(() => {
     
       });
 

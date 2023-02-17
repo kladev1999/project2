@@ -35,8 +35,16 @@ public interface Total_OrderRepository extends JpaRepository<Total_Order, Intege
 
 	@Modifying
 	@Transactional
-	@Query(value = "UPDATE total_order SET total_price = :totalPrice WHERE total_order_id = :total_order_ID ", nativeQuery = true)
-	public int Update_Totalprice(@Param("totalPrice") Integer totalPrice, @Param("total_order_ID") Integer total_order_ID);
+	@Query(value = "UPDATE total_order SET total_order.total_price = :totalPrice WHERE total_order.total_order_id = :totalOrderID"
+			, nativeQuery = true)
+	public int Update_Totalprice(int totalPrice,int totalOrderID);
+	
+	@Modifying
+	@Transactional
+	@Query(value="UPDATE total_order\n"
+			+ "SET after_discount = :afterDiscount\n"
+			+ "WHERE total_order_id = :total_order_ID",nativeQuery = true)
+	public int insertDiscount(int total_order_ID,int afterDiscount);
 
 	@Modifying
 	@Transactional

@@ -55,8 +55,8 @@ const totalPrice = (totalPrice,totalOrder_ID)=>{
     return axios.get("http://localhost:8080/totalOrder/totalPrice/"+totalPrice+"/"+totalOrder_ID,{ headers: authHeader()});
 }
 
-const UpdateDiscount = (Discount_ID,totalOrder_ID)=>{
-    return axios.get("http://localhost:8080/totalOrder/UpdateDiscount/"+Discount_ID+"/"+totalOrder_ID,{ headers: authHeader()});
+const UpdateDiscount = (Discount_ID,totalOrder_ID,distotal)=>{
+    return axios.get("http://localhost:8080/totalOrder/UpdateDiscount/"+Discount_ID+"/"+totalOrder_ID+"/"+distotal,{ headers: authHeader()});
 }
 
 const Update_Discount = (discount_id,totalOrder_ID)=>{

@@ -89,6 +89,16 @@ const incomeByMenuID = (menu_ID,date) => {
 const incomeAllByDate = (date) => {
     return axios.get("http://localhost:8080/OrderMenu/incomeAllByDate/"+date,{ headers: authHeader()});
 }
+const incomeAllDate = (date) => {
+    return axios.get("http://localhost:8080/OrderMenu/incomeAll/"+date,{ headers: authHeader()});
+}
+const incomeAllBetweenByDate = (startDate,endDate) => {
+    return axios.get("http://localhost:8080/OrderMenu/incomeAllBetweenBydate/"+startDate+"/"+endDate,{ headers: authHeader()});
+}
+const incomeBetweenAllMenu =(startDate,endDate)=>{
+    return axios.get("http://localhost:8080/OrderMenu/incomeBetweenAllMenu/"+startDate+"/"+endDate,{ headers: authHeader()});
+}
+
 
 
 
@@ -109,7 +119,14 @@ const OrderMenuService = {
     mergeTable,
     cancelStatus,
     Cancel,
-    monthCost
+    monthCost,
+    incomeAllMenu,
+    incomeAllMenuTotal,
+    incomeByMenuID,
+    incomeAllByDate,
+    incomeAllDate,
+    incomeAllBetweenByDate,
+    incomeBetweenAllMenu
 }
 
 export default OrderMenuService;

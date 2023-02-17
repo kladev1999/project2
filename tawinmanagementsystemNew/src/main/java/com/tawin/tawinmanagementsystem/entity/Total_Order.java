@@ -47,6 +47,10 @@ public class Total_Order {
 
 	@Column(name = "total_Order_image")
 	private String totalOrder_image;
+	
+	@JsonIgnore
+	@Column(nullable =true,name = "after_discount")
+	private int afterDiscount;
 
 	@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)

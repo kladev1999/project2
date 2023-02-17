@@ -60,6 +60,7 @@ public class TotalOrderController {
 	public Total_Order addTotalOrder(@RequestBody Total_Order totalOrder) {
 		totalOrder.setTotalOrder_TimeStamp(LocalDateTime.now());
 		totalOrder.setTotalOrder_Status("0");
+		totalOrder.setAfterDiscount(0);
 		// totalOrder.setCompoSite(0);
 		return totalOrderRepo.save(totalOrder);
 	}
@@ -143,9 +144,11 @@ public class TotalOrderController {
 		return pointTable;
 	}
 
-	@GetMapping("/UpdateDiscount/{discount_id}/{totalOrder_ID}")
-	public int UpdateDiscount(@PathVariable Integer discount_id,@PathVariable Integer totalOrder_ID) {
+	@GetMapping("/UpdateDiscount/{discount_id}/{totalOrder_ID}/{distotal}")
+	public int UpdateDiscount(@PathVariable Integer discount_id,@PathVariable Integer totalOrder_ID, @PathVariable Integer distotal) {
 		totalOrderRepo.updateDiscount(discount_id, totalOrder_ID);
+		totalOrderRepo.insertDiscount(totalOrder_ID, distotal);
+
 		return discount_id;
 	}
 

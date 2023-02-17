@@ -15,4 +15,5 @@ public class Income {
 	private int totalCost;
 	private int menuPrice;
 	private int proFit;
+	private int discount;
 }

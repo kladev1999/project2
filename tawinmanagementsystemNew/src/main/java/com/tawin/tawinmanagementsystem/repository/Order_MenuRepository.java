@@ -205,6 +205,18 @@ public interface Order_MenuRepository extends JpaRepository<Order_Menu, Integer>
 			+ "AND  EXTRACT(MONTH FROM order_menu.order_menu_time_stamp) = :month "
 			+ "AND  EXTRACT(YEAR FROM order_menu.order_menu_time_stamp) = :year", nativeQuery = true)
 	public int findMenuDate(Long menu_ID, String day, String month, String year);
+	
+	@Query(value="SELECT SUM(total_order.after_discount)\n"
+			+ "FROM total_order\n"
+			+ "WHERE EXTRACT(DAY FROM total_order.total_order_time_stamp) = :day\n"
+			+ "AND  EXTRACT(MONTH FROM total_order.total_order_time_stamp) = :month\n"
+			+ "AND  EXTRACT(YEAR FROM total_order.total_order_time_stamp) = :year",nativeQuery = true)
+	public int discountByDate(String day, String month, String year);
+	
+	@Query(value = "SELECT SUM(total_order.after_discount)\n"
+			+ "FROM total_order\n"
+			+ "WHERE total_order.total_order_time_stamp BETWEEN :startDate AND :endDate",nativeQuery = true)
+	public int discountBetween(String startDate, String endDate);
 
 	// แสดงรายรับรายจ่ายทั้งหมด
 	@Query(value = "SELECT SUM(order_menu.order_menu_qty)\n" + "FROM order_menu\n"
@@ -261,6 +273,8 @@ public interface Order_MenuRepository extends JpaRepository<Order_Menu, Integer>
                         + "WHERE total_order.total_order_id = :totalOrder_ID", nativeQuery = true)
         public int mergeTable(@Param("totalOrder_ID") int totalOrder_ID, @Param("pointTable") String pointTable);
         
-       
+        @Query(value="SELECT SUM(after_discount)\n"
+        		+ "FROM total_order",nativeQuery = true)
+       public int totalDiscount();
         
 }
