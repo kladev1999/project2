@@ -130,13 +130,7 @@ function ListTotalOrdermenuEmp() {
           >
             กลับ
           </button>
-          <button
-          style={{marginRight: "5px" }}
-          onClick={() => toStock()}
-          className="btn btn-outline-warning"
-          >
-            วัตถุดิบ
-          </button>
+         
         </div>
       );
     } else {

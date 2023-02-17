@@ -234,7 +234,7 @@ const TableOrderEmp = () => {
   };
 
   const editMixtable = (value) => {
-    if (value.table_ID.table_ID !== value.compoSite) {
+    if (value.table_ID.table_ID != value.compoSite) {
       return (
         <button
           style={{ marginLeft: "3px" }}
@@ -265,7 +265,9 @@ const TableOrderEmp = () => {
   const DeleteTable = ({ data }) => {
     return (
       <>
-        <Modal show={data ? true : false} onHide={handleClose}>
+        <Modal show={data ? true : false} onHide={handleClose} size="lg"
+          aria-labelledby="contained-modal-title-vcenter"
+          centered>
           <p></p>
           <p></p>
           <Modal.Header closeButton>
@@ -314,7 +316,9 @@ const TableOrderEmp = () => {
 
     return (
       <>
-        <Modal show={data ? true : false} onHide={handleClosepro}>
+        <Modal show={data ? true : false} onHide={handleClosepro} size="lg"
+          aria-labelledby="contained-modal-title-vcenter"
+          centered>
           <p></p>
           <p></p>
           <Modal.Header closeButton>
@@ -396,7 +400,9 @@ const TableOrderEmp = () => {
 
     return (
       <>
-        <Modal show={data ? true : false} onHide={handleClosepay}>
+        <Modal show={data ? true : false} onHide={handleClosepay}size="lg"
+          aria-labelledby="contained-modal-title-vcenter"
+          centered >
           <p></p>
           <p></p>
           <Modal.Header closeButton>
@@ -404,7 +410,7 @@ const TableOrderEmp = () => {
           </Modal.Header>
           <Modal.Body>
             <div className="text-center">
-              <h3>โต๊ที่ {data?.table_ID?.table_ID}</h3>
+              <h3>โต๊ะ {data?.table_ID?.table_Zone}</h3>
               <h3>
                 จำนวนรวมทั้งหมด {Intl.NumberFormat().format(data?.totalPrice)}{" "}
                 บาท
@@ -469,7 +475,7 @@ const TableOrderEmp = () => {
             <Modal.Body>
               <div>
                 <h2 className="text-center">
-                  โต๊ที่ {data?.table_ID?.table_ID} จะย้ายโต๊ะไปที่
+                  โต๊ะ {data?.table_ID?.table_Zone} จะย้ายโต๊ะไปที่
                 </h2>
 
                 {getMoveTable?.map((value, index) => {
@@ -484,7 +490,7 @@ const TableOrderEmp = () => {
                           onChange={() => setPointTable(value.table_ID)}
                         />
                         <label>
-                          โต๊ะที่ {value.table_ID} Zone {value.table_Zone}
+                          โต๊ะ {value.table_Zone}
                         </label>
                       </div>
                     </fieldset>
@@ -578,7 +584,9 @@ const TableOrderEmp = () => {
 
     return (
       <>
-        <Modal show={data ? true : false} onHide={handleCloseMix}>
+        <Modal show={data ? true : false} onHide={handleCloseMix}size="lg"
+          aria-labelledby="contained-modal-title-vcenter"
+          centered>
           <p></p>
           <p></p>
           <Modal.Header closeButton>
@@ -586,9 +594,9 @@ const TableOrderEmp = () => {
           </Modal.Header>
           <form onSubmit={() => Movetable(data?.totalOrder_ID)}>
             <Modal.Body>
-              <div>
+              <div className="text-center">
                 <h2 className="text-center">
-                  โต๊ที่ {data?.table_ID?.table_ID} จะรวมโต๊ะไปที่
+                  โต๊ะที่ {data?.table_ID?.table_Zone} จะรวมโต๊ะไปที่
                 </h2>
                 {table?.map((t) => {
                   return (
@@ -602,8 +610,7 @@ const TableOrderEmp = () => {
                           onClick={() => setPointTable(t.table_ID.table_ID)}
                         />
                         <label>
-                          โต๊ะที่ {t.table_ID.table_ID} Zone{" "}
-                          {t.table_ID.table_Zone}
+                          โต๊ะ {t.table_ID.table_Zone}
                         </label>
                       </div>
                     </fieldset>
@@ -695,7 +702,7 @@ const TableOrderEmp = () => {
             <Modal.Body>
               <div>
                 <h2 className="text-center">
-                  โต๊ที่ {data?.table_ID?.table_ID} จะรวมโต๊ะไปที่
+                  โต๊ะที่ {data?.table_ID?.table_Zone} จะรวมโต๊ะไปที่
                 </h2>
                 {table?.map((t) => {
                   return (
@@ -709,8 +716,7 @@ const TableOrderEmp = () => {
                           onClick={() => setPointTable(t.table_ID.table_ID)}
                         />
                         <label>
-                          โต๊ะที่ {t.table_ID.table_ID} Zone{" "}
-                          {t.table_ID.table_Zone}
+                          โต๊ะที่ {t.table_ID.table_Zone}
                         </label>
                       </div>
                     </fieldset>
@@ -854,7 +860,7 @@ const TableOrderEmp = () => {
                             )
                           }
                           disabled={
-                            totalOrder.compoSite !==
+                            totalOrder.compoSite !=
                               totalOrder.table_ID.table_ID ||
                             totalOrder.totalOrder_Status === "1"
                           }
@@ -871,7 +877,7 @@ const TableOrderEmp = () => {
                             )
                           }
                           disabled={
-                            totalOrder.compoSite !==
+                            totalOrder.compoSite !=
                             totalOrder.table_ID.table_ID
                           }
                           className="btn btn-secondary"
@@ -886,7 +892,7 @@ const TableOrderEmp = () => {
                           <button
                             style={{ marginLeft: "3px" }}
                             disabled={
-                              totalOrder.compoSite !==
+                              totalOrder.compoSite !=
                                 totalOrder.table_ID.table_ID ||
                               totalOrder.totalOrder_Status === "1" ||
                               DisBTNmixTable(totalOrder.compoSite)
@@ -903,7 +909,7 @@ const TableOrderEmp = () => {
                             style={{ marginLeft: "3px" }}
                             variant="btn btn-outline-dark"
                             disabled={
-                              totalOrder.compoSite !==
+                              totalOrder.compoSite !=
                               totalOrder.table_ID.table_ID
                             }
                             onClick={() => handleShowpay(totalOrder)}
@@ -914,7 +920,7 @@ const TableOrderEmp = () => {
                             style={{ marginLeft: "3px" }}
                             variant="danger"
                             disabled={
-                              totalOrder.compoSite !==
+                              totalOrder.compoSite !=
                                 totalOrder.table_ID.table_ID ||
                               DisBTNmixTable(totalOrder.compoSite)
                             }
@@ -963,3 +969,4 @@ const TableOrderEmp = () => {
 };
 
 export default TableOrderEmp;
+

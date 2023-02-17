@@ -127,10 +127,14 @@ public class StockController {
 	public ResponseEntity<Stock> updateStock(@PathVariable Long stock_ID,@RequestBody Stock stockDetails){
 		Stock stock = stockRepo.findById(stock_ID)
 				.orElseThrow(() -> new ResourceNotFoundException("Stock not exist with id :" + stock_ID));
+		
+		
 		stock.setStock_Qty(stockDetails.getStock_Qty());
 		stock.setStock_Cost(stockDetails.getStock_Cost());
 		stock.setStock_Min(stockDetails.getStock_Min());
 		stock.setStockType_ID(stockDetails.getStockType_ID());
+		stock.setPricePerUnit((double)stockDetails.getStock_Cost()/stockDetails.getStock_Qty());
+		
 		Stock updateStock = stockRepo.save(stock);
 		return ResponseEntity.ok(updateStock);
 	}

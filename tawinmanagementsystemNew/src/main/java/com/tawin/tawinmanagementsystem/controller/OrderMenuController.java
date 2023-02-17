@@ -160,9 +160,10 @@ public class OrderMenuController {
 			int totalCost = 0;
 			int totalSell = 0;
 			int proFit = 0;
-			for (int i = 0; i < getListInt(ss.get(index)).size(); i++) {
-				cost += orderMenuRepo.findCostMenu(getListInt(ss.get(i)).get(i), ss.get(i));
-			}
+//			for (int i = 0; i < getListInt(ss.get(index)).size(); i++) {
+//				cost += orderMenuRepo.findCostMenu(getListInt(ss.get(i)).get(i), ss.get(i));
+			cost += getCost(ss.get(index));
+//			}
 			qtyByMenu = orderMenuRepo.findAllDetail(ss.get(index));
 			menuPrice = orderMenuRepo.findMenuInOrderMenu(ss.get(index));
 			totalCost = (cost * qtyByMenu);

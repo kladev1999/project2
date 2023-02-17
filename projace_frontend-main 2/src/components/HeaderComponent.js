@@ -123,7 +123,7 @@ const HeaderComponent = () => {
     <HolidayVillageIcon />,
     <TimelineIcon />,
   ];
-  let iconUser = [<HomeIcon />, <TableRestaurantIcon />, <MapsHomeWorkIcon />];
+  let iconUser = [<HomeIcon />, <TableRestaurantIcon />, <MapsHomeWorkIcon />, <LocalGroceryStoreIcon />];
   let iconCook = [<BalconyIcon />];
 
   const [showCook, setShowCook] = useState(false);
@@ -174,6 +174,9 @@ const HeaderComponent = () => {
       return "/TableEmp";
     } else if (i === 2) {
       return "/promotion";
+    }
+    else if (i === 3){
+      return "/stockEmp";
     }
   };
   const goPageCook = (i) => {
@@ -347,7 +350,7 @@ const HeaderComponent = () => {
             )}
             {showUser && (
               <List>
-                {["Home", "Table", "Promotion"].map((text, index) => (
+                {["Home", "Table", "Promotion","Stock"].map((text, index) => (
   
                   <ListItem key={text} disablePadding sx={{ display: "block" }}>
                     <ListItemButton

@@ -60,6 +60,7 @@ import MStockType from "./components/stockComponent/MStockType";
 import UpdateStockType from "./components/stockComponent/UpdateStockType";
 import ListMunuType from "./components/menuComponent/ListMunuType";
 import UpdateMenutype from "./components/menuComponent/UpdateMenutype";
+import StockEmp from "./components/stockComponent/StockEmp";
 
 
 function App() {
@@ -90,6 +91,7 @@ function App() {
           <Route path="/TableOrderEmp" element={<TableOrderEmp />}></Route>
           <Route path="/stock" element={<ListStockComponent />}></Route>
           <Route path="/addStock" element={<CreateStockComponent />}></Route>
+          <Route path="/stockEmp" element={<StockEmp/>}></Route>
           <Route
             path="/addStockType"
             element={<CreateStockTypeComponent />}

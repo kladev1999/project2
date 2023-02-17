@@ -30,13 +30,14 @@ const TatalOrder = () => {
   const handleClosepay = () => setShowpay(false);
   const handleCloseMove = () => setShowMove(false);
   const handleCloseMix = () => setShowMix(false);
-
   const handleShow = (item) => setShow(item);
   const handleShowModeTable = (item) => setShowMove(item);
   const handleShowMixTable = (item) => setShowMix(item);
   const handleShowEditMixTable = (item) => setShowEditMix(item);
   const handleShowpay = (item) => setShowpay(item);
-  let TotalPrice = totalOrder?.reduce((prev, cur) => prev + cur.totalPrice, 0);
+
+
+  let TotalPrice = totalOrder?.reduce((prev, cur) =>  prev + cur.totalPrice, 0);
   const [date, setDate] = useState(new Date());
   let s = date.toString();
   let datetime =  s.split(' ')
@@ -232,7 +233,7 @@ const TatalOrder = () => {
   };
 
   const editMixtable = (value) => {
-    if (value.table_ID.table_ID !== value.compoSite) {
+    if (value.table_ID.table_ID != value.compoSite) {
       return (
         <button
           style={{ marginLeft: "3px" }}
@@ -320,7 +321,7 @@ const TatalOrder = () => {
 
           <Modal.Header closeButton>
             <Modal.Title>
-              ส่วนลดของโต๊ที่ {data?.table_ID?.table_ID}
+              ส่วนลดของโต๊ะที่ {data?.table_ID?.table_Zone}
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
@@ -418,7 +419,7 @@ const TatalOrder = () => {
           </Modal.Header>
           <Modal.Body>
             <div className="text-center">
-              <h3>โต๊ที่ {data?.table_ID?.table_ID}</h3>
+              <h3>โต๊ะ {data?.table_ID?.table_Zone}</h3>
               <h3>
                 จำนวนรวมทั้งหมด {Intl.NumberFormat().format(data?.totalPrice)}{" "}
                 บาท
@@ -489,7 +490,7 @@ const TatalOrder = () => {
             <Modal.Body>
               <div>
                 <h2 className="text-center">
-                  โต๊ที่ {data?.table_ID?.table_ID} จะย้ายโต๊ะไปที่
+                  โต๊ะ {data?.table_ID?.table_Zone} จะย้ายโต๊ะไปที่
                 </h2>
 
                 {getMoveTable?.map((value, index) => {
@@ -504,7 +505,7 @@ const TatalOrder = () => {
                           onChange={() => setPointTable(value.table_ID)}
                         />
                         <label>
-                          โต๊ะที่ {value.table_ID} Zone {value.table_Zone}
+                          โต๊ะ {value.table_Zone}
                         </label>
                       </div>
                     </fieldset>
@@ -616,7 +617,7 @@ const TatalOrder = () => {
             <Modal.Body>
               <div>
                 <h2 className="text-center">
-                  โต๊ที่ {data?.table_ID?.table_ID} จะรวมโต๊ะไปที่
+                  โต๊ะที่ {data?.table_ID?.table_Zone} จะรวมโต๊ะไปที่
                 </h2>
                 {table?.map((t) => {
                   return (
@@ -630,8 +631,7 @@ const TatalOrder = () => {
                           onClick={() => setPointTable(t.table_ID.table_ID)}
                         />
                         <label>
-                          โต๊ะที่ {t.table_ID.table_ID} Zone{" "}
-                          {t.table_ID.table_Zone}
+                          โต๊ะ {t.table_ID.table_Zone}
                         </label>
                       </div>
                     </fieldset>
@@ -727,7 +727,7 @@ const TatalOrder = () => {
             <Modal.Body>
               <div>
                 <h2 className="text-center">
-                  โต๊ที่ {data?.table_ID?.table_ID} จะรวมโต๊ะไปที่
+                  โต๊ะ {data?.table_ID?.table_Zone} จะรวมโต๊ะไปที่
                
                 </h2>
                 {table?.map((t) => {
@@ -742,8 +742,7 @@ const TatalOrder = () => {
                           onClick={() => setPointTable(t.table_ID.table_ID)}
                         />
                         <label>
-                          โต๊ะที่ {t.table_ID.table_ID} Zone{" "}
-                          {t.table_ID.table_Zone}
+                          โต๊ะ {t.table_ID.table_Zone}
                         </label>
                       </div>
                     </fieldset>
@@ -793,20 +792,14 @@ const TatalOrder = () => {
   };
 
   const statusMixTable = (value) => {
-    if (value.table_ID.table_ID === value.compoSite) {
+    if (value.table_ID.table_ID == value.compoSite) {
       return <p className="text-center">-</p>;
     } else {
       return <p>รวมกับโต๊ะที่ {value.compoSite}</p>;
     }
   };
 
-  const statusMixtable = (value) => {
-    if (value.table_ID.table_ID === value.compoSite) {
-      return;
-    } else {
-      return <p className="text-center">รวมกับโต๊ะที่ {value.compoSite}</p>;
-    }
-  };
+
 
   function MyComponent() {
     let date = new Date();
@@ -833,7 +826,7 @@ const TatalOrder = () => {
 
       return (
         <>
-          {time[0]}
+          เวลา {time[0]}
         </>
       )
     }
@@ -862,9 +855,9 @@ const TatalOrder = () => {
                 <th> ราคารวม </th>
                 <th> เวลาที่เปิดโต๊ะ </th>
                 <th> สถานะ </th>
-                <th> โต๊ะที่</th>
+                <th> โต๊ะ</th>
                 <th> รวมโต๊ะ </th>
-                <th> จัดการ </th>
+                <th> Action </th>
               </tr>
             </thead>
 
@@ -893,7 +886,7 @@ const TatalOrder = () => {
                         )
                       }
                       disabled={
-                        totalOrder.compoSite !== totalOrder.table_ID.table_ID ||
+                        totalOrder.compoSite != totalOrder.table_ID.table_ID ||
                         totalOrder.totalOrder_Status === "1"
                       }
                       className="btn btn-outline-primary"
@@ -910,7 +903,7 @@ const TatalOrder = () => {
                         )
                       }
                       disabled={
-                        totalOrder.compoSite !== totalOrder.table_ID.table_ID
+                        totalOrder.compoSite != totalOrder.table_ID.table_ID
                       }
                       className="btn btn-outline-secondary"
                     >
@@ -922,7 +915,7 @@ const TatalOrder = () => {
                     <button
                       style={{ marginLeft: "3px" }}
                       disabled={
-                        totalOrder.compoSite !== totalOrder.table_ID.table_ID ||
+                        totalOrder.compoSite != totalOrder.table_ID.table_ID ||
                         totalOrder.totalOrder_Status === "1" || DisBTNmixTable(totalOrder.compoSite , totalOrder.totalOrder_Status)
                       }
                       onClick={
@@ -936,7 +929,7 @@ const TatalOrder = () => {
                     <button
                       style={{ marginLeft: "5px" }}
                       disabled={
-                        totalOrder.compoSite !== totalOrder.table_ID.table_ID||
+                        totalOrder.compoSite != totalOrder.table_ID.table_ID||
                         totalOrder.totalOrder_Status === "1"
                       }
                       onClick={() => Checkbill(totalOrder.compoSite,totalOrder.totalOrder_Status)}
@@ -948,7 +941,7 @@ const TatalOrder = () => {
                       style={{ marginLeft: "3px" }}
                       variant="btn btn-outline-dark"
                       disabled={
-                        totalOrder.compoSite !== totalOrder.table_ID.table_ID 
+                        totalOrder.compoSite != totalOrder.table_ID.table_ID 
                       }
                       onClick={() => handleShowpay(totalOrder)}
                     >
@@ -959,7 +952,7 @@ const TatalOrder = () => {
                       style={{ marginLeft: "3px" }}
                       variant="danger"
                       disabled={
-                        totalOrder.compoSite !== totalOrder.table_ID.table_ID ||
+                        totalOrder.compoSite != totalOrder.table_ID.table_ID ||
                         DisBTNmixTable(totalOrder.compoSite , totalOrder.totalOrder_Status)
                       }
                       onClick={() => handleShow(totalOrder)}
@@ -985,7 +978,7 @@ const TatalOrder = () => {
   }
   return (
     <>
-      <h2 className="text-center"> ข้อมูลทั้งหมด </h2>
+      <h2 className="text-center"> Total Order </h2>
       <div>
       <h3>
        {"วัน "} {day}{" "}
@@ -1016,3 +1009,4 @@ const TatalOrder = () => {
 };
 
 export default TatalOrder;
+
