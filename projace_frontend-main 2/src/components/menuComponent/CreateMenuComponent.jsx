@@ -37,7 +37,7 @@ const CreateMenuComponent = () => {
     menu_Name: Yup.string().required("กรุณากรอกชื่อเมนู"),
     menu_Price: Yup.number("กรุณากรอกเฉพาะตัวเลข").required("กรุณากรอกราคา"),
     typeMenu_ID: Yup.string().required("กรุณาระบุประเภทเมนู"),
-    menu_Type: Yup.string().required("กรุณาระบุชนิดเมนู"),
+    // menu_Type: Yup.string().required("กรุณาระบุชนิดเมนู"),
   });
   const formOptions = { resolver: yupResolver(validationSchema) };
 
@@ -53,7 +53,6 @@ const CreateMenuComponent = () => {
       () =>
         setUser({
           menu_Name: "",
-          menu_Type: "",
           menu_Price: "",
           typeMenu_ID: "",
         }),
@@ -70,7 +69,6 @@ const CreateMenuComponent = () => {
       const menu = {
         menu_Name,
         menu_Price,
-        menu_Type,
         typeMenu_ID: {
           typeMenu_ID,
         },
@@ -107,7 +105,6 @@ const CreateMenuComponent = () => {
       });
   };
 
-
   useEffect(() => {
     if (preview.length < 1) return;
     const newPreviewURL = [];
@@ -130,8 +127,14 @@ const CreateMenuComponent = () => {
             <div className="card-body">
               {user && (
                 <form>
-                  <div>
+                  <div className="form-group mb-2">
                     <label className="form-label"> ประเภทเมนู</label>
+
+                    <div className="invalid-feedback">
+                      {errors.menu_Type?.message}
+                    </div>
+                  </div>
+                  <div>
                     <select
                       style={{ width: "200px", marginLeft: "10px" }}
                       name="typeMenu_ID"
@@ -153,30 +156,7 @@ const CreateMenuComponent = () => {
                       {errors.typeMenu_ID?.message}
                     </div>
                   </div>
-                  <div className="form-group mb-2">
-                    <select
-                      style={{
-                        width: "200px",
-                        marginLeft: "10px",
-                        marginBottom: "15px",
-                        marginTop: "15px",
-                      }}
-                      name="typeMenu_ID"
-                      value={menu_Type}
-                      {...register("menu_Type")}
-                      className={`form-control ${
-                        errors.menu_Type ? "is-invalid" : ""
-                      }`}
-                      onChange={(e) => setMenu_Type(e.target.value)}
-                    >
-                      <option value="">-- อาหารหรือเครืองดื่ม --</option>
-                      <option value="0">-- อาหาร --</option>
-                      <option value="1"> -- เครื่องดื่ม -- </option>
-                    </select>
-                    <div className="invalid-feedback">
-                      {errors.menu_Type?.message}
-                    </div>
-                  </div>
+
                   <div className="form-group mb-2">
                     <label className="form-label">ชื่อเมนู</label>
                     <input

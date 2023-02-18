@@ -30,6 +30,9 @@ public class Type_Menu {
 	@Column(nullable = false,length = 50)
 	private String typeMenu_Name;
 	
+	@Column(nullable = false,length = 50)
+	private Integer menu_Type;
+	
 	@JsonIgnore
 	@OneToMany(mappedBy = "menu_ID",fetch = FetchType.LAZY)
     private List<Menu> menu_ID;

@@ -9,6 +9,7 @@ function UpdateMenutype() {
   const { Menutype_ID } = useParams();
   const [Menutype, setMenutype] = useState();
   const [user, setUser] = useState(null);
+  const [menu_Type, setMenuType] = useState();
   const navigate = useNavigate();
 
   const validationSchema = Yup.object().shape({
@@ -37,6 +38,7 @@ function UpdateMenutype() {
   function MenuType() {
     var data = {
       typeMenu_Name: Menutype,
+      menu_Type:menu_Type
     };
 
     MenuService.updateMenuType(Menutype_ID, data)
@@ -50,7 +52,7 @@ function UpdateMenutype() {
 
   const getTableByID = () => {
     MenuService.getMenuTypeByID(Menutype_ID).then((res) => {
-      setMenutype(res.data.typeMenu_Name);
+      setMenutype(res.data.typeMenu_Name,res.data.menu_Type);
       console.log(res.data);
     });
   };
@@ -67,6 +69,29 @@ function UpdateMenutype() {
               {user && (
                 <form>
                   <div className="form-group mb-2">
+                  <label className="form-label"> ประเภทเมนู </label>
+                <select
+                      style={{
+                        width: "200px",
+                        marginLeft: "10px",
+                        marginBottom: "15px",
+                        marginTop: "15px",
+                      }}
+                      name="typeMenu_ID"
+                      value={menu_Type}
+                      {...register("menu_Type")}
+                      className={`form-control ${
+                        errors.menu_Type ? "is-invalid" : ""
+                      }`}
+                      onChange={(e) => setMenuType(e.target.value)}
+                    >
+                      <option value="">
+                        -- เลือกส่วนที่แสดง --
+                      </option>
+                      <option value="0">-- อาหาร --</option>
+                      <option value="1"> -- บาร์เครื่องดื่ม -- </option>
+                    </select>
+
                     <label className="form-label"> ชนิดเมนู :</label>
                     <input
                       type="text"

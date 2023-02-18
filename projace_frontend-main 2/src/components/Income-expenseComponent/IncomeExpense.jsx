@@ -298,7 +298,12 @@ function IncomeExpense() {
   return (
     <>
       <div className="row">
+        <div className="text-center">
+          <h3> รายงานรายรับ - รายจ่าย </h3>
+        </div>
         <div className="text-center" style={{ margin: "40px" }}>
+
+          
           <div>
             เริ่มต้น:
           <select
@@ -401,6 +406,8 @@ function IncomeExpense() {
               </option>
             ))}
           </select>
+
+          
           </div>
           
           <div className="text-center">
@@ -409,6 +416,23 @@ function IncomeExpense() {
             </Button>
           </div>
         </div>
+        <Container>
+        <Row>
+        <h4 style={{ color: "#F4656D" ,margin:"5px",padding:"5px"}}>
+          รายได้ทั้งหมด = {Intl.NumberFormat()?.format(proFitAndCost[0])} บาท
+        </h4>
+        <h4 style={{ color: "#656868" ,margin:"5px",padding:"5px"}}>
+          ต้นทุนทั้งหมด = {Intl.NumberFormat()?.format(proFitAndCost[4])} บาท
+        </h4>
+        <h4 style={{ color: "black",margin:"5px",padding:"5px" }}>
+          ส่วนลดทั้งหมด = {Intl.NumberFormat()?.format(proFitAndCost[2])} บาท
+        </h4>
+        <h4 style={{ color: "green",margin:"5px",padding:"5px" }}>
+          กำไรทั้งหมด = {Intl.NumberFormat()?.format(proFitAndCost[3])} บาท
+        </h4>
+        </Row>
+        </Container>
+
       </div>
       <div className="row" style={{ textAlign: "center" }}>
         <table className="table table-striped table-bordered">
@@ -440,25 +464,7 @@ function IncomeExpense() {
           </tbody>
         </table>
       </div>
-     <Container>
-        <Row>
-        <h4 style={{ color: "#F4656D" ,margin:"5px",padding:"5px"}}>
-          รายได้ทั้งหมด = {Intl.NumberFormat()?.format(proFitAndCost[0])} บาท
-        </h4>
-        <h4 style={{ color: "#656868" ,margin:"5px",padding:"5px"}}>
-          ต้นทุนทั้งหมด = {Intl.NumberFormat()?.format(proFitAndCost[4])} บาท
-        </h4>
-        <h4 style={{ color: "black",margin:"5px",padding:"5px" }}>
-          ส่วนลดทั้งหมด = {Intl.NumberFormat()?.format(proFitAndCost[2])} บาท
-        </h4>
-        <h4 style={{ color: "#659AD2",margin:"5px",padding:"5px" }}>
-          กำไรทั้งหมด = {Intl.NumberFormat()?.format(proFitAndCost[1])} บาท
-        </h4>
-        <h4 style={{ color: "#729897",margin:"5px",padding:"5px" }}>
-          กำไรทั้งหมดหลังจากหักส่วนลด = {Intl.NumberFormat()?.format(proFitAndCost[3])} บาท
-        </h4>
-        </Row>
-        </Container>
+
     </>
   );
 }

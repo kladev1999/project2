@@ -59,6 +59,7 @@ const getMenuType = () => {
 };
 
 const addMenuType = (typeMenu) => {
+  console.log(typeMenu);
   return axios.post("http://localhost:8080/TypeMenu/addTypeMenu", typeMenu, {
     headers: authHeader(),
   });

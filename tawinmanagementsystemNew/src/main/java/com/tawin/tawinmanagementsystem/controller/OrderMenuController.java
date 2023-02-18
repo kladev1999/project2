@@ -530,34 +530,6 @@ public class OrderMenuController {
 		return orderMenuRepo.mergeTable(totalOrder_ID, pointTable);
 	}
 
-	@GetMapping("/dayCost")
-	public List<Object> dayCost() {
-		return orderMenuRepo.dayCost();
-	}
 
-	@GetMapping("/monthCost")
-	public List<Object> monthCost() {
-		return orderMenuRepo.monthCost();
-	}
-
-	@GetMapping("/yearCost")
-	public List<Object> yearCost() {
-		return orderMenuRepo.yearCost();
-	}
-
-	@GetMapping("/yearIncome")
-	public List<Object> yearIncome() {
-		return orderMenuRepo.yearIncome();
-	}
-
-	@GetMapping("/monthIncome")
-	public List<Object> monthIncome() {
-		return orderMenuRepo.monthIncome();
-	}
-
-	@GetMapping("/dayIncome")
-	public List<Object> dayIncome() {
-		return orderMenuRepo.dayIncome();
-	}
 
 }

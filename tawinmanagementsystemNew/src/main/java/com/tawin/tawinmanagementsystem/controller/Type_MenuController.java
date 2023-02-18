@@ -44,6 +44,7 @@ public class Type_MenuController {
 				.orElseThrow(() -> new ResourceNotFoundException("StockType not exist with id :" + Type_Menu_ID));
 		
 				type_Menu.setTypeMenu_Name(Type_MenuDetails.getTypeMenu_Name());
+				type_Menu.setMenu_Type(Type_MenuDetails.getMenu_Type());
 		Type_Menu updateStockType = typeMenuRepo.save(type_Menu);
 		return ResponseEntity.ok(updateStockType);
 	}

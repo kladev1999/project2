@@ -189,29 +189,6 @@ const UpdateMenuComponent = (props) => {
                 {errors.typeMenu_ID?.message}
               </div>
             </div>
-            <div className="form-group mb-2">
-              <select
-                style={{
-                  width: "200px",
-                  marginLeft: "10px",
-                  marginBottom: "15px",
-                  marginTop: "15px",
-                }}
-                name="menu_Type"
-                value={menu_Type}
-                {...register("menu_Type")}
-                className={`form-control ${
-                  errors.menu_Type ? "is-invalid" : ""
-                }`}
-                onChange={handleInputChange}
-              >
-                <option value="0">-- อาหาร --</option>
-                <option value="1"> -- เครื่องดื่ม -- </option>
-              </select>
-              <div className="invalid-feedback">
-                {errors.menu_Type?.message}
-              </div>
-            </div>
             <div className="form-group">
               <label htmlFor="description">ชื่อเมนู</label>
               <input

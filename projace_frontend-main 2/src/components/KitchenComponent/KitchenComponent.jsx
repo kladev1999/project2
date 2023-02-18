@@ -244,7 +244,7 @@ const KitchenComponent = () => {
     if (
       k.status_ID.status_ID !== 4 &&
       k.status_ID.status_ID !== 3 &&
-      k.menu_ID.menu_Type !== 1
+      k.menu_ID.typeMenu_ID.menu_Type !== 1
     ) {
       return (
         <tr
@@ -291,8 +291,8 @@ const KitchenComponent = () => {
 
   const finishedCook = (k, index) => {
     if (
-      (k.status_ID.status_ID === 4 && k.menu_ID.menu_Type === 0) ||
-      (k.status_ID.status_ID === 3 && k.menu_ID.menu_Type === 0)
+      (k.status_ID.status_ID === 4 &&  k.menu_ID.typeMenu_ID.menu_Type === 0) ||
+      (k.status_ID.status_ID === 3 &&  k.menu_ID.typeMenu_ID.menu_Type === 0)
     ) {
       return (
         <tr

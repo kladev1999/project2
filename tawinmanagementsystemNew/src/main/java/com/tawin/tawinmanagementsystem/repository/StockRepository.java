@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.tawin.tawinmanagementsystem.entity.BackupStock;
 import com.tawin.tawinmanagementsystem.entity.Stock;
 
 public interface StockRepository extends JpaRepository<Stock, Long>{
@@ -17,6 +18,9 @@ public interface StockRepository extends JpaRepository<Stock, Long>{
     //Loop หา stockType_ID
     @Query(value = "SELECT a.stock_type_id FROM stock_menu b  ,stock a WHERE  a.stock_type_id = b.stock_type_id  AND b.menu_id = :menu_ID",nativeQuery = true)
     public List<String> findStock(Long menu_ID);
+    
+    @Query(value="SELECT * FROM backup_stock ORDER BY backup_stock.backup_stock_time_stamp DESC",nativeQuery = true)
+    public List<BackupStock> findAllBackupStock();
     
     //ตัดสต๊อกโดยการรับค่า stockType_ID เข้ามา
     @Modifying

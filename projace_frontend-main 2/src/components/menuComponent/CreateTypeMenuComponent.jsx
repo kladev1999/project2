@@ -6,12 +6,14 @@ import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 
 const CreateMenuTypeComponent = () => {
+  //const [menu_Type, setMenu_Type] = useState();
   const navigate = useNavigate();
 
 
     const typeMenuData  ={
         typeMenu_ID : "",
         typeMenu_Name :"",
+        menu_Type: "",
     };
 
     const [typeMenu, setTypeMenu] = useState(typeMenuData);
@@ -24,13 +26,15 @@ const CreateMenuTypeComponent = () => {
 
     const saveTypeMenu = () => {
         var data = {
-            typeMenu_Name : typeMenu.typeMenu_Name
+            typeMenu_Name : typeMenu.typeMenu_Name,
+            menu_Type : typeMenu.menu_Type
         };
         MenuService.addMenuType(data)
         .then((response) => {
             setTypeMenu({
                 typeMenu_ID : response.data.typeMenu_ID,
-                typeMenu_Name : response.data.typeMenu_Name
+                typeMenu_Name : response.data.typeMenu_Name,
+                menu_Type : response.data.menu_Type
             });
             console.log(response.data);
         }).catch((error) => {
@@ -56,6 +60,7 @@ const CreateMenuTypeComponent = () => {
         () =>
           setUser({
             typeMenu_Name :"",
+            menu_Type: "",
           }),
         300
       );
@@ -74,6 +79,29 @@ const CreateMenuTypeComponent = () => {
             {user && (
               <form>
                 <div className="form-group mb-2">
+                <label className="form-label"> ประเภทเมนู </label>
+                <select
+                      style={{
+                        width: "200px",
+                        marginLeft: "10px",
+                        marginBottom: "15px",
+                        marginTop: "15px",
+                      }}
+                      name="typeMenu_ID"
+                      value={typeMenu.menu_Type}
+                      {...register("menu_Type")}
+                      className={`form-control ${
+                        errors.menu_Type ? "is-invalid" : ""
+                      }`}
+                      onChange={handleInput}
+                    >
+                      <option value="">
+                        -- เลือกส่วนที่แสดง --
+                      </option>
+                      <option value="0">-- อาหาร --</option>
+                      <option value="1"> -- บาร์เครื่องดื่ม -- </option>
+                    </select>
+
                   <label className="form-label"> ชื่อชนิดเมนู</label>
                   <input
                     type="text"
