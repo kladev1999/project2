@@ -123,7 +123,7 @@ const HeaderComponent = () => {
     <HolidayVillageIcon />,
     <TimelineIcon />,
   ];
-  let iconUser = [<HomeIcon />, <TableRestaurantIcon />, <MapsHomeWorkIcon />, <LocalGroceryStoreIcon />];
+  let iconUser = [<HomeIcon />, <TableRestaurantIcon />, <MapsHomeWorkIcon />];
   let iconCook = [<BalconyIcon />];
 
   const [showCook, setShowCook] = useState(false);
@@ -175,9 +175,6 @@ const HeaderComponent = () => {
     } else if (i === 2) {
       return "/promotion";
     }
-    else if (i === 3){
-      return "/stockEmp";
-    }
   };
   const goPageCook = (i) => {
     if (i === 0) {
@@ -195,14 +192,11 @@ const HeaderComponent = () => {
 
   const logOut = (e) => {
     e.preventDefault();
-    if(window.confirm("Are you sure you want to log out")){
-      AuthService.logout();
-      setShowUser(false);
-      setShowCook(false);
-      navigate("/Login");
-      setCurrentUser(undefined);
-    }
-    
+    AuthService.logout();
+    setShowUser(false);
+    setShowCook(false);
+    navigate("/Login");
+    setCurrentUser(undefined);
 
     // window.location.reload();
   };
@@ -212,6 +206,25 @@ const HeaderComponent = () => {
   };
 
   let pic = "http://localhost:8080/menu/getimagesEmp/";
+
+  let Roles = ""
+
+ 
+  
+  
+  if(currentUser?.roles == "ROLE_ADMIN"){
+
+    Roles = "ผู้ดูแลระบบ"
+    
+  } else if(currentUser?.roles == "ROLE_USER"){
+
+    Roles = "พนักงาน"
+    
+  } else{
+    
+    Roles = "พนักงานครัว"
+
+  }
 
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -254,7 +267,7 @@ const HeaderComponent = () => {
               <Typography variant="h6" noWrap component="div">
               <div style={{marginRight: "10px"}}>
 
-                {currentUser?.name_Emp+"  "}
+                ชื่อ {currentUser?.name_Emp+" ("+Roles+")"}
               </div>
               </Typography>
 
@@ -283,12 +296,12 @@ const HeaderComponent = () => {
                 >
                   <MenuItem>
                     <Typography onClick={proFile} textAlign="center">
-                      บัญชีผู้ใช้
+                      บัญชีผู้ใช้!
                     </Typography>
                   </MenuItem>
                   <MenuItem>
                     <Typography onClick={logOut} textAlign="center">
-                      ออกจากระบบ
+                      ออกจากระบบ!
                     </Typography>
                   </MenuItem>
                 </Menu>
@@ -311,14 +324,14 @@ const HeaderComponent = () => {
                 {[
                   "หน้าหลัก",
                   "เมนูอาหาร",
-                  "วัตถุดิบ",
+                  "รายการวัตถุดิบ",
                   "วัตถุดิบในเมนู",
                   "โต๊ะ",
                   "พนักงาน",
                   "โปรโมชั่น",
                   "ครัว",
                   "บาร์น้ำ",
-                  "รายรับ - รายจ่าย",
+                  "รายงานรายรับ - รายจ่าย",
                 ].map((text, index) => (
                   <ListItem key={text} disablePadding sx={{ display: "block" }}>
                     <ListItemButton
@@ -350,7 +363,7 @@ const HeaderComponent = () => {
             )}
             {showUser && (
               <List>
-                {["Home", "Table", "Promotion","Stock"].map((text, index) => (
+                {["หน้าหลัก", "โต๊ะ", "โปรโมชั่น"].map((text, index) => (
   
                   <ListItem key={text} disablePadding sx={{ display: "block" }}>
                     <ListItemButton
@@ -383,7 +396,7 @@ const HeaderComponent = () => {
             )}
             {showCook && (
               <List>
-                {["Home"].map((text, index) => (
+                {["หน้าหลัก"].map((text, index) => (
                   <ListItem key={text} disablePadding sx={{ display: "block" }}>
                     <ListItemButton
                       href={goPageCook(index)}

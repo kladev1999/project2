@@ -96,6 +96,7 @@ const ListMenuComponent = () => {
     navigate("/addStockMenu/" + menu_ID);
   };
 
+  
   const filterMenu = currentRows.filter((menuList) => {
     if(search.length>0){
 

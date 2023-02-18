@@ -5,7 +5,11 @@ import OrderMenuService from "../../services/OrderMenuService";
 import { Button, Spinner } from "react-bootstrap";
 import Dropdown from "react-bootstrap/Dropdown";
 import { Container, Row, Col } from "react-grid-system";
+import { useNavigate } from "react-router-dom";
 function IncomeExpense() {
+  const [searchName, setsearchName] = useState("");
+  const navigate = useNavigate();
+
   const [selectedDate, setSelectedDate] = useState({
     day: "",
     month: "",
@@ -20,10 +24,10 @@ function IncomeExpense() {
   const [days, setDays] = useState([]);
   const [totalOrder, setTotalOrder] = useState([]);
 
-  const [incomeAll, setIncomeAll] = useState([""]);
-  const [incomeMenu,setIncomeMenu] = useState([""]);
+  const [incomeAll, setIncomeAll] = useState([]);
+  const [incomeMenu, setIncomeMenu] = useState([""]);
   const [proFitAndCost, setProFitAndCost] = useState([""]);
-  
+
   let TotalPrice = totalOrder?.reduce((prev, cur) => prev + cur.totalPrice, 0);
 
   let dateDatalable = "";
@@ -88,8 +92,6 @@ function IncomeExpense() {
 
   console.log(dateDatalableEnd);
 
-
-
   const getIncomeAllMenu = async () => {
     try {
       const response = await Promise.resolve(OrderMenuService.incomeAllMenu());
@@ -112,58 +114,75 @@ function IncomeExpense() {
     }
   };
 
-  const getIncomeByIDMenu = async (menu_ID,date) =>{
-    try{
-      const response = await Promise.resolve(OrderMenuService.incomeByMenuID(menu_ID,date));
+  const getIncomeByIDMenu = async (menu_ID, date) => {
+    try {
+      const response = await Promise.resolve(
+        OrderMenuService.incomeByMenuID(menu_ID, date)
+      );
       console.log("Response data: ", response.data);
       setIncomeAll(response.data);
-    }catch(error){
+    } catch (error) {
       console.log(error);
     }
   };
 
-  const getIncomeAllByDate = async (date) =>{
-    try{
-      const response = await Promise.resolve(OrderMenuService.incomeAllByDate(date));
-      const response2 = await Promise.resolve(OrderMenuService.incomeAllDate(date));
+  const getIncomeAllByDate = async (date) => {
+    try {
+      const response = await Promise.resolve(
+        OrderMenuService.incomeAllByDate(date)
+      );
+      const response2 = await Promise.resolve(
+        OrderMenuService.incomeAllDate(date)
+      );
       setIncomeAll(null);
       setIncomeAll(response.data);
-
 
       console.log(response2.data);
       // setProFitAndCost(null);
       setProFitAndCost(response2.data);
-    }catch(error){
+    } catch (error) {
       console.log(error);
     }
-  }
+  };
 
-  const getIncomeBetweenDate = async (startDate,endDate) =>{
-    try{
-        const response = await Promise.resolve(OrderMenuService.incomeAllBetweenByDate(startDate,endDate));
-        const response2 = await Promise.resolve(OrderMenuService.incomeBetweenAllMenu(startDate,endDate));
+  const getIncomeBetweenDate = async (startDate, endDate) => {
+    try {
+      const response = await Promise.resolve(
+        OrderMenuService.incomeAllBetweenByDate(startDate, endDate)
+      );
+      const response2 = await Promise.resolve(
+        OrderMenuService.incomeBetweenAllMenu(startDate, endDate)
+      );
 
-        setIncomeAll(null);
-        setIncomeAll(response.data);
+      setIncomeAll(null);
+      setIncomeAll(response.data);
 
-        setProFitAndCost(response2.data);
-    }catch(error){
+      setProFitAndCost(response2.data);
+    } catch (error) {
       console.log(error);
     }
-  }
-
+  };
 
   const grap = (dataDateStart) => {
     let dateDatalableStart = "";
     let dateDataStart = "";
-    if (dataDateStart.day === "" && dataDateStart.month === "" && dataDateStart.year === "") {
+    if (
+      dataDateStart.day === "" &&
+      dataDateStart.month === "" &&
+      dataDateStart.year === ""
+    ) {
       dateDatalableStart = [];
     } else if (
       dataDateStart.day !== "" &&
       dataDateStart.month !== "" &&
       dataDateStart.year !== ""
     ) {
-      dateDataStart = dataDateStart.year + "-" + dataDateStart.month + "-" + dataDateStart.day;
+      dateDataStart =
+        dataDateStart.year +
+        "-" +
+        dataDateStart.month +
+        "-" +
+        dataDateStart.day;
       dateDatalableStart = dataDateStart.day;
     } else if (dataDateStart.month === "") {
       dateDataStart = dataDateStart.year;
@@ -191,19 +210,28 @@ function IncomeExpense() {
     date = dateData;
   };
 
-  const grapEnd = (dataDate,dataDateStart) => {
+  const grapEnd = (dataDate, dataDateStart) => {
     let dateDatalable = "";
     let dateData = "";
     let dateDatalableStart = "";
     let dateDataStart = "";
-    if (dataDateStart.day === "" && dataDateStart.month === "" && dataDateStart.year === "") {
+    if (
+      dataDateStart.day === "" &&
+      dataDateStart.month === "" &&
+      dataDateStart.year === ""
+    ) {
       dateDatalableStart = [];
     } else if (
       dataDateStart.day !== "" &&
       dataDateStart.month !== "" &&
       dataDateStart.year !== ""
     ) {
-      dateDataStart = dataDateStart.year + "-" + dataDateStart.month + "-" + dataDateStart.day;
+      dateDataStart =
+        dataDateStart.year +
+        "-" +
+        dataDateStart.month +
+        "-" +
+        dataDateStart.day;
       dateDatalableStart = dataDateStart.day;
     } else if (dataDateStart.month === "") {
       dateDataStart = dataDateStart.year;
@@ -225,7 +253,6 @@ function IncomeExpense() {
       dateDataStart = dataDateStart.year + "-" + dataDateStart.month;
       dateDatalableStart = days;
     }
-
 
     if (dataDate.day === "" && dataDate.month === "" && dataDate.year === "") {
       dateDatalable = [];
@@ -257,19 +284,17 @@ function IncomeExpense() {
       dateDatalable = days;
     }
 
-    console.log("Start",dateDataStart);
-    console.log("End",dateData);
+    console.log("Start", dateDataStart);
+    console.log("End", dateData);
 
     date = dateData;
     // getIncomeAllByDate(dateDataStart);
-    if(dateData.length === 0){
+    if (dateData.length === 0) {
       getIncomeAllByDate(dateDataStart);
-    }else if(dateData.length > 0){
-      getIncomeBetweenDate(dateDataStart,dateData);
+    } else if (dateData.length > 0) {
+      getIncomeBetweenDate(dateDataStart, dateData);
     }
   };
-
-
 
   useEffect(() => {
     let year = selectedDate.year;
@@ -278,7 +303,7 @@ function IncomeExpense() {
     let daysArr = Array.from({ length: daysInMonth }, (_, i) => i + 1);
     setDays(daysArr);
   }, [selectedDate]);
-  
+
   useEffect(() => {
     let year = selectedDate.year;
     let month = selectedDate.month;
@@ -293,7 +318,26 @@ function IncomeExpense() {
     console.log(incomeAll);
   }, []);
 
-  console.log("pppdppp = ",selectedDate);
+  console.log("pppdppp = ", selectedDate);
+
+  const filterMenu = incomeAll.filter((incomeAll) => {
+    if (searchName.length > 0) {
+      return incomeAll.menu_Name
+        .toLowerCase()
+        .includes(searchName?.toLowerCase());
+    } else if (searchName.length > 2) {
+      return incomeAll.menu_Name
+        .toLowerCase()
+        .includes(searchName?.toLowerCase());
+    } else {
+      return incomeAll.menu_Name
+        .toLowerCase()
+        .includes(searchName?.toLowerCase());
+    }
+  });
+  const back = () => {
+    navigate("/menu");
+  };
 
   return (
     <>
@@ -302,139 +346,162 @@ function IncomeExpense() {
           <h3> รายงานรายรับ - รายจ่าย </h3>
         </div>
         <div className="text-center" style={{ margin: "40px" }}>
-
-          
           <div>
             เริ่มต้น:
-          <select
-            value={selectedDate.day}
-            disabled={selectedDate.month === ""}
-            onChange={(e) =>
-              setSelectedDate({ ...selectedDate, day: e.target.value })
-            }
-          >
-            <option value="">วันที่</option>
-            {days.map((day) => (
-              <option key={day} value={day}>
-                {day}
-              </option>
-            ))}
-          </select>
-
-          <select
-            style={{ margin: "10px" }}
-            value={selectedDate.month}
-            disabled={selectedDate.year === ""}
-            onChange={(e) =>
-              setSelectedDate({ ...selectedDate, month: e.target.value })
-            }
-          >
-            <option value="">เดือน</option>
-            {Array.from({ length: 12 }, (_, i) =>
-              new Date(null, i).toLocaleString("default", { month: "2-digit" })
-            ).map((month, index) => (
-              <option key={month} value={month}>
-                {month}
-              </option>
-            ))}
-          </select>
-          <select
-            value={selectedDate.year}
-            onChange={(e) =>
-              setSelectedDate({ ...selectedDate, year: e.target.value })
-            }
-          >
-            <option value="">ปี</option>
-            {Array.from(
-              { length: 10 },
-              (_, i) => new Date().getFullYear() - i
-            ).map((year) => (
-              <option key={year} value={year}>
-                {year}
-              </option>
-            ))}
-          </select>
+            <select
+              value={selectedDate.day}
+              disabled={selectedDate.month === ""}
+              onChange={(e) =>
+                setSelectedDate({ ...selectedDate, day: e.target.value })
+              }
+            >
+              <option value="">วันที่</option>
+              {days.map((day) => (
+                <option key={day} value={day}>
+                  {day}
+                </option>
+              ))}
+            </select>
+            <select
+              style={{ margin: "10px" }}
+              value={selectedDate.month}
+              disabled={selectedDate.year === ""}
+              onChange={(e) =>
+                setSelectedDate({ ...selectedDate, month: e.target.value })
+              }
+            >
+              <option value="">เดือน</option>
+              {Array.from({ length: 12 }, (_, i) =>
+                new Date(null, i).toLocaleString("default", {
+                  month: "2-digit",
+                })
+              ).map((month, index) => (
+                <option key={month} value={month}>
+                  {month}
+                </option>
+              ))}
+            </select>
+            <select
+              value={selectedDate.year}
+              onChange={(e) =>
+                setSelectedDate({ ...selectedDate, year: e.target.value })
+              }
+            >
+              <option value="">ปี</option>
+              {Array.from(
+                { length: 10 },
+                (_, i) => new Date().getFullYear() - i
+              ).map((year) => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div>
-            สิ้นสุด: 
-          <select
-            value={selectedDateEnd.day}
-            disabled={selectedDateEnd.month === ""}
-            onChange={(e) =>
-              setSelectedDateEnd({ ...selectedDateEnd, day: e.target.value })
-            }
-          >
-            <option value="">วันที่</option>
-            {days.map((day) => (
-              <option key={day} value={day}>
-                {day}
-              </option>
-            ))}
-          </select>
-
-          <select
-            style={{ margin: "10px" }}
-            value={selectedDateEnd.month}
-            disabled={selectedDateEnd.year === ""}
-            onChange={(e) =>
-              setSelectedDateEnd({ ...selectedDateEnd, month: e.target.value })
-            }
-          >
-            <option value="">เดือน</option>
-            {Array.from({ length: 12 }, (_, i) =>
-              new Date(null, i).toLocaleString("default", { month: "2-digit" })
-            ).map((month, index) => (
-              <option key={month} value={month}>
-                {month}
-              </option>
-            ))}
-          </select>
-          <select
-            value={selectedDateEnd.year}
-            onChange={(e) =>
-              setSelectedDateEnd({ ...selectedDateEnd, year: e.target.value })
-            }
-          >
-            <option value="">ปี</option>
-            {Array.from(
-              { length: 10 },
-              (_, i) => new Date().getFullYear() - i
-            ).map((year) => (
-              <option key={year} value={year}>
-                {year}
-              </option>
-            ))}
-          </select>
-
-          
+            สิ้นสุด:
+            <select
+              value={selectedDateEnd.day}
+              disabled={selectedDateEnd.month === ""}
+              onChange={(e) =>
+                setSelectedDateEnd({ ...selectedDateEnd, day: e.target.value })
+              }
+            >
+              <option value="">วันที่</option>
+              {days.map((day) => (
+                <option key={day} value={day}>
+                  {day}
+                </option>
+              ))}
+            </select>
+            <select
+              style={{ margin: "10px" }}
+              value={selectedDateEnd.month}
+              disabled={selectedDateEnd.year === ""}
+              onChange={(e) =>
+                setSelectedDateEnd({
+                  ...selectedDateEnd,
+                  month: e.target.value,
+                })
+              }
+            >
+              <option value="">เดือน</option>
+              {Array.from({ length: 12 }, (_, i) =>
+                new Date(null, i).toLocaleString("default", {
+                  month: "2-digit",
+                })
+              ).map((month, index) => (
+                <option key={month} value={month}>
+                  {month}
+                </option>
+              ))}
+            </select>
+            <select
+              value={selectedDateEnd.year}
+              onChange={(e) =>
+                setSelectedDateEnd({ ...selectedDateEnd, year: e.target.value })
+              }
+            >
+              <option value="">ปี</option>
+              {Array.from(
+                { length: 10 },
+                (_, i) => new Date().getFullYear() - i
+              ).map((year) => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              ))}
+            </select>
           </div>
-          
+
           <div className="text-center">
-            <Button variant="success" onClick={() => grapEnd(selectedDateEnd,selectedDate)}>
+            <Button
+              variant="success"
+              onClick={() => grapEnd(selectedDateEnd, selectedDate)}
+            >
               {"ตกลง"}
             </Button>
           </div>
         </div>
         <Container>
-        <Row>
-        <h4 style={{ color: "#F4656D" ,margin:"5px",padding:"5px"}}>
-          รายได้ทั้งหมด = {Intl.NumberFormat()?.format(proFitAndCost[0])} บาท
-        </h4>
-        <h4 style={{ color: "#656868" ,margin:"5px",padding:"5px"}}>
-          ต้นทุนทั้งหมด = {Intl.NumberFormat()?.format(proFitAndCost[4])} บาท
-        </h4>
-        <h4 style={{ color: "black",margin:"5px",padding:"5px" }}>
-          ส่วนลดทั้งหมด = {Intl.NumberFormat()?.format(proFitAndCost[2])} บาท
-        </h4>
-        <h4 style={{ color: "green",margin:"5px",padding:"5px" }}>
-          กำไรทั้งหมด = {Intl.NumberFormat()?.format(proFitAndCost[3])} บาท
-        </h4>
-        </Row>
+          <Row>
+            <h4 style={{ color: "#F4656D", margin: "5px", padding: "5px" }}>
+              รายได้ทั้งหมด = {Intl.NumberFormat()?.format(proFitAndCost[0])}{" "}
+              บาท
+            </h4>
+            <h4 style={{ color: "#656868", margin: "5px", padding: "5px" }}>
+              ต้นทุนทั้งหมด = {Intl.NumberFormat()?.format(proFitAndCost[4])}{" "}
+              บาท
+            </h4>
+            <h4 style={{ color: "black", margin: "5px", padding: "5px" }}>
+              ส่วนลดทั้งหมด = {Intl.NumberFormat()?.format(proFitAndCost[2])}{" "}
+              บาท
+            </h4>
+            <h4 style={{ color: "green", margin: "5px", padding: "5px" }}>
+              กำไรทั้งหมด = {Intl.NumberFormat()?.format(proFitAndCost[3])} บาท
+            </h4>
+          </Row>
         </Container>
-
       </div>
       <div className="row" style={{ textAlign: "center" }}>
+        <div className="col">
+        
+          <input
+            type="search"
+            placeholder="ค้นหา"
+            aria-label="Search"
+            style={{ margin: "5px", padding: "5px", boxSizing: "content-box" }}
+            onChange={(e) => setsearchName(e.target.value)}
+          />
+          <button
+              className="btn btn-danger"
+              onClick={() => back()}
+              style={{ margin: "5px", padding: "5px" }}
+            >
+              กลับ
+            </button>
+        </div>
         <table className="table table-striped table-bordered">
           <thead>
             <tr>
@@ -449,7 +516,7 @@ function IncomeExpense() {
             </tr>
           </thead>
           <tbody>
-            {incomeAll?.map((income) => (
+            {filterMenu?.map((income) => (
               <tr key={income.menu_ID}>
                 <td>{income?.menu_ID}</td>
                 <td>{income?.menu_Name}</td>
@@ -464,7 +531,6 @@ function IncomeExpense() {
           </tbody>
         </table>
       </div>
-
     </>
   );
 }
