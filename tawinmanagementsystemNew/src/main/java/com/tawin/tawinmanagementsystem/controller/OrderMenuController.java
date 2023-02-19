@@ -513,6 +513,11 @@ public class OrderMenuController {
 		return orderMenuRepo.cancelStatus(orderMenu_ID);
 	}
 
+	@GetMapping("/waste/{orderMenu_ID}")
+	public int waste(@PathVariable Long orderMenu_ID) {
+		return orderMenuRepo.Waste(orderMenu_ID);
+	}
+
 	@GetMapping("/Cancel/{orderMenu_ID}/{Emp}")
 	public int cancel(@PathVariable Long orderMenu_ID,@PathVariable String Emp) {
 		return orderMenuRepo.Cancel(orderMenu_ID,Emp);
