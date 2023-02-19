@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.TimeZone;
 
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tawin.tawinmanagementsystem.entity.Menu;
+import com.tawin.tawinmanagementsystem.entity.Stock_Menu;
 import com.tawin.tawinmanagementsystem.exception.ResourceNotFoundException;
 import com.tawin.tawinmanagementsystem.repository.MenuRepository;
 
@@ -45,6 +47,15 @@ public class MenuController {
 				.orElseThrow(() -> new ResourceNotFoundException("Menu not exist with id :" + menu_ID));
 		return ResponseEntity.ok(menu);
 	
+	}
+	
+	
+	@CrossOrigin(origins = "*")
+	@GetMapping("/findMenuInStockMenu/{menu_ID}")
+	public ArrayList<Stock_Menu> findMenuInStockMenu(@PathVariable Long menu_ID){
+		ArrayList<Stock_Menu> stockMenu = new ArrayList<Stock_Menu>();
+		stockMenu.addAll(menuRepo.findMenuInStockMenu((Long) menu_ID));
+		return stockMenu;
 	}
 
 

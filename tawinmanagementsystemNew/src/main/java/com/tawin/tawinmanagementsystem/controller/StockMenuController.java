@@ -33,12 +33,7 @@ public class StockMenuController {
 		return (List<Stock_Menu>) stockMenuRepo.findAll();
 	}
 	
-	@GetMapping("/findMenuInStockMenu/{menu_ID}")
-	public ArrayList<Stock_Menu> findMenuInStockMenu(@PathVariable Long menu_ID){
-		ArrayList<Stock_Menu> stockMenu = new ArrayList<Stock_Menu>();
-		stockMenu.addAll(stockMenuRepo.findMenuInStockMenu(menu_ID));
-		return stockMenu;
-	}
+
 	
 	@PostMapping("/addStockMenu")
 	public Stock_Menu createStock_Menu(@RequestBody Stock_Menu stock_menu) {

@@ -20,7 +20,6 @@ const deleteStockMenu = (stockMenu_ID) => {
 
 
 const findMenuInStockMenu = (menu_ID) =>{
-    return axios.get("http://localhost:8080/stock_menu/findMenuInStockMenu/"+menu_ID,{ headers:authHeader()});
 }
 
 const StockMenuService = {
