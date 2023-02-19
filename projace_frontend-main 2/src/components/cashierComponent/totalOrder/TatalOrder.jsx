@@ -145,6 +145,7 @@ const TatalOrder = () => {
       });
   };
 
+
   totalOrder?.forEach((e) => {
 
     if(e.totalOrder_Status == "0"){
@@ -153,6 +154,8 @@ const TatalOrder = () => {
     }
 
   });
+
+
 
   const GetMoveTable = () => {
     TableService.getMoveTable().then((respone) => {
@@ -984,7 +987,7 @@ const TatalOrder = () => {
   }
   return (
     <>
-      <h2 className="text-center"> Total Order </h2>
+      <h2 className="text-center"> การจัดการโต๊ะอาหาร </h2>
       <div>
       <h3>
        {"วัน "} {day}{" "}

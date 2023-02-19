@@ -342,7 +342,7 @@ const KitchenComponent = () => {
             ครัว
           </h2>
 
-          <h2 class="text-center"> ทำยังไม่เสร็จ </h2>
+          <h2 class="text-center"> รายการอาหารรอดำเนินการ </h2>
           <input
             style={{ marginTop: 10 }}
             type="search"

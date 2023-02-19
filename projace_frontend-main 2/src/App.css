@@ -15,6 +15,11 @@
   }
 }
 
+.center-select {
+  display: block;
+  margin: 0 auto;
+}
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -64,7 +69,8 @@
 
 input[type=search] {
   border: 2px solid green;
-  border-radius: 4px;
+  border-radius: 10px;
+  
 }
 
 

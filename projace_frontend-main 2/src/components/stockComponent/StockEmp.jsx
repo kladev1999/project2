@@ -6,6 +6,7 @@ import StockService from "../../services/StockService";
 const ListStockComponent = () => {
   const [stock, setStock] = useState([]);
   const [search, searchInput] = useState("");
+  const [sortStock,setSortStock] = useState([]);
   const navigate = useNavigate();
 
   const getAllStocks = () => {
@@ -38,6 +39,7 @@ const ListStockComponent = () => {
 
   useEffect(() => {
     getAllStocks();
+    sortStocksByQty();
   }, []);
 
   const viewStock = (stock_ID) => {
@@ -48,12 +50,10 @@ const ListStockComponent = () => {
     navigate("/update-Stock/" + stock_ID);
   };
 
-  const addStock = () => {
-    navigate("/addStock");
-  };
-
-  const addStockType = () => {
-    navigate("/MStockType");
+  const sortStocksByQty = () => {
+    const sortedStocks = [...stock].sort((a, b) => a.stock_Qty - b.stock_Qty);
+    console.log("Sorted Stock = ",sortedStocks);
+    setSortStock(sortedStocks);
   };
 
   const filterStock = stock.filter((stock) => {
@@ -87,14 +87,18 @@ const ListStockComponent = () => {
     navigate("/BackupStock");
   };
 
+
+
   return (
     <div className="container">
       <h2 className="text-center">ข้อมูลสต๊อก</h2>
-      <div className="">
+      <div class="form-outline">
         <input
+          class="form-control"
           type="search"
           placeholder="ค้นหา"
           aria-label="Search"
+          style={{width:"200px"}}
           onChange={(e) => searchInput(e.target.value)}
         />
       </div>
@@ -107,9 +111,7 @@ const ListStockComponent = () => {
               <th> รหัสวัตถุดิบ </th>
               <th> ชื่อวัตถุดิบ </th>
               <th> จำนวนคงเหลือ </th>
-              <th> ต้นทุนวัตถุดิบ </th>
               <th> วัตถุดิบคงเหลือขั้นต่ำ </th>
-              <th> ต้นทุนวัตถุดิบ </th>
               <th> วันที่เพิ่มวัตถุดิบ </th>
             </tr>
           </thead>
@@ -122,9 +124,7 @@ const ListStockComponent = () => {
                 <td>{i + 1}</td>
                 <td>{stocks.stockType_ID.stockType_Name}</td>
                 <td>{stocks.stock_Qty}</td>
-                <td>{stocks.stock_Cost}</td>
                 <td>{stocks.stock_Min}</td>
-                <td>{stocks.pricePerUnit}</td>
                 <td>{timestamp(stocks.stock_TimeStamp)}</td>
               </tr>
             ))}

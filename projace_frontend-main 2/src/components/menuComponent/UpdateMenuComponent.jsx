@@ -163,7 +163,7 @@ const UpdateMenuComponent = (props) => {
   return (
     <div>
       <div className="edit-form">
-        <h2 style={{ textAlign: "center" }}>อัพเดทเมนู</h2>
+        <h2 style={{ textAlign: "center" }}>แก้ไขเมนู</h2>
         {user && (
           <form>
             <div>

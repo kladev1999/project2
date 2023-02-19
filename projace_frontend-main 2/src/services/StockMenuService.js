@@ -18,11 +18,17 @@ const deleteStockMenu = (stockMenu_ID) => {
     return axios.delete("http://localhost:8080/stock_menu/deleteStockMenu/"+stockMenu_ID,{ headers: authHeader()});
 }
 
+
+const findMenuInStockMenu = (menu_ID) =>{
+    return axios.get("http://localhost:8080/stock_menu/findMenuInStockMenu/"+menu_ID,{ headers:authHeader()});
+}
+
 const StockMenuService = {
     getStockMenu,
     addStockMenu,
     updateStockMenu,
-    deleteStockMenu
+    deleteStockMenu,
+    findMenuInStockMenu
 }
 
 export default StockMenuService;

@@ -1,6 +1,7 @@
 package com.tawin.tawinmanagementsystem.controller;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +31,13 @@ public class StockMenuController {
 	@GetMapping("/getStockMenu")
 	public List<Stock_Menu> getStock_Menu() {
 		return (List<Stock_Menu>) stockMenuRepo.findAll();
+	}
+	
+	@GetMapping("/findMenuInStockMenu/{menu_ID}")
+	public ArrayList<Stock_Menu> findMenuInStockMenu(@PathVariable Long menu_ID){
+		ArrayList<Stock_Menu> stockMenu = new ArrayList<Stock_Menu>();
+		stockMenu.addAll(stockMenuRepo.findMenuInStockMenu(menu_ID));
+		return stockMenu;
 	}
 	
 	@PostMapping("/addStockMenu")

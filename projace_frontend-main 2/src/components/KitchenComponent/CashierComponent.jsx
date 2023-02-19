@@ -339,7 +339,7 @@ const CashierComponent = () => {
             บาร์น้ำ
           </h2>
 
-          <h2 class="text-center"> ทำยังไม่เสร็จ </h2>
+        
 
           <input
             style={{ marginTop: 10, width: "150px" }}
@@ -419,7 +419,6 @@ const CashierComponent = () => {
           <input
             style={{ marginTop: 10, width: "150px" }}
             type="search"
-            class="form-control border-end-0 border rounded-pill"
             placeholder="ค้นหาโต๊ะ..."
             aria-label="Search"
             onChange={(e) => searchInput(e.target.value)}

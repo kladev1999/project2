@@ -6,7 +6,6 @@ import stockTypeRow from "./stockTypeRow";
 import { Button, Spinner } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 
-
 function CreateStock_MenuComponent() {
   const navigate = useNavigate();
 
@@ -15,6 +14,8 @@ function CreateStock_MenuComponent() {
   const [menu, setMenu] = useState([]);
   const [menuID, setMenuID] = useState([]);
   const [stockType, setStockType] = useState([]);
+
+  const [detailStockMenu, setDetailStockMenu] = useState([]);
 
   const [inputValue, setInputValue] = useState([]);
   const { menu_ID } = useParams();
@@ -53,6 +54,17 @@ function CreateStock_MenuComponent() {
       });
   };
 
+  const findMenuInStockMenu = async (menu_ID) => {
+    try {
+      const response = await Promise.resolve(
+        StockMenuService.findMenuInStockMenu(menu_ID)
+      );
+      setDetailStockMenu(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const getStockType = () => {
     StockService.getStockType()
       .then((response) => {
@@ -68,13 +80,13 @@ function CreateStock_MenuComponent() {
   useEffect(() => {
     getStockType();
     getMenuID(menu_ID);
+    findMenuInStockMenu(menuID);
+   
   }, [menu_ID]);
 
   const back = () => {
     navigate("/menu");
   };
-
-
 
   const filterMenu = stockType.filter((stockType) => {
     if (searchName.length > 0) {
@@ -114,7 +126,7 @@ function CreateStock_MenuComponent() {
             type="search"
             placeholder="ค้นหา"
             aria-label="Search"
-            style={{ margin: "5px", padding: "5px" ,boxSizing:"content-box"}}
+            style={{ margin: "5px", padding: "5px", boxSizing: "content-box" }}
             onChange={(e) => setsearchName(e.target.value)}
           />
           <table className="table table-striped table-bordered">
@@ -147,11 +159,11 @@ function CreateStock_MenuComponent() {
                       className="btn btn-success"
                       style={{ marginLeft: "5px" }}
                       // disabled={stockMenu_Qty.length === 0}
-                      disabled={isLoading &&stockMenu_Qty.length === 0}
+                      disabled={isLoading && stockMenu_Qty.length === 0}
                       onClick={(e) => saveStock_Menu(e, stockType.stockType_ID)}
                     >
                       {isLoading ? "Loading..." : "ยืนยัน"}
-                    {isLoading && <Spinner animation="border" size="sm" />}
+                      {isLoading && <Spinner animation="border" size="sm" />}
                     </button>
                   </td>
                 </tr>

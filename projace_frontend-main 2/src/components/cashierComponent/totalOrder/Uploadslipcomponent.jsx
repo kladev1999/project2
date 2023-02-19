@@ -67,7 +67,7 @@ function Uploadslipcomponent() {
 
         <form>
           <div className="form-group mb-8">
-            <label className="form-label"> Picture :</label>
+            <label className="form-label"> รูปภาพ :</label>
             <input
               style={{marginLeft: "25px"}}
               type="file"
@@ -101,8 +101,8 @@ function Uploadslipcomponent() {
       style={{margin: "10px"}}
       onClick={(e) => handleClick(e)}
       disabled={ImageUpload.length === 0}
-      >upload</button>
-      <button className="btn btn-success"
+      >อัพโหลด</button>
+      <button className="btn btn-danger"
         onClick={Back}
       >กลับ</button>
       </div>
