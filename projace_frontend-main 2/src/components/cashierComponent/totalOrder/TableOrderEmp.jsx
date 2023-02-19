@@ -252,7 +252,7 @@ const TableOrderEmp = () => {
           onClick={() => handleShowMixTable(value)}
           disabled={
             DisBTNmixTable(value.compoSite, value.totalOrder_Status) ||
-            value.totalOrder_Status === "1"
+            value.totalOrder_Status === "1" || value.discount_ID !== null
           }
           className="btn btn-info"
         >
@@ -869,7 +869,7 @@ const TableOrderEmp = () => {
                           disabled={
                             totalOrder.compoSite !=
                               totalOrder.table_ID.table_Zone ||
-                            totalOrder.totalOrder_Status === "1"
+                            totalOrder.totalOrder_Status === "1" || totalOrder.discount_ID !== null
                           }
                         >
                           สั่งอาหาร
@@ -901,8 +901,9 @@ const TableOrderEmp = () => {
                             disabled={
                               totalOrder.compoSite !=
                                 totalOrder.table_ID.table_Zone ||
-                              totalOrder.totalOrder_Status === "1" ||
+                              totalOrder.totalOrder_Status === "1" || 
                               DisBTNmixTable(totalOrder.compoSite)
+                              || totalOrder.discount_ID !== null 
                             }
                             onClick={
                               (e) => handleShowModeTable(totalOrder)
@@ -930,6 +931,7 @@ const TableOrderEmp = () => {
                               totalOrder.compoSite !=
                                 totalOrder.table_ID.table_Zone ||
                               DisBTNmixTable(totalOrder.compoSite)
+                              || totalOrder.discount_ID !== null
                             }
                             onClick={() => handleShow(totalOrder)}
                           >

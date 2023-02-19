@@ -55,6 +55,8 @@ function Checkbill() {
     )
   );
 
+  console.log("dasdasdasd",filteredList)
+
 
   var distotal = 0;
   var distotalPrice = TotalPrice;
@@ -148,6 +150,7 @@ function Checkbill() {
           style={{ width: "200px", marginLeft: "10px" }}
           id="Promotion"
           name="Promotion"
+          disabled={filteredList.length ===0}
           onChange={(e) => {
             const selectedDiscount = Discount.find(
               (discount) => discount.discount_ID === parseInt(e.target.value)

@@ -154,6 +154,12 @@ public interface Order_MenuRepository extends JpaRepository<Order_Menu, Integer>
 			+ "WHERE order_menu.order_menu_id = :orderMenu_ID", nativeQuery = true)
 	public int cancelStatus(@Param("orderMenu_ID") Long orderMenu_ID);
 
+	@Modifying
+	@Transactional
+	@Query(value = "UPDATE order_menu " + "SET order_menu.status_id = 5 "
+			+ "WHERE order_menu.order_menu_id = :orderMenu_ID", nativeQuery = true)
+	public int Waste(@Param("orderMenu_ID") Long orderMenu_ID);
+
 	// รวมโต๊ะ
 	@Modifying
 	@Transactional

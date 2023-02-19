@@ -45,7 +45,7 @@ function ListTotalOrdermenuEmp() {
         console.log("totalprice = ", Price);
       }
     );
-  };
+  }
 
   const getTotalOrder = () => {
     TotalOrderService.getTotalOrderById(compoSite)
@@ -98,13 +98,22 @@ function ListTotalOrdermenuEmp() {
           {value.status_ID.status}
         </td>
       );
-    } else if (value.status_ID.status_ID === 2) {
+    } 
+    else if (value.status_ID.status_ID === 2) {
       return (
         <td className="text-center" style={{ backgroundColor: "#49dfff" }}>
           {value.status_ID.status}
         </td>
       );
-    } else {
+    } 
+    else if (value.status_ID.status_ID === 5) {
+      return (
+        <td className="text-center" style={{ backgroundColor: "#262f36",color: "white" }}>
+          {value.status_ID.status}
+        </td>
+      );
+    } 
+    else {
       return (
         <td className="text-center" style={{ backgroundColor: "#ffc847" }}>
           {value.status_ID.status}
@@ -130,9 +139,6 @@ function ListTotalOrdermenuEmp() {
       );
     }
   };
-  const toStock = () =>{
-    navigate("/stock");
-  }
 
   const ChechBNT = () => {
     if (list.length > 0) {
@@ -145,7 +151,6 @@ function ListTotalOrdermenuEmp() {
           >
             กลับ
           </button>
-         
         </div>
       );
     } else {
@@ -166,6 +171,24 @@ function ListTotalOrdermenuEmp() {
       </>
     );
   };
+  let nameEmp = currentUser?.name_Emp
+  let Action = nameEmp
+
+  const waste = (orderMenu_ID,name) => {
+    if (window.confirm(`${name} เป็นของเสีย!!`)) {
+    OrderMenuService.Waste(orderMenu_ID).then(() => {
+
+    });
+
+    OrderMenuService.Cancel(orderMenu_ID, nameEmp)
+    .then((response) => {})
+    .catch((e) => {
+      console.log(e);
+    });
+    
+  }
+}
+  
 
   const cancel = (orderMenu_ID) => () => {
     if (window.confirm("คุณต้องการยกเลิกหรือไม่!!")) {
@@ -174,7 +197,8 @@ function ListTotalOrdermenuEmp() {
         .catch((e) => {
           console.log(e);
         });
-      OrderMenuService.Cancel(orderMenu_ID, currentUser.name_Emp)
+
+      OrderMenuService.Cancel(orderMenu_ID, nameEmp)
         .then((response) => {})
         .catch((e) => {
           console.log(e);
@@ -190,13 +214,17 @@ function ListTotalOrdermenuEmp() {
         .catch((e) => {
           console.log(e);
         });
-      OrderMenuService.Cancel(orderMenu_ID, currentUser.name_Emp)
+
+      OrderMenuService.Cancel(orderMenu_ID, nameEmp)
         .then((response) => {})
         .catch((e) => {
           console.log(e);
         });
     }
   };
+
+ 
+
 
   const CancelEmp = (name_Emp, status) => {
     if (name_Emp === "") {
@@ -209,9 +237,24 @@ function ListTotalOrdermenuEmp() {
       return <>{name_Emp} กำลังทำ</>;
     } else if (status === 2) {
       return <>{name_Emp} พร้อมเสริฟ</>;
+    } else if (status === 5) {
+      return <>ของเสีย ({name_Emp})</>;
     }
   };
 
+  const discount = () => {
+
+
+    if(list.length == 0){
+      return <>ราคารวม 0</>
+    }
+    if (list[list.length-1]?.totalOrder_ID.discount_ID === null) {
+     return <>ราคารวม {Intl.NumberFormat().format(TotalPrice)}</>
+    } else {
+      return <>ราคารวม {Intl.NumberFormat().format(TotalPrice)} (ลด {list[0]?.totalOrder_ID?.discount_ID?.discount_Percent}% )</>
+    }
+  }
+  
   return (
     <Container>
       {title()}
@@ -239,7 +282,7 @@ function ListTotalOrdermenuEmp() {
                     <th className="text-center"> จำนวน </th>
                     <th className="text-center"> ราคา </th>
                     <th className="text-center"> พนักงานที่รับ </th>
-                    <th className="text-center"> Action </th>
+                    <th className="text-center"> จัดการ </th>
                     <th className="text-center"> Action </th>
                   </tr>
                 </thead>
@@ -270,7 +313,8 @@ function ListTotalOrdermenuEmp() {
                             class="btn btn-success"
                             disabled={
                               d.status_ID.status_ID === 4 ||
-                              d.status_ID.status_ID === 3
+                              d.status_ID.status_ID === 3 ||
+                              d.status_ID.status_ID === 5
                             }
                             onClick={() =>
                               finishedlStatus(
@@ -285,10 +329,26 @@ function ListTotalOrdermenuEmp() {
                           <button
                             type="button"
                             style={{ marginLeft: "5px" }}
+                            class="btn btn-dark"
+                            disabled={
+                              d.status_ID.status_ID === 4 ||
+                              d.status_ID.status_ID === 3 ||
+                              d.status_ID.status_ID === 5
+                            }
+                            onClick={() => waste(d.orderMenu_ID,d.menu_ID.menu_Name)}
+                            // onClick={waste(d.orderMenu_ID,d.menu_ID.menu_Name)}
+                          >
+                            {" "}
+                            ของเสีย{" "}
+                          </button>
+                          <button
+                            type="button"
+                            style={{ marginLeft: "5px" }}
                             class="btn btn-danger"
                             disabled={
                               d.status_ID.status_ID === 4 ||
-                              d.status_ID.status_ID === 3
+                              d.status_ID.status_ID === 3 ||
+                              d.status_ID.status_ID === 5
                             }
                             onClick={cancel(d.orderMenu_ID)}
                           >
@@ -306,7 +366,7 @@ function ListTotalOrdermenuEmp() {
 
             <h2 className="text-end">
               {UpdateTotalPrice(TotalPrice)}
-              ราคารวม {Intl.NumberFormat().format(TotalPrice)}
+              {discount()}
             </h2>
             {ChechBNT()}
           </Col>
