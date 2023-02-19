@@ -186,14 +186,32 @@ const CashierComponent = () => {
       color = "#A7D489";
     } else if (value.status_ID.status_ID === 4) {
       color = "#FF6961";
-    } else if (value.status_ID.status_ID === 2) {
+    } 
+    else if (value.status_ID.status_ID === 2) {
       color = "#49dfff";
-    }
-    else if(value.status_ID.status_ID !== 4 && value.status_ID.status_ID !== 3 && value.status_ID.status_ID !== 0){
+    } 
+    else if (value.status_ID.status_ID === 5) {
+      color = "#262f36";
+    } 
+    else if (
+      value.status_ID.status_ID !== 4 &&
+      value.status_ID.status_ID !== 3 &&
+      value.status_ID.status_ID !== 0
+    ) {
       color = "#ffc847";
     }
     return color;
   };
+
+  const color = (status) => {
+    let color;
+    if (status.status_ID.status_ID === 5) {
+      color = "#fefefe";
+    }else{
+      color = "#000000";
+    }
+    return color;
+  }
 
   const cutStock = (status, menu_ID, qty) => {
     console.log(qty);
@@ -226,21 +244,40 @@ const CashierComponent = () => {
       return <>-</>;
     } else if (status === 4) {
       return <>ยกเลิกโดย {name_Emp}</>;
-    } else if (status === 3) {
+    } 
+    else if (status === 3) {
       return <>เสริฟโดย {name_Emp}</>;
-    }
+    } 
+    else if (status === 5) {
+      return <>ของเสีย ({name_Emp})</>;
+    } 
     else if (status === 1) {
       return <>{name_Emp} กำลังทำ</>;
-    }
-    else if (status === 2) {
+    } else if (status === 2) {
       return <>{name_Emp} พร้อมเสริฟ</>;
     }
   };
+
+  const waste = (orderMenu_ID,name) => {
+    if (window.confirm(`${name} เป็นของเสีย!!`)) {
+    OrderMenuService.Waste(orderMenu_ID).then(() => {
+
+    });
+
+    OrderMenuService.Cancel(orderMenu_ID, currentUser?.name_Emp)
+    .then((response) => {})
+    .catch((e) => {
+      console.log(e);
+    });
+    
+  }
+}
 
   const watingCook = (k, index) => {
     if (
       k.status_ID.status_ID !== 4 &&
       k.status_ID.status_ID !== 3 &&
+      k.status_ID.status_ID !== 5 &&
       k.menu_ID.typeMenu_ID.menu_Type !== 0
     ) {
       return (
@@ -269,6 +306,22 @@ const CashierComponent = () => {
               >
                 {k.status_ID.status}
               </button>
+
+              <button
+                type="button"
+                style={{ marginLeft: "5px" }}
+                class="btn btn-dark"
+                disabled={
+                  k.status_ID.status_ID === 4 ||
+                  k.status_ID.status_ID === 3 ||
+                  k.status_ID.status_ID === 5
+                }
+                onClick={() => waste(k.orderMenu_ID, k.menu_ID.menu_Name)}
+                // onClick={waste(d.orderMenu_ID,d.menu_ID.menu_Name)}
+              >
+                {" "}
+                ของเสีย{" "}
+              </button>
               <button
                 type="button"
                 style={{ marginLeft: "5px" }}
@@ -289,11 +342,12 @@ const CashierComponent = () => {
   const finishedCook = (k, index) => {
     if (
       (k.status_ID.status_ID === 4 && k.menu_ID.typeMenu_ID.menu_Type === 1) ||
-      (k.status_ID.status_ID === 3 &&  k.menu_ID.typeMenu_ID.menu_Type === 1)
+      (k.status_ID.status_ID === 3 &&  k.menu_ID.typeMenu_ID.menu_Type === 1) ||
+      (k.status_ID.status_ID === 5 &&  k.menu_ID.typeMenu_ID.menu_Type === 1)
     ) {
       return (
         <tr
-          style={{ backgroundColor: getBackgroundColor(k), marginTop: "50px" }}
+          style={{ backgroundColor: getBackgroundColor(k), marginTop: "50px",color: color(k) }}
         >
           <th>{index + 1}</th>
           <td>{k.totalOrder_ID.table_ID.table_Zone}</td>
@@ -310,6 +364,21 @@ const CashierComponent = () => {
                 onClick={updateState(k.orderMenu_ID)}
               >
                 {k.status_ID.status}
+              </button>
+              <button
+                type="button"
+                style={{ marginLeft: "5px" }}
+                class="btn btn-dark"
+                disabled={
+                  k.status_ID.status_ID === 4 ||
+                  k.status_ID.status_ID === 3 ||
+                  k.status_ID.status_ID === 5
+                }
+                onClick={() => waste(k.orderMenu_ID, k.menu_ID.menu_Name)}
+                // onClick={waste(d.orderMenu_ID,d.menu_ID.menu_Name)}
+              >
+                {" "}
+                ของเสีย{" "}
               </button>
               <button
                 type="button"

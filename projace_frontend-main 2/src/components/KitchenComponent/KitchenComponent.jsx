@@ -88,73 +88,67 @@ const KitchenComponent = () => {
     };
   }, [OrderKitchen]);
 
-  const updateState = (orderMenu_ID, status,name, menu_ID, qty) => () => {
+  const updateState = (orderMenu_ID, status, name, menu_ID, qty) => () => {
+    console.log("sssssss", status);
 
-    console.log("sssssss",status)
-
-
-    if(status === 0){
-      if(window.confirm(`${name} กำลังทำ!!`)){
-        
+    if (status === 0) {
+      if (window.confirm(`${name} กำลังทำ!!`)) {
         OrderMenuService.updateStatus(orderMenu_ID)
-        .then((response) => {
-          OrderKitchen();
-        })
-        .catch((e) => {
-          console.log(e);
-        });
-        
+          .then((response) => {
+            OrderKitchen();
+          })
+          .catch((e) => {
+            console.log(e);
+          });
+
         OrderMenuService.Cancel(orderMenu_ID, currentUser.name_Emp)
-        .then((response) => {
-          console.log("Update",orderMenu_ID)
-        })
-        .catch((e) => {
-          console.log(e);
-        });
+          .then((response) => {
+            console.log("Update", orderMenu_ID);
+          })
+          .catch((e) => {
+            console.log(e);
+          });
       }
-    }else if (status === 1){
-      if(window.confirm(`${name} พร้อมเสริฟ!!`)){
-        
+    } else if (status === 1) {
+      if (window.confirm(`${name} พร้อมเสริฟ!!`)) {
         OrderMenuService.updateStatus(orderMenu_ID)
-        .then((response) => {
-          OrderKitchen();
-        })
-        .catch((e) => {
-          console.log(e);
-        });
-        
+          .then((response) => {
+            OrderKitchen();
+          })
+          .catch((e) => {
+            console.log(e);
+          });
+
         OrderMenuService.Cancel(orderMenu_ID, currentUser.name_Emp)
-        .then((response) => {
-          console.log("Update",orderMenu_ID)
-        })
-        .catch((e) => {
-          console.log(e);
-        });
+          .then((response) => {
+            console.log("Update", orderMenu_ID);
+          })
+          .catch((e) => {
+            console.log(e);
+          });
       }
-    }
-    else if(status === 2){
-      if(window.confirm(`${name} เสริฟแล้ว!!`)){
-        
+    } else if (status === 2) {
+      if (window.confirm(`${name} เสริฟแล้ว!!`)) {
         OrderMenuService.updateStatus(orderMenu_ID)
-        .then((response) => {
-          OrderKitchen();
-        })
-        .catch((e) => {
-          console.log(e);
-        });
-        
+          .then((response) => {
+            OrderKitchen();
+          })
+          .catch((e) => {
+            console.log(e);
+          });
+
         OrderMenuService.Cancel(orderMenu_ID, currentUser.name_Emp)
-        .then((response) => {
-          console.log("Update",orderMenu_ID)
-        })
-        .catch((e) => {
-          console.log(e);
-        });
+          .then((response) => {
+            console.log("Update", orderMenu_ID);
+          })
+          .catch((e) => {
+            console.log(e);
+          });
         cutStock(status, menu_ID, qty);
       }
     }
-    };
-    
+  };
+
   const cancel = (orderMenu_ID) => () => {
     if (window.confirm("คุณต้องการยกเลิกหรือไม่!!")) {
       OrderMenuService.cancelStatus(orderMenu_ID)
@@ -185,14 +179,33 @@ const KitchenComponent = () => {
       color = "#A7D489";
     } else if (value.status_ID.status_ID === 4) {
       color = "#FF6961";
-    } else if (value.status_ID.status_ID === 2) {
+    } 
+    else if (value.status_ID.status_ID === 2) {
       color = "#49dfff";
-    }
-    else if(value.status_ID.status_ID !== 4 && value.status_ID.status_ID !== 3 && value.status_ID.status_ID !== 0){
+    } 
+    else if (value.status_ID.status_ID === 5) {
+      color = "#262f36";
+    } 
+    else if (
+      value.status_ID.status_ID !== 4 &&
+      value.status_ID.status_ID !== 3 &&
+      value.status_ID.status_ID !== 0
+    ) {
       color = "#ffc847";
     }
     return color;
   };
+
+  const color = (status) => {
+    let color;
+    if (status.status_ID.status_ID === 5) {
+      color = "#fefefe";
+    }else{
+      color = "#000000";
+    }
+    return color;
+  }
+  
 
   const cutStock = (status, menu_ID, qty) => {
     console.log(qty);
@@ -207,22 +220,39 @@ const KitchenComponent = () => {
     }
   };
 
- const CancelEmp = (name_Emp, status) => {
+  const waste = (orderMenu_ID,name) => {
+    if (window.confirm(`${name} เป็นของเสีย!!`)) {
+    OrderMenuService.Waste(orderMenu_ID).then(() => {
+
+    });
+
+    OrderMenuService.Cancel(orderMenu_ID, currentUser?.name_Emp)
+    .then((response) => {})
+    .catch((e) => {
+      console.log(e);
+    });
+    
+  }
+}
+
+  const CancelEmp = (name_Emp, status) => {
     if (name_Emp === "") {
       return <>-</>;
     } else if (status === 4) {
       return <>ยกเลิกโดย {name_Emp}</>;
-    } else if (status === 3) {
+    } 
+    else if (status === 3) {
       return <>เสริฟโดย {name_Emp}</>;
-    }
+    } 
+    else if (status === 5) {
+      return <>ของเสีย ({name_Emp})</>;
+    } 
     else if (status === 1) {
       return <>{name_Emp} กำลังทำ</>;
-    }
-    else if (status === 2) {
+    } else if (status === 2) {
       return <>{name_Emp} พร้อมเสริฟ</>;
     }
   };
-
 
   const timestamp = (data) => {
     let timestamp = data.split("T");
@@ -237,18 +267,16 @@ const KitchenComponent = () => {
     OrderKitchen();
   }, [dateData]);
 
-  
-
-
   const watingCook = (k, index) => {
     if (
       k.status_ID.status_ID !== 4 &&
       k.status_ID.status_ID !== 3 &&
+      k.status_ID.status_ID !== 5 &&
       k.menu_ID.typeMenu_ID.menu_Type !== 1
     ) {
       return (
         <tr
-          style={{ backgroundColor: getBackgroundColor(k), marginTop: "50px" }}
+          style={{ backgroundColor: getBackgroundColor(k), marginTop: "50px",color: "red" }}
         >
           <th>{index + 1}</th>
           <td>{k.totalOrder_ID.table_ID.table_Zone}</td>
@@ -272,6 +300,22 @@ const KitchenComponent = () => {
               >
                 {k.status_ID.status}
               </button>
+
+              <button
+                type="button"
+                style={{ marginLeft: "5px" }}
+                class="btn btn-dark"
+                disabled={
+                  k.status_ID.status_ID === 4 ||
+                  k.status_ID.status_ID === 3 ||
+                  k.status_ID.status_ID === 5
+                }
+                onClick={() => waste(k.orderMenu_ID, k.menu_ID.menu_Name)}
+                // onClick={waste(d.orderMenu_ID,d.menu_ID.menu_Name)}
+              >
+                {" "}
+                ของเสีย{" "}
+              </button>
               <button
                 type="button"
                 style={{ marginLeft: "5px" }}
@@ -283,7 +327,7 @@ const KitchenComponent = () => {
               </button>
             </div>
           </td>
-          <td>{CancelEmp(k.cencel,k.status_ID.status_ID)}</td>
+          <td>{CancelEmp(k.cencel, k.status_ID.status_ID)}</td>
         </tr>
       );
     }
@@ -291,28 +335,45 @@ const KitchenComponent = () => {
 
   const finishedCook = (k, index) => {
     if (
-      (k.status_ID.status_ID === 4 &&  k.menu_ID.typeMenu_ID.menu_Type === 0) ||
-      (k.status_ID.status_ID === 3 &&  k.menu_ID.typeMenu_ID.menu_Type === 0)
+      (k.status_ID.status_ID === 4 && k.menu_ID.typeMenu_ID.menu_Type === 0) ||
+      (k.status_ID.status_ID === 3 && k.menu_ID.typeMenu_ID.menu_Type === 0) ||
+      (k.status_ID.status_ID === 5 && k.menu_ID.typeMenu_ID.menu_Type === 0)
     ) {
       return (
         <tr
-          style={{ backgroundColor: getBackgroundColor(k), marginTop: "50px" }}
+          style={{ backgroundColor: getBackgroundColor(k), marginTop: "50px",color: color(k) }}
         >
           <th>{index + 1}</th>
           <td>{k.totalOrder_ID.table_ID.table_Zone}</td>
           <td>{k.menu_ID.menu_Name}</td>
           <td>{k.orderMenu_Qty}</td>
           <td>{timestamp(k.orderMenu_TimeStamp)}</td>
-          <td>{k.status_ID.status_ID}</td>
+          <td>{k.status_ID.status}</td>
           <td>
             <div>
               <button
                 type="button"
                 class="btn btn-primary"
                 disabled={getBackgroundColor(k)}
-                onClick={updateState(k.orderMenu_ID,k.status_ID.status_ID)}
+                onClick={updateState(k.orderMenu_ID, k.status_ID.status_ID)}
               >
                 {k.status_ID.status}
+              </button>
+
+              <button
+                type="button"
+                style={{ marginLeft: "5px" }}
+                class="btn btn-dark"
+                disabled={
+                  k.status_ID.status_ID === 4 ||
+                  k.status_ID.status_ID === 3 ||
+                  k.status_ID.status_ID === 5
+                }
+                onClick={() => waste(k.orderMenu_ID, k.menu_ID.menu_Name)}
+                // onClick={waste(d.orderMenu_ID,d.menu_ID.menu_Name)}
+              >
+                {" "}
+                ของเสีย{" "}
               </button>
               <button
                 type="button"
@@ -325,7 +386,7 @@ const KitchenComponent = () => {
               </button>
             </div>
           </td>
-          <td>{CancelEmp(k.cencel,k.status_ID.status_ID)}</td>
+          <td>{CancelEmp(k.cencel, k.status_ID.status_ID)}</td>
         </tr>
       );
     }
@@ -450,7 +511,9 @@ const KitchenComponent = () => {
                         <th> Action </th>
                       </tr>
                     </thead>
-                    <tbody></tbody>
+                    <tbody>
+                    </tbody>
+
                     {filterStock?.map((k, index) => {
                       return finishedCook(k, index);
                     })}

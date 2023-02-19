@@ -19,21 +19,7 @@ const ListMenuComponent = () => {
   const indexOfFirstRow = indexOfLastRow - rowsPerPage;
   const currentRows = menuList.slice(indexOfFirstRow, indexOfLastRow);
 
-  const Next = () => {
-    console.log(parseInt(menuList.length / 5) + 1);
 
-    if (parseInt(menuList.length / 5) + 1 <= currentPage) {
-    } else {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-
-  const Previous = () => {
-    if (currentPage <= 1) {
-    } else {
-      setCurrentPage(currentPage - 1);
-    }
-  };
 
   let pic = "http://localhost:8080/menu/getimages/";
 
@@ -97,7 +83,7 @@ const ListMenuComponent = () => {
   };
 
   
-  const filterMenu = currentRows.filter((menuList) => {
+  const filterMenu = menuList.filter((menuList) => {
     if(search.length>0){
 
       return (
@@ -240,27 +226,6 @@ const ListMenuComponent = () => {
             </tbody>
           </table>
         </div>
-      </div>
-      <div className="text-center">
-        <button
-          id="prev"
-          className="btn btn-primary mr-2"
-          disabled={1 == currentPage}
-          onClick={Previous}
-        >
-          ก่อนหน้า
-        </button>
-        <span id="pageNum" style={{ margin: "10px", fontSize: "20px" }}>
-          {currentPage} / {parseInt(menuList.length / 5) + 1}
-        </span>
-        <button
-          id="next"
-          className="btn btn-primary mr-2"
-          disabled={parseInt(menuList.length / 5) + 1 == currentPage}
-          onClick={Next}
-        >
-          ต่อไป
-        </button>
       </div>
     </>
   );

@@ -254,7 +254,8 @@ const TatalOrder = () => {
           disabled={
             DisBTNmixTable(value.compoSite , value.totalOrder_Status) 
             || value.totalOrder_Status === "1"
-            || value.totalOrder_image !== null
+            || value.totalOrder_image !== null 
+            || value.discount_ID !== null
           }
           className="btn btn-info"
         >
@@ -891,7 +892,7 @@ const TatalOrder = () => {
                       }
                       disabled={
                         totalOrder.compoSite != totalOrder.table_ID.table_Zone ||
-                        totalOrder.totalOrder_Status === "1" || totalOrder.totalOrder_image !== null
+                        totalOrder.totalOrder_Status === "1" || totalOrder.totalOrder_image !== null || totalOrder.discount_ID !== null
                       }
                       className="btn btn-outline-primary"
                     >
@@ -907,7 +908,7 @@ const TatalOrder = () => {
                         )
                       }
                       disabled={
-                        totalOrder.compoSite != totalOrder.table_ID.table_Zone
+                        totalOrder.compoSite != totalOrder.table_ID.table_Zone 
                         
                       }
                       className="btn btn-outline-secondary"
@@ -922,7 +923,7 @@ const TatalOrder = () => {
                       disabled={
                         totalOrder.compoSite != totalOrder.table_ID.table_Zone ||
                         totalOrder.totalOrder_Status === "1" || DisBTNmixTable(totalOrder.compoSite , totalOrder.totalOrder_Status)
-                         || totalOrder.totalOrder_image !== null
+                         || totalOrder.totalOrder_image !== null || totalOrder.discount_ID !== null
                       }
                       onClick={
                         (e) => handleShowModeTable(totalOrder)
