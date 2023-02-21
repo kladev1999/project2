@@ -16,6 +16,7 @@ const kitchen = (dateData) =>{
 }
 
 
+
 const addOrderMenus = (OrderMenus) =>{
 
     let oor = OrderMenus;
@@ -100,7 +101,9 @@ const incomeBetweenAllMenu =(startDate,endDate)=>{
 }
 
 
-
+const Waste = (orderMenu_ID) =>{
+    return axios.get("http://localhost:8080/OrderMenu/waste/"+ orderMenu_ID,{ headers: authHeader()});
+}
 
 const OrderMenuService = {
     getOrderMenu,
@@ -126,7 +129,8 @@ const OrderMenuService = {
     incomeAllByDate,
     incomeAllDate,
     incomeAllBetweenByDate,
-    incomeBetweenAllMenu
+    incomeBetweenAllMenu,
+    Waste
 }
 
 export default OrderMenuService;

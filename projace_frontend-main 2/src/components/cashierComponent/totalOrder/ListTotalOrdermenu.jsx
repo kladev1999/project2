@@ -45,7 +45,7 @@ function ListTotalOrdermenu() {
         console.log("totalprice = ", Price);
       }
     );
-  }
+  };
 
   const getTotalOrder = () => {
     TotalOrderService.getTotalOrderById(compoSite)
@@ -85,6 +85,18 @@ function ListTotalOrdermenu() {
       });
   };
 
+  const cutStock = (menu_ID, qty) => {
+    console.log(qty);
+
+    OrderMenuService.loopStockCut(menu_ID, qty)
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   const status = (value) => {
     if (value.status_ID.status_ID === 3) {
       return (
@@ -98,16 +110,16 @@ function ListTotalOrdermenu() {
           {value.status_ID.status}
         </td>
       );
-    } 
-    else if (value.status_ID.status_ID === 5) {
+    } else if (value.status_ID.status_ID === 5) {
       return (
-        <td className="text-center" style={{ backgroundColor: "#262f36",color: "white" }}>
+        <td
+          className="text-center"
+          style={{ backgroundColor: "#262f36", color: "white" }}
+        >
           {value.status_ID.status}
         </td>
       );
-    } 
-    
-    else if (value.status_ID.status_ID === 2) {
+    } else if (value.status_ID.status_ID === 2) {
       return (
         <td className="text-center" style={{ backgroundColor: "#49dfff" }}>
           {value.status_ID.status}
@@ -171,25 +183,24 @@ function ListTotalOrdermenu() {
       </>
     );
   };
-  let nameEmp = currentUser?.name_Emp
-  let Action = nameEmp
+  let nameEmp = currentUser?.name_Emp;
+  let Action = nameEmp;
 
-  console.log(typeof nameEmp,"sdasdasdad")
+  console.log(typeof nameEmp, "sdasdasdad");
 
-  const waste = (orderMenu_ID,name) => {
+  const waste = (orderMenu_ID, name,menu_ID,qty) => {
     if (window.confirm(`${name} เป็นของเสีย!!`)) {
-    OrderMenuService.Waste(orderMenu_ID).then(() => {
+      OrderMenuService.Waste(orderMenu_ID).then(() => {});
 
-    });
+      OrderMenuService.Cancel(orderMenu_ID, nameEmp)
+        .then((response) => {})
+        .catch((e) => {
+          console.log(e);
+        });
 
-    OrderMenuService.Cancel(orderMenu_ID, nameEmp)
-    .then((response) => {})
-    .catch((e) => {
-      console.log(e);
-    });
-    
-  }
-}
+        cutStock(menu_ID, qty);
+    }
+  };
 
   const cancel = (orderMenu_ID) => () => {
     if (window.confirm("คุณต้องการยกเลิกหรือไม่!!")) {
@@ -207,7 +218,7 @@ function ListTotalOrdermenu() {
     }
   };
 
-  const finishedlStatus = (orderMenu_ID, name) => {
+  const finishedlStatus = (orderMenu_ID, name, menu_ID, qty) => {
     console.log(name);
     if (window.confirm(`${name} เสร็จแล้ว!!`)) {
       OrderMenuService.finishedlStatus(orderMenu_ID)
@@ -222,10 +233,9 @@ function ListTotalOrdermenu() {
           console.log(e);
         });
     }
+
+    cutStock(menu_ID, qty);
   };
-
- 
-
 
   const CancelEmp = (name_Emp, status) => {
     if (name_Emp === "") {
@@ -244,19 +254,21 @@ function ListTotalOrdermenu() {
   };
 
   const discount = () => {
-   
-
-
-    if(list.length == 0){
-      return <>ราคารวม 0</>
+    if (list.length == 0) {
+      return <>ราคารวม 0</>;
     }
-    if (list[list.length-1]?.totalOrder_ID.discount_ID === null) {
-     return <>ราคารวม {Intl.NumberFormat().format(TotalPrice)}</>
+    if (list[list.length - 1]?.totalOrder_ID.discount_ID === null) {
+      return <>ราคารวม {Intl.NumberFormat().format(TotalPrice)}</>;
     } else {
-      return <>ราคารวม {Intl.NumberFormat().format(TotalPrice)} (ลด {list[0]?.totalOrder_ID?.discount_ID?.discount_Percent}% )</>
+      return (
+        <>
+          ราคารวม {Intl.NumberFormat().format(TotalPrice)} (ลด{" "}
+          {list[0]?.totalOrder_ID?.discount_ID?.discount_Percent}% )
+        </>
+      );
     }
-  }
-  
+  };
+
   return (
     <Container>
       {title()}
@@ -315,13 +327,15 @@ function ListTotalOrdermenu() {
                             class="btn btn-success"
                             disabled={
                               d.status_ID.status_ID === 4 ||
-                              d.status_ID.status_ID === 3||
+                              d.status_ID.status_ID === 3 ||
                               d.status_ID.status_ID === 5
                             }
                             onClick={() =>
                               finishedlStatus(
                                 d.orderMenu_ID,
-                                d.menu_ID.menu_Name
+                                d.menu_ID.menu_Name,
+                                d.menu_ID.menu_ID,
+                                d.orderMenu_Qty
                               )
                             }
                           >
@@ -337,7 +351,14 @@ function ListTotalOrdermenu() {
                               d.status_ID.status_ID === 3 ||
                               d.status_ID.status_ID === 5
                             }
-                            onClick={() => waste(d.orderMenu_ID,d.menu_ID.menu_Name)}
+                            onClick={() =>
+                              waste(
+                                d.orderMenu_ID,
+                                d.menu_ID.menu_Name,
+                                d.menu_ID.menu_ID,
+                                d.orderMenu_Qty
+                              )
+                            }
                             // onClick={waste(d.orderMenu_ID,d.menu_ID.menu_Name)}
                           >
                             {" "}
@@ -349,7 +370,7 @@ function ListTotalOrdermenu() {
                             class="btn btn-danger"
                             disabled={
                               d.status_ID.status_ID === 4 ||
-                              d.status_ID.status_ID === 3||
+                              d.status_ID.status_ID === 3 ||
                               d.status_ID.status_ID === 5
                             }
                             onClick={cancel(d.orderMenu_ID)}

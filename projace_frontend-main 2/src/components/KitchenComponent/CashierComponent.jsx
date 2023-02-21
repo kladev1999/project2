@@ -150,7 +150,7 @@ const CashierComponent = () => {
         .catch((e) => {
           console.log(e);
         });
-        cutStock(status, menu_ID, qty);
+        cutStock( menu_ID, qty);
       }
     }
     };
@@ -213,9 +213,8 @@ const CashierComponent = () => {
     return color;
   }
 
-  const cutStock = (status, menu_ID, qty) => {
+  const cutStock = ( menu_ID, qty) => {
     console.log(qty);
-    if (status?.status_ID?.status_ID === 1) {
       OrderMenuService.loopStockCut(menu_ID, qty)
         .then((response) => {
           console.log(response.data);
@@ -223,7 +222,7 @@ const CashierComponent = () => {
         .catch((error) => {
           console.log(error);
         });
-    }
+    
   };
 
   const timestamp = (data) => {

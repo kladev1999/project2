@@ -320,7 +320,7 @@ function IncomeExpense() {
 
   console.log("pppdppp = ", selectedDate);
 
-  const filterMenu = incomeAll.filter((incomeAll) => {
+  const filterMenu = incomeAll?.filter((incomeAll) => {
     if (searchName.length > 0) {
       return incomeAll.menu_Name
         .toLowerCase()

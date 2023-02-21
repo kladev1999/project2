@@ -100,7 +100,7 @@ public class OrderMenuController {
 	}
 
 	@GetMapping("/getListOrderMenu/{totalOrder_ID}/{statusTable}")
-	public List<Order_Menu> getStockTypeByIDd(@PathVariable String totalOrder_ID,@PathVariable Integer statusTable) {
+	public List<Order_Menu> getStockTypeByIDd(@PathVariable String totalOrder_ID, @PathVariable Integer statusTable) {
 
 		return (List<Order_Menu>) orderMenuRepo.findByTotalOrder_ID(totalOrder_ID, statusTable);
 	}
@@ -146,7 +146,7 @@ public class OrderMenuController {
 		return cost;
 	}
 
-	//ใช้แล้ว
+	// ใช้แล้ว
 	// รายรับ รายจ่าย รวมทุกเมนู
 	@GetMapping("/incomeAllDetailMenu")
 	public ArrayList<Income> incomeAllMenu() {
@@ -155,17 +155,14 @@ public class OrderMenuController {
 		for (int index = 0; index < ss.size(); index++) {
 			Income newIncome = new Income();
 			String nameMenu = orderMenuRepo.findMenuByID(ss.get(index));
-			
+
 			int cost = 0;
 			int qtyByMenu = 0;
 			int menuPrice = 0;
 			int totalCost = 0;
 			int totalSell = 0;
 			int proFit = 0;
-//			for (int i = 0; i < getListInt(ss.get(index)).size(); i++) {
-//				cost += orderMenuRepo.findCostMenu(getListInt(ss.get(i)).get(i), ss.get(i));
 			cost += getCost(ss.get(index));
-//			}
 			qtyByMenu = orderMenuRepo.findAllDetail(ss.get(index));
 			menuPrice = orderMenuRepo.findMenuInOrderMenu(ss.get(index));
 			totalCost = (cost * qtyByMenu);
@@ -191,8 +188,7 @@ public class OrderMenuController {
 		return income;
 	}
 
-	
-	//ใช้แล้ว 
+	// ใช้แล้ว
 	@GetMapping("/incomeAllDetailMenus")
 	public ArrayList<Integer> incomeAllMenus() {
 		ArrayList<Income> income = new ArrayList<Income>();
@@ -209,21 +205,17 @@ public class OrderMenuController {
 			totalCost += income.get(i).getTotalCost();
 		}
 
-
 		total.add(totalAllSell);
 		total.add(totalAllProfit);
 		total.add(totalDiscount);
 		total.add(totalAllProfit - totalDiscount);
 		total.add(totalCost);
 
-		
-		
-
 		return total;
 	}
 
-	//ใช้แล้ว
-	//ใช้เฉพาะวัน 
+	// ใช้แล้ว
+	// ใช้เฉพาะวัน
 	@GetMapping("/incomeAllByDate/{date}")
 	public ArrayList<Income> incomeAllByDate(@PathVariable String date) {
 		List<Long> ss = orderMenuRepo.findMenu();
@@ -233,21 +225,20 @@ public class OrderMenuController {
 		}
 		return income;
 	}
-	
-	//ใช้แล้ว
+
+	// ใช้แล้ว
 	@GetMapping("/incomeAllBetweenBydate/{startDate}/{endDate}")
-	public ArrayList<Income> incomeAllBetWeen(@PathVariable String startDate,@PathVariable String endDate){
+	public ArrayList<Income> incomeAllBetWeen(@PathVariable String startDate, @PathVariable String endDate) {
 		List<Long> ss = orderMenuRepo.findMenu();
 		ArrayList<Income> income = new ArrayList<Income>();
 		for (int index = 0; index < ss.size(); index++) {
-			income.add(incomeBetween(ss.get(index),startDate,endDate));
+			income.add(incomeBetween(ss.get(index), startDate, endDate));
 		}
 		return income;
 	}
 
-	
-	//ใช้แล้ว
-	//จะใช้อันนี้เฉพาะตอนที่ enddate == null
+	// ใช้แล้ว
+	// จะใช้อันนี้เฉพาะตอนที่ enddate == null
 	// รายงานข้อมูลรายรับ - รายจ่าย เฉพาะเมนู
 	@GetMapping("/incomeCost/{menu_ID}/{date}")
 	public Income incomeOneMenu(@PathVariable Long menu_ID, @PathVariable String date) {
@@ -285,8 +276,8 @@ public class OrderMenuController {
 		return income;
 	}
 
-	//ใช้แล้ว
-	//ใช้ตอนที่ enddate != null
+	// ใช้แล้ว
+	// ใช้ตอนที่ enddate != null
 	// การดูรายรับ รายจ่าย ระหว่างช่วงเวลา เฉพาะเมนู
 	// http://localhost:8080/OrderMenu/incomeBetween/18/2023-02-10/2023-02-14
 	// ฟอร์มการส่ง
@@ -326,9 +317,8 @@ public class OrderMenuController {
 		return income;
 	}
 
-	
-	//ใช้แล้ว
-	//ใช้เฉพาะ enddate == null
+	// ใช้แล้ว
+	// ใช้เฉพาะ enddate == null
 	// รายงานข้อมูลรายรับ - รายจ่าย ทุกเมนู
 	@GetMapping("/incomeAll/{date}")
 	public ArrayList<Integer> incomeMenus(@PathVariable String date) {
@@ -348,25 +338,19 @@ public class OrderMenuController {
 			totalAllProfit += (income.get(i).getTotalSell() - income.get(i).getTotalCost());
 			totalCost += income.get(i).getTotalCost();
 		}
-		
-		
-		
-		
+
 		total.add(totalAllSell);
 		total.add(totalAllProfit);
 		total.add(income.get(0).getDiscount());
 		total.add(totalAllProfit - income.get(0).getDiscount());
 		total.add(totalCost);
-		
-		System.out.println(total);
 
-		
+		System.out.println(total);
 
 		return total;
 	}
 
-	
-	//ใช้ตอนที่ enddate != null
+	// ใช้ตอนที่ enddate != null
 	// การรายงานรายรับรายจ่าย ระหว่างช่วงเวลาทุกเมนู
 	// http://localhost:8080/OrderMenu/incomeBetweenAllMenu/2023-02-10/2023-02-14
 	// แบบฟอร์มการส่ง
@@ -391,8 +375,6 @@ public class OrderMenuController {
 		total.add(income.get(0).getDiscount());
 		total.add(totalAllProfit - income.get(0).getDiscount());
 		total.add(totalCost);
-		
-		
 
 		System.out.println(totalAllSell);
 		System.out.println(totalAllProfit);
@@ -400,14 +382,10 @@ public class OrderMenuController {
 		return total;
 	}
 
-
-
-	
 	// Loop หาวัตถุดิบ พร้อมตัดสต๊อก
 	// ตัวนี้เวิร์คลองแล้ว
 	@GetMapping("/cutLoopStock/{menu_ID}/{qtyMenu}")
 	public String loopStockCut(@PathVariable Long menu_ID, @PathVariable int qtyMenu) {
-		int stocktypeid = 5;
 		for (int q = 0; q < qtyMenu; q++) {
 			for (int i = 0; i < getListInt(menu_ID).size(); i++) {
 				int qtyStock = 0;
@@ -416,13 +394,11 @@ public class OrderMenuController {
 				LocalDateTime qty_timeStamp = LocalDateTime.now();
 				List<Stock> stock = stockRepo.findAll();
 				List<Stock_Menu> stock_menu = stockMenuRepo.findAll();
-
 				Stock stockUpdate = null;
 				Stock stockNagative = null;
-
 				for (int a = 0; a < stock_menu.size(); a++) {
-					if (stock_menu.get(a).getStockType_ID().getStockType_ID() == getListInt(menu_ID).get(i)
-							&& stock_menu.get(a).getMenu_ID().getMenu_ID() == menu_ID) {
+					if (stock_menu.get(a).getStockType_ID().getStockType_ID() == getListInt(menu_ID).get(i)) {
+						System.out.println(stock_menu.get(a).getStockMenu_ID());
 						qtyStock_Menu = stock_menu.get(a).getStockMenu_Qty();
 						break;
 					}
@@ -447,37 +423,26 @@ public class OrderMenuController {
 									stockNagative = stockRepo.findById(stock.get(k).getStock_ID()).orElseThrow(
 											() -> new ResourceNotFoundException("Stock not exist with id :" + 2));
 									stockNagative.setStock_Qty(stockNagative.getStock_Qty() - qtyNagative);
-
 									stockRepo.save(stockNagative);
-
 									break;
 								}
 							}
 						}
-
 						else {
 							stockUpdate.setStock_Qty(qtyStock - qtyStock_Menu);
 							stockRepo.save(stockUpdate);
 						}
 						break;
-
 					}
-
 				}
-
 			}
 		}
 		try {
-
 		} catch (Exception e) {
 			return "Menu_ID not found";
 		}
-
 		return "Menu_ID OK";
 	}
-
-
-
 
 	// Loop หาวัตถุดิบพร้อมเพิ่มสต๊อก
 	@GetMapping("/addLoppStock/{menu_ID}")
@@ -519,8 +484,8 @@ public class OrderMenuController {
 	}
 
 	@GetMapping("/Cancel/{orderMenu_ID}/{Emp}")
-	public int cancel(@PathVariable Long orderMenu_ID,@PathVariable String Emp) {
-		return orderMenuRepo.Cancel(orderMenu_ID,Emp);
+	public int cancel(@PathVariable Long orderMenu_ID, @PathVariable String Emp) {
+		return orderMenuRepo.Cancel(orderMenu_ID, Emp);
 	}
 
 	@GetMapping("/finished/{orderMenu_ID}")
@@ -534,7 +499,5 @@ public class OrderMenuController {
 		orderMenuRepo.mergeTable(totalOrder_ID, pointTable);
 		return orderMenuRepo.mergeTable(totalOrder_ID, pointTable);
 	}
-
-
 
 }

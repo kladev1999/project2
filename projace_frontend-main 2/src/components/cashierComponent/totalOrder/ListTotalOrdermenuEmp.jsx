@@ -174,20 +174,19 @@ function ListTotalOrdermenuEmp() {
   let nameEmp = currentUser?.name_Emp
   let Action = nameEmp
 
-  const waste = (orderMenu_ID,name) => {
+  const waste = (orderMenu_ID, name,menu_ID,qty) => {
     if (window.confirm(`${name} เป็นของเสีย!!`)) {
-    OrderMenuService.Waste(orderMenu_ID).then(() => {
+      OrderMenuService.Waste(orderMenu_ID).then(() => {});
 
-    });
+      OrderMenuService.Cancel(orderMenu_ID, nameEmp)
+        .then((response) => {})
+        .catch((e) => {
+          console.log(e);
+        });
 
-    OrderMenuService.Cancel(orderMenu_ID, nameEmp)
-    .then((response) => {})
-    .catch((e) => {
-      console.log(e);
-    });
-    
-  }
-}
+        cutStock(menu_ID, qty);
+    }
+  };
   
 
   const cancel = (orderMenu_ID) => () => {
@@ -206,7 +205,7 @@ function ListTotalOrdermenuEmp() {
     }
   };
 
-  const finishedlStatus = (orderMenu_ID, name) => {
+  const finishedlStatus = (orderMenu_ID, name,menu_ID,qty) => {
     console.log(name);
     if (window.confirm(`${name} เสร็จแล้ว!!`)) {
       OrderMenuService.finishedlStatus(orderMenu_ID)
@@ -220,8 +219,22 @@ function ListTotalOrdermenuEmp() {
         .catch((e) => {
           console.log(e);
         });
+
+        cutStock(menu_ID, qty);
     }
   };
+  const cutStock = (menu_ID, qty) => {
+    console.log(qty);
+
+    OrderMenuService.loopStockCut(menu_ID, qty)
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
 
  
 
@@ -319,7 +332,9 @@ function ListTotalOrdermenuEmp() {
                             onClick={() =>
                               finishedlStatus(
                                 d.orderMenu_ID,
-                                d.menu_ID.menu_Name
+                                d.menu_ID.menu_Name,
+                                d.menu_ID.menu_ID,
+                                d.orderMenu_Qty
                               )
                             }
                           >
@@ -335,7 +350,12 @@ function ListTotalOrdermenuEmp() {
                               d.status_ID.status_ID === 3 ||
                               d.status_ID.status_ID === 5
                             }
-                            onClick={() => waste(d.orderMenu_ID,d.menu_ID.menu_Name)}
+                            onClick={() => waste(
+                              d.orderMenu_ID,
+                              d.menu_ID.menu_Name,
+                              d.menu_ID.menu_ID,
+                              d.orderMenu_Qty
+                              )}
                             // onClick={waste(d.orderMenu_ID,d.menu_ID.menu_Name)}
                           >
                             {" "}

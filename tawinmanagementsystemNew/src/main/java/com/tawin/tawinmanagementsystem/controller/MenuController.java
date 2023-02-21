@@ -49,7 +49,6 @@ public class MenuController {
 	
 	}
 	
-	
 	@CrossOrigin(origins = "*")
 	@GetMapping("/findMenuInStockMenu/{menu_ID}")
 	public ArrayList<Stock_Menu> findMenuInStockMenu(@PathVariable Long menu_ID){
@@ -58,13 +57,9 @@ public class MenuController {
 		return stockMenu;
 	}
 
-
-
 	@PostMapping("/addMenu")
 	public Menu createMenu(@RequestBody Menu menu) {
-
 		Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Asia/Bangkok"));
-
 		int hours = calendar.get(Calendar.HOUR_OF_DAY);
         int minutes = calendar.get(Calendar.MINUTE);
         int sec = calendar.get(Calendar.SECOND);
@@ -80,8 +75,6 @@ public class MenuController {
 		
 		return menu;
 	}
-
-	
 
 	@GetMapping("/getSearchMenu/{Datetime}")
 	public List<Menu> getDatetime(@PathVariable String Datetime) {

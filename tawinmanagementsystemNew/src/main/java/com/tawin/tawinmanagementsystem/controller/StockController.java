@@ -35,120 +35,77 @@ import com.tawin.tawinmanagementsystem.repository.StockRepository;
 public class StockController {
 	@Autowired
 	StockRepository stockRepo;
-	
+
 	@Autowired
 	BackupStockRepository backupRepo;
-	
+
 	@Autowired
 	MirrorStockRepo mirrorRepo;
-	
+
 	Stock stock;
-	
-//	SecurityUtil util;
-	
-	
-	
+
 	@GetMapping("/stockFindAll")
-	public List<Stock> getAll(){
-		
-	return (List<Stock>) stockRepo.findAllStockSQL();
+	public List<Stock> getAll() {
+		return (List<Stock>) stockRepo.findAllStockSQL();
 	}
 
 	@GetMapping("/backupStockFindAll")
-	public List<BackupStock> getbackupStockkAll(){
-
-	return (List<BackupStock>) backupRepo.findAll();
-	
+	public List<BackupStock> getbackupStockkAll() {
+		return (List<BackupStock>) backupRepo.findAll();
 	}
-	
+
 	// หาวัตถุดิบ
-    @GetMapping("/getListInt/{menu_ID}")
-    public List<String>getListInt(@PathVariable Long menu_ID){
-        return (List<String>) stockRepo.findStock(menu_ID);
-    }
-	
-	// Loop หาวัตถุดิบ พร้อมตัดสต๊อก
-	//ตัวนี้เวิร์คลองแล้ว
-    @GetMapping("/getLoopStock2/{menu_ID}")
-    public void loopStockCut(@PathVariable Long menu_ID) {
-        for(int i = 0; i < getListInt(menu_ID).size();i++ ) {
-            stockRepo.stockCutLoop(getListInt(menu_ID).get(i));
-        }
-    }
-    
-	
-	
+	@GetMapping("/getListInt/{menu_ID}")
+	public List<String> getListInt(@PathVariable Long menu_ID) {
+		return (List<String>) stockRepo.findStock(menu_ID);
+	}
+
 	@GetMapping("/getStock")
-	public List<Stock> getStock(){
-		
+	public List<Stock> getStock() {
 		return (List<Stock>) stockRepo.findAll();
 	}
-	
+
 //	ตัดสต๊อกแบบส่ง StockType_ID ไปที่ stockCut
 	@GetMapping("/stockCut/{stockType_ID}")
-	public int stockCut(@PathVariable Long stockType_ID){
-	    return stockRepo.stockCut(stockType_ID);
+	public int stockCut(@PathVariable Long stockType_ID) {
+		return stockRepo.stockCut(stockType_ID);
 	}
-	
-	
-	
+
 	@PostMapping("/addStock")
 	public Stock createStock(@RequestBody Stock stock) {
-		//MirrorStock mirror = new MirrorStock();
 		stock.setStock_TimeStamp(LocalDateTime.now());
-		stock.setPricePerUnit((double)stock.getStock_Cost()/stock.getStock_Qty());
-		
-//		mirror.setMirrorStock_ID(stock.getStock_ID());
-//		mirror.setMirrorStock_Cost(stock.getStock_Cost());
-//		mirror.setMirrorStock_Min(stock.getStock_Min());
-//		mirror.setMirrorStock_Qty(stock.getStock_Qty());
-//		mirror.setMirrorStock_TimeStamp(stock.getStock_TimeStamp());
-//		mirror.setMirrorPricePerUnit(stock.getPricePerUnit());
-//		mirror.setStockType_ID(stock.getStockType_ID());
-		
+		stock.setPricePerUnit((double) stock.getStock_Cost() / stock.getStock_Qty());
 		stockRepo.save(stock);
-		mirrorRepo.insertMirrorStock();
-		
-		
 		backupRepo.insertBackupStock();
 		return stock;
 	}
-	
+
 	@GetMapping("/getStock/{stock_ID}")
-	public ResponseEntity <Stock> getStockById(@PathVariable Long stock_ID) {
+	public ResponseEntity<Stock> getStockById(@PathVariable Long stock_ID) {
 		Stock stock = stockRepo.findById(stock_ID)
 				.orElseThrow(() -> new ResourceNotFoundException("Stock not exist with id :" + stock_ID));
 		return ResponseEntity.ok(stock);
-	
 	}
-	
-	
 	@PutMapping("/updateStock/{stock_ID}")
-	public ResponseEntity<Stock> updateStock(@PathVariable Long stock_ID,@RequestBody Stock stockDetails){
+	public ResponseEntity<Stock> updateStock(@PathVariable Long stock_ID, @RequestBody Stock stockDetails) {
 		Stock stock = stockRepo.findById(stock_ID)
 				.orElseThrow(() -> new ResourceNotFoundException("Stock not exist with id :" + stock_ID));
-		
-		
 		stock.setStock_Qty(stockDetails.getStock_Qty());
 		stock.setStock_Cost(stockDetails.getStock_Cost());
 		stock.setStock_Min(stockDetails.getStock_Min());
 		stock.setStockType_ID(stockDetails.getStockType_ID());
-		stock.setPricePerUnit((double)stockDetails.getStock_Cost()/stockDetails.getStock_Qty());
-		
+		stock.setPricePerUnit((double) stockDetails.getStock_Cost() / stockDetails.getStock_Qty());
 		Stock updateStock = stockRepo.save(stock);
 		return ResponseEntity.ok(updateStock);
 	}
-	
 	@DeleteMapping("/deleteStock/{stock_ID}")
-	public ResponseEntity<Map<String, Boolean>> deleteStock(@PathVariable Long stock_ID){
-		Stock stock =stockRepo.findById(stock_ID)
+	public ResponseEntity<Map<String, Boolean>> deleteStock(@PathVariable Long stock_ID) {
+		Stock stock = stockRepo.findById(stock_ID)
 				.orElseThrow(() -> new ResourceNotFoundException("Employee not exist with id :" + stock_ID));
-		
 		stockRepo.delete(stock);
-	
 		Map<String, Boolean> response = new HashMap<>();
 		response.put("deleted", Boolean.TRUE);
 		return ResponseEntity.ok(response);
 	}
-	
+
 }

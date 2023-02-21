@@ -18,13 +18,12 @@ import javax.persistence.EntityManager;
 
 public interface Order_MenuRepository extends JpaRepository<Order_Menu, Integer> {
 
-        @Query(value = "SELECT * \n"
-        		+ "FROM order_menu \n"
-        		+ "INNER JOIN total_order \n"
-        		+ "ON order_menu.total_order_id = total_order.total_order_id \n"
-        		+ "WHERE compo_site = :compoSite AND total_order_status = :statusTable \n"
-        		+ "ORDER BY order_menu.status_id AND order_menu.order_menu_time_stamp ASC", nativeQuery = true)
-        List<Order_Menu> findByTotalOrder_ID(@Param("compoSite") String compoSite,@Param("statusTable") Integer statusTable);
+	@Query(value = "SELECT * \n" + "FROM order_menu \n" + "INNER JOIN total_order \n"
+			+ "ON order_menu.total_order_id = total_order.total_order_id \n"
+			+ "WHERE compo_site = :compoSite AND total_order_status = :statusTable \n"
+			+ "ORDER BY order_menu.status_id AND order_menu.order_menu_time_stamp ASC", nativeQuery = true)
+	List<Order_Menu> findByTotalOrder_ID(@Param("compoSite") String compoSite,
+			@Param("statusTable") Integer statusTable);
 
 	@Query(value = "SELECT o.menu_id,m.menu_name,m.menu_pic FROM order_menu o inner join menu m on o.menu_id = m.menu_id group by menu_id order by SUM(order_menu_qty) DESC LIMIT 5", nativeQuery = true)
 	List<Object> Bestseller();
@@ -35,7 +34,8 @@ public interface Order_MenuRepository extends JpaRepository<Order_Menu, Integer>
 	@Query(value = "SELECT * FROM order_menu ORDER BY order_menu_time_stamp ASC", nativeQuery = true)
 	List<Order_Menu> Bestsellermenu();
 
-	@Query(value = "SELECT DISTINCT a.stock_type_id FROM stock_menu b  ,stock a WHERE  a.stock_type_id = b.stock_type_id  AND b.menu_id = :menu_ID", nativeQuery = true)
+	@Query(value = "SELECT DISTINCT a.stock_type_id FROM stock_menu b  ,stock a "
+			+ "WHERE  a.stock_type_id = b.stock_type_id  AND b.menu_id = :menu_ID", nativeQuery = true)
 	public List<Long> findStock(@Param("menu_ID") Long menu_ID);
 
 	// ตัดสต๊อกโดยการรับค่า stockType_ID เข้ามา
@@ -52,31 +52,12 @@ public interface Order_MenuRepository extends JpaRepository<Order_Menu, Integer>
 	@Query(value = "SET @@sql_mode = ''; SELECT (a.stock_qty - b.stock_menu_qty) FROM stock a, stock_menu b WHERE a.stock_type_id = b.stock_type_id AND a.stock_type_id = 4 AND a.stock_time_stamp = (SELECT MIN(stock_time_stamp)  FROM stock WHERE stock.stock_type_id = 4   GROUP BY stock.stock_type_id) GROUP BY a.stock_type_id;\n", nativeQuery = true)
 	public int beforeUpdateStock(Long stockType_ID);
 
-//	@Modifying
-//	@Transactional
-//	@Query(value = "SET @@sql_mode='';\n"
-//			+ "	SELECT CAST(a.stock_qty - b.stock_menu_qty AS SIGNED) as result\n"
-//			+ "	FROM stock a\n"
-//			+ "	INNER JOIN stock_menu b ON a.stock_type_id = b.stock_type_id\n"
-//			+ "	WHERE a.stock_type_id = :stockType_ID\n"
-//			+ "	AND a.stock_time_stamp = (SELECT MIN(stock_time_stamp) FROM stock WHERE stock.stock_type_id = :stockType_ID)\n"
-//			+ "	GROUP BY a.stock_type_id"
-//			,nativeQuery = true)
-//	public int beforeUpdateStock(@Param("stockType_ID") String stockType_ID);
-//	
-
 	@Query(value = "SELECT (a.price_per_unit * b.stock_menu_qty) \n" + "FROM stock a,stock_menu b \n"
 			+ "WHERE  a.stock_type_id = b.stock_type_id AND a.stock_type_id = :stockType_ID AND b.menu_id = :menu_ID\n"
 			+ "AND a.stock_time_stamp = (SELECT MIN(a.stock_time_stamp) \n"
 			+ "                              FROM stock a \n"
 			+ "                              WHERE a.stock_type_id = :stockType_ID)", nativeQuery = true)
 	public int findCostMenu(Long stockType_ID, Long menu_ID);
-
-//	@Query(value = "SET @@sql_mode = '';"+"SELECT (a.stock_qty - b.stock_menu_qty)\n"
-//			+ "  FROM stock a,stock_menu b\n" + "  WHERE  a.stock_type_id = b.stock_type_id    AND \n"
-//			+ "  a.stock_type_id = :stockType_ID AND menu_id = :menu_ID\n" + "  GROUP BY a.stock_type_id\n"
-//			+ "  HAVING MIN(a.stock_time_stamp);", nativeQuery = true)
-//	public int findStock_Nagative_Qty(@Param("stockType_ID") String stockType_ID, @Param("menu_ID") Long menu_ID);
 
 	@Modifying
 	@Transactional
@@ -85,13 +66,13 @@ public interface Order_MenuRepository extends JpaRepository<Order_Menu, Integer>
 			+ "(SELECT min_ts FROM (SELECT MIN(stock_time_stamp) AS min_ts FROM stock WHERE stock_type_id = :stockType_ID) AS temp)", nativeQuery = true)
 	public void updateStock(int num, String stockType_ID);
 
-	@Query(value = "SET @@sql_mode = '';" + "" + "SELECT (a.stock_qty - b.stock_menu_qty)\n"
-			+ "  FROM stock a,stock_menu b\n" + "  WHERE  a.stock_type_id = b.stock_type_id    AND \n"
+	@Query(value = "SELECT (a.stock_qty - b.stock_menu_qty)\n" + "  FROM stock a,stock_menu b\n"
+			+ "  WHERE  a.stock_type_id = b.stock_type_id    AND \n"
 			+ "  a.stock_type_id = :stockType_ID AND menu_id = :menu_ID\n" + "  GROUP BY a.stock_type_id\n"
 			+ "  HAVING MIN(a.stock_time_stamp);", nativeQuery = true)
 	public int findStock_Nagative_Qty(@Param("stockType_ID") String stockType_ID, @Param("menu_ID") Long menu_ID);
 
-	@Query(value = "SET @@sql_mode = '';" + "SELECT  stock_time_stamp \n" + "    FROM stock a,stock_menu b\n"
+	@Query(value = "SELECT  stock_time_stamp" + "FROM stock a,stock_menu b\n"
 			+ "    WHERE  a.stock_type_id = b.stock_type_id    AND \n" + "  a.stock_type_id = :stockType_ID \n"
 			+ "  GROUP BY a.stock_type_id \n" + "  HAVING MIN(a.stock_time_stamp);", nativeQuery = true)
 	public String findStock_Nagative_TimeStamp(@Param("stockType_ID") Long stockType_ID);
@@ -174,54 +155,20 @@ public interface Order_MenuRepository extends JpaRepository<Order_Menu, Integer>
 			+ "FROM backup_stock\n" + "GROUP BY day", nativeQuery = true)
 	public int sumCost();
 
-	@Query(value = "SELECT backup_stock.stock_type_id,EXTRACT(DAY FROM backup_stock.backup_stock_time_stamp) as day, SUM(backup_stock.backup_stock_cost) as cost,backup_stock.backup_stock_qty\n"
-			+ "FROM backup_stock\n" + "GROUP BY day, backup_stock.stock_type_id" + "", nativeQuery = true)
-	public List<Object> dayCost();
-
-	@Query(value = "SELECT EXTRACT(MONTH FROM backup_stock.backup_stock_time_stamp) as month, SUM(backup_stock.backup_stock_cost) as total_value,SUM(backup_stock.backup_stock_qty)\n"
-			+ "FROM backup_stock\n" + "GROUP BY month, backup_stock.stock_type_id\n" + "", nativeQuery = true)
-	public List<Object> monthCost();
-
-	@Query(value = "SELECT EXTRACT(YEAR FROM backup_stock.backup_stock_time_stamp) as year, SUM(backup_stock.backup_stock_cost) as total_value,SUM(backup_stock.backup_stock_qty)\n"
-			+ "FROM backup_stock\n" + "GROUP BY year, backup_stock.stock_type_id\n" + "", nativeQuery = true)
-	public List<Object> yearCost();
-
-	@Query(value = "SELECT EXTRACT(YEAR FROM total_order.total_order_time_stamp) as year, SUM(total_order.total_price) as total_value\n"
-			+ "FROM total_order\n" + "GROUP BY year", nativeQuery = true)
-	public List<Object> yearIncome();
-
-	@Query(value = "SELECT EXTRACT(MONTH FROM total_order.total_order_time_stamp) as month, SUM(total_order.total_price) as total_value\n"
-			+ "FROM total_order\n" + "GROUP BY month", nativeQuery = true)
-	public List<Object> monthIncome();
-
-	@Query(value = "SELECT EXTRACT(DAY FROM total_order.total_order_time_stamp) as day, SUM(total_order.total_price) as total_value\n"
-			+ "FROM total_order\n" + "GROUP BY day", nativeQuery = true)
-	public List<Object> dayIncome();
-
-	@Query(value = "SELECT EXTRACT(DAY FROM order_menu.order_menu_time_stamp) as day ,EXTRACT(MONTH FROM order_menu.order_menu_time_stamp) as month,EXTRACT(YEAR FROM order_menu.order_menu_time_stamp) as year\n"
-			+ "FROM order_menu\n" + "GROUP BY day,month,year", nativeQuery = true)
-	public List<Object> extractDMY();
-
-	@Query(value = "SELECT *\n" + "FROM order_menu\n" + "WHERE EXTRACT(DAY FROM order_menu.order_menu_time_stamp) = 11 "
-			+ "AND EXTRACT(MONTH FROM order_menu.order_menu_time_stamp) = 2;", nativeQuery = true)
-	public List<Order_Menu> extractDMY2();
-
 	@Query(value = "SELECT SUM(order_menu.order_menu_qty)\n" + "FROM order_menu\n"
 			+ "WHERE order_menu.menu_id = :menu_ID " + "AND EXTRACT(DAY FROM order_menu.order_menu_time_stamp) = :day "
 			+ "AND  EXTRACT(MONTH FROM order_menu.order_menu_time_stamp) = :month "
 			+ "AND  EXTRACT(YEAR FROM order_menu.order_menu_time_stamp) = :year", nativeQuery = true)
 	public int findMenuDate(Long menu_ID, String day, String month, String year);
-	
-	@Query(value="SELECT SUM(total_order.after_discount)\n"
-			+ "FROM total_order\n"
+
+	@Query(value = "SELECT SUM(total_order.after_discount)\n" + "FROM total_order\n"
 			+ "WHERE EXTRACT(DAY FROM total_order.total_order_time_stamp) = :day\n"
 			+ "AND  EXTRACT(MONTH FROM total_order.total_order_time_stamp) = :month\n"
-			+ "AND  EXTRACT(YEAR FROM total_order.total_order_time_stamp) = :year",nativeQuery = true)
+			+ "AND  EXTRACT(YEAR FROM total_order.total_order_time_stamp) = :year", nativeQuery = true)
 	public int discountByDate(String day, String month, String year);
-	
-	@Query(value = "SELECT SUM(total_order.after_discount)\n"
-			+ "FROM total_order\n"
-			+ "WHERE total_order.total_order_time_stamp BETWEEN :startDate AND :endDate",nativeQuery = true)
+
+	@Query(value = "SELECT SUM(total_order.after_discount)\n" + "FROM total_order\n"
+			+ "WHERE total_order.total_order_time_stamp BETWEEN :startDate AND :endDate", nativeQuery = true)
 	public int discountBetween(String startDate, String endDate);
 
 	// แสดงรายรับรายจ่ายทั้งหมด
@@ -266,21 +213,19 @@ public interface Order_MenuRepository extends JpaRepository<Order_Menu, Integer>
 			+ "WHERE order_menu.order_menu_id = :orderMenu_ID", nativeQuery = true)
 	public int finishedStatus(@Param("orderMenu_ID") Long orderMenu_ID);
 
-        @Modifying
-        @Transactional
-        @Query(value = "UPDATE order_menu SET cencel = :Emp WHERE (order_menu_id = :orderMenu_ID)", nativeQuery = true)
-        public int Cancel(@Param("orderMenu_ID") Long orderMenu_ID,@Param("Emp") String Emp);
+	@Modifying
+	@Transactional
+	@Query(value = "UPDATE order_menu SET cencel = :Emp WHERE (order_menu_id = :orderMenu_ID)", nativeQuery = true)
+	public int Cancel(@Param("orderMenu_ID") Long orderMenu_ID, @Param("Emp") String Emp);
 
-        // รวมโต๊ะ
-        @Modifying
-        @Transactional
-        @Query(value = "UPDATE total_order\n"
-                        + "SET total_order.compo_site = :pointTable\n"
-                        + "WHERE total_order.total_order_id = :totalOrder_ID", nativeQuery = true)
-        public int mergeTable(@Param("totalOrder_ID") int totalOrder_ID, @Param("pointTable") String pointTable);
-        
-        @Query(value="SELECT SUM(after_discount)\n"
-        		+ "FROM total_order",nativeQuery = true)
-       public int totalDiscount();
-        
+	// รวมโต๊ะ
+	@Modifying
+	@Transactional
+	@Query(value = "UPDATE total_order\n" + "SET total_order.compo_site = :pointTable\n"
+			+ "WHERE total_order.total_order_id = :totalOrder_ID", nativeQuery = true)
+	public int mergeTable(@Param("totalOrder_ID") int totalOrder_ID, @Param("pointTable") String pointTable);
+
+	@Query(value = "SELECT SUM(after_discount)\n" + "FROM total_order", nativeQuery = true)
+	public int totalDiscount();
+
 }

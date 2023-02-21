@@ -107,22 +107,22 @@ const TableOrderEmp = () => {
 
   let pic = "http://localhost:8080/menu/getimagesPay/";
 
-  console.log("mytable = ",showMytable)
+  console.log("mytable = ", showMytable);
 
   useEffect(() => {
-    if(showMytable === "0"){
+    if (showMytable === "0") {
       getMytable();
-    }else{
+    } else {
       getAllTotalOrder();
     }
     GetMoveTable();
-  }, [date,showMytable]);
+  }, [date, showMytable]);
 
   const getMytable = () => {
-    TotalOrderService.getMytable(currentUser.id,dateData).then((response) =>{
+    TotalOrderService.getMytable(currentUser.id, dateData).then((response) => {
       setTotalOrder(response.data);
-    })
-  }
+    });
+  };
 
   const getAllTotalOrder = () => {
     TotalOrderService.getDate(dateData)
@@ -191,6 +191,11 @@ const TableOrderEmp = () => {
     );
   };
 
+  const sortByStatusZone = () => {
+    const sortedTotal = [...totalOrder].sort((a, b) => a.totalOrder_Status - b.totalOrder_Status);
+    setTotalOrder(sortedTotal);
+  };
+
   const filterTotalOrder = totalOrder.filter((totalOrder) => {
     return totalOrder.table_ID.table_Zone
       .toLowerCase()
@@ -252,7 +257,8 @@ const TableOrderEmp = () => {
           onClick={() => handleShowMixTable(value)}
           disabled={
             DisBTNmixTable(value.compoSite, value.totalOrder_Status) ||
-            value.totalOrder_Status === "1" || value.discount_ID !== null
+            value.totalOrder_Status === "1" ||
+            value.discount_ID !== null
           }
           className="btn btn-info"
         >
@@ -265,9 +271,13 @@ const TableOrderEmp = () => {
   const DeleteTable = ({ data }) => {
     return (
       <>
-        <Modal show={data ? true : false} onHide={handleClose} size="lg"
+        <Modal
+          show={data ? true : false}
+          onHide={handleClose}
+          size="lg"
           aria-labelledby="contained-modal-title-vcenter"
-          centered>
+          centered
+        >
           <p></p>
           <p></p>
           <Modal.Header closeButton>
@@ -316,9 +326,13 @@ const TableOrderEmp = () => {
 
     return (
       <>
-        <Modal show={data ? true : false} onHide={handleClosepro} size="lg"
+        <Modal
+          show={data ? true : false}
+          onHide={handleClosepro}
+          size="lg"
           aria-labelledby="contained-modal-title-vcenter"
-          centered>
+          centered
+        >
           <p></p>
           <p></p>
           <Modal.Header closeButton>
@@ -400,9 +414,13 @@ const TableOrderEmp = () => {
 
     return (
       <>
-        <Modal show={data ? true : false} onHide={handleClosepay}size="lg"
+        <Modal
+          show={data ? true : false}
+          onHide={handleClosepay}
+          size="lg"
           aria-labelledby="contained-modal-title-vcenter"
-          centered >
+          centered
+        >
           <p></p>
           <p></p>
           <Modal.Header closeButton>
@@ -448,25 +466,31 @@ const TableOrderEmp = () => {
         if (pointTable == null) {
           window.alert("กรุณาเลือกโต๊ะที่ต้องการย้าย!!");
         } else {
-          TableService.MoveTable(pointTable?.table_ID, totalOrder_ID).then(() => {});
-          OrderMenuService.mergeTable(totalOrder_ID, pointTable?.table_Zone).then(() => {
+          TableService.MoveTable(pointTable?.table_ID, totalOrder_ID).then(
+            () => {}
+          );
+          OrderMenuService.mergeTable(
+            totalOrder_ID,
+            pointTable?.table_Zone
+          ).then(() => {
             setShowMove(false);
             getAllTotalOrder();
             GetMoveTable();
           });
-        
         }
         setIsLoading(false);
       }, 500);
     };
 
-
     return (
       <>
-        <Modal show={data ? true : false} onHide={handleCloseMove} ize="lg"
-      aria-labelledby="contained-modal-title-vcenter"
-      centered>
- 
+        <Modal
+          show={data ? true : false}
+          onHide={handleCloseMove}
+          ize="lg"
+          aria-labelledby="contained-modal-title-vcenter"
+          centered
+        >
           <Modal.Header closeButton>
             <Modal.Title>ย้ายโต๊ะ</Modal.Title>
           </Modal.Header>
@@ -480,7 +504,7 @@ const TableOrderEmp = () => {
                 {getMoveTable?.map((value, index) => {
                   return (
                     <fieldset>
-                    <div className="text-center">
+                      <div className="text-center">
                         <input
                           type="radio"
                           id="louie"
@@ -488,9 +512,7 @@ const TableOrderEmp = () => {
                           value={null}
                           onChange={() => setPointTable(value)}
                         />
-                        <label>
-                          โต๊ะ {value.table_Zone}
-                        </label>
+                        <label>โต๊ะ {value.table_Zone}</label>
                       </div>
                     </fieldset>
                   );
@@ -543,7 +565,7 @@ const TableOrderEmp = () => {
     const [pointTable, setPointTable] = useState(null);
 
     const getMixTebles = () => {
-      TableService.MixTable(data?.table_ID?.table_Zone,dateData)
+      TableService.MixTable(data?.table_ID?.table_Zone, dateData)
         .then((response) => {
           setTabel(response.data);
           console.log("mix", response.data);
@@ -575,7 +597,7 @@ const TableOrderEmp = () => {
       TotalOrderService.updateTotalprice(0, data?.totalOrder_ID).then(
         (response) => {
           getAllTotalOrder();
-            GetMoveTable();
+          GetMoveTable();
         }
       );
     };
@@ -586,10 +608,13 @@ const TableOrderEmp = () => {
 
     return (
       <>
-        <Modal show={data ? true : false} onHide={handleCloseMix} ize="lg"
-      aria-labelledby="contained-modal-title-vcenter"
-      centered>
-
+        <Modal
+          show={data ? true : false}
+          onHide={handleCloseMix}
+          ize="lg"
+          aria-labelledby="contained-modal-title-vcenter"
+          centered
+        >
           <Modal.Header closeButton>
             <Modal.Title>รวมโต๊ะ</Modal.Title>
           </Modal.Header>
@@ -602,7 +627,7 @@ const TableOrderEmp = () => {
                 {table?.map((t) => {
                   return (
                     <fieldset>
-                    <div className="text-center">
+                      <div className="text-center">
                         <input
                           type="radio"
                           id="louie"
@@ -610,9 +635,7 @@ const TableOrderEmp = () => {
                           value={t.table_ID.table_Zone}
                           onClick={() => setPointTable(t.table_ID.table_Zone)}
                         />
-                        <label>
-                          โต๊ะ {t.table_ID.table_Zone}
-                        </label>
+                        <label>โต๊ะ {t.table_ID.table_Zone}</label>
                       </div>
                     </fieldset>
                   );
@@ -626,7 +649,9 @@ const TableOrderEmp = () => {
             </Button>
             <Button
               variant="success"
-              onClick={() => mixTable(data?.totalOrder_ID,data?.totalOrder_TimeStamp)}
+              onClick={() =>
+                mixTable(data?.totalOrder_ID, data?.totalOrder_TimeStamp)
+              }
             >
               {isLoading ? "Loading..." : "รวมโต๊ะ"}
               {isLoading && <Spinner animation="border" size="sm" />}
@@ -642,120 +667,116 @@ const TableOrderEmp = () => {
     const [isLoadingCan, setIsLoadingCan] = useState(false);
     const [table, setTabel] = useState([]);
     const [pointTable, setPointTable] = useState(null);
-  
-      const getMixTebles = () => {
-        TableService.MixTable(data?.compoSite,dateData)
-          .then((response) => {
-            setTabel(response.data);
-            console.log("mix", response.data);
-          })
-          .catch((error) => {
-            console.log("Something went wrong", error);
-          });
-      };
-  
-      const mixTable = (totalOrder_ID) => {
-        setIsLoading(true);
-  
-        setTimeout(() => {
-          if (pointTable == null) {
-            window.alert("กรุณาเลือกโต๊ะที่ต้องการรวม!!");
-          } else {
-            OrderMenuService.mergeTable(totalOrder_ID, pointTable).then(() => {
-              setShowEditMix(false);
-              getAllTotalOrder();
-              GetMoveTable();
-            });
-          }
-          setIsLoading(false);
-        }, 500);
-      };
-  
-      const CancelTable = () => {
-        setIsLoadingCan(true);
-  
-        setTimeout(() => {
-          OrderMenuService.mergeTable(
-            data?.totalOrder_ID,
-            data?.table_ID?.table_Zone
-          ).then(() => {
+
+    const getMixTebles = () => {
+      TableService.MixTable(data?.compoSite, dateData)
+        .then((response) => {
+          setTabel(response.data);
+          console.log("mix", response.data);
+        })
+        .catch((error) => {
+          console.log("Something went wrong", error);
+        });
+    };
+
+    const mixTable = (totalOrder_ID) => {
+      setIsLoading(true);
+
+      setTimeout(() => {
+        if (pointTable == null) {
+          window.alert("กรุณาเลือกโต๊ะที่ต้องการรวม!!");
+        } else {
+          OrderMenuService.mergeTable(totalOrder_ID, pointTable).then(() => {
             setShowEditMix(false);
             getAllTotalOrder();
             GetMoveTable();
           });
-          setIsLoadingCan(false);
-        }, 500);
-      };
-  
-      
-  
-      useEffect(() => {
-        
-        getMixTebles();
-   
-      }, []);
-  
-      return (
-        <>
-          <Modal show={data ? true : false} onHide={handleCloseEditMix} ize="lg"
-        aria-labelledby="contained-modal-title-vcenter"
-        centered>
-            <Modal.Header closeButton>
-              <Modal.Title>รวมโต๊ะ</Modal.Title>
-            </Modal.Header>
-            <form onSubmit={() => Movetable(data?.totalOrder_ID)}>
-              <Modal.Body>
-                <div>
-                  <h2 className="text-center">
-                    โต๊ {data?.table_ID?.table_ID} จะรวมโต๊ะไปที่
-                 
-                  </h2>
-                  {table?.map((t) => {
-                    return (
-                      <fieldset>
-                        <div>
-                          <input
-                            type="radio"
-                            id="louie"
-                            name="drone"
-                            value={t.table_ID.table_ID}
-                            onClick={() => setPointTable(t.table_ID.table_ID)}
-                          />
-                          <label>
-                            โต๊ะที่ {t.table_ID.table_Zone}
-                          </label>
-                        </div>
-                      </fieldset>
-                    );
-                  })}
-                </div>
-              </Modal.Body>
-            </form>
-            <Modal.Footer>
-              <Button variant="secondary" onClick={handleCloseEditMix}>
-                กลับ
-              </Button>
-              <Button
-                variant="success"
-                onClick={() => mixTable(data?.totalOrder_ID)}
-                disabled={pointTable === null}
-              >
-                {isLoading ? "Loading..." : "รวมโต๊ะ"}
-                {isLoading && <Spinner animation="border" size="sm" />}
-              </Button>
-              <Button
-                variant="danger"
-                onClick={() => CancelTable(data?.totalOrder_ID)}
-              >
-                {isLoadingCan ? "Loading..." : "ยกเลิกการรวมโต๊ะ"}
-                {isLoadingCan && <Spinner animation="border" size="sm" />}
-              </Button>
-            </Modal.Footer>
-          </Modal>
-        </>
-      );
+        }
+        setIsLoading(false);
+      }, 500);
     };
-  
+
+    const CancelTable = () => {
+      setIsLoadingCan(true);
+
+      setTimeout(() => {
+        OrderMenuService.mergeTable(
+          data?.totalOrder_ID,
+          data?.table_ID?.table_Zone
+        ).then(() => {
+          setShowEditMix(false);
+          getAllTotalOrder();
+          GetMoveTable();
+        });
+        setIsLoadingCan(false);
+      }, 500);
+    };
+
+    useEffect(() => {
+      getMixTebles();
+    }, []);
+
+    return (
+      <>
+        <Modal
+          show={data ? true : false}
+          onHide={handleCloseEditMix}
+          ize="lg"
+          aria-labelledby="contained-modal-title-vcenter"
+          centered
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>รวมโต๊ะ</Modal.Title>
+          </Modal.Header>
+          <form onSubmit={() => Movetable(data?.totalOrder_ID)}>
+            <Modal.Body>
+              <div>
+                <h2 className="text-center">
+                  โต๊ {data?.table_ID?.table_ID} จะรวมโต๊ะไปที่
+                </h2>
+                {table?.map((t) => {
+                  return (
+                    <fieldset>
+                      <div>
+                        <input
+                          type="radio"
+                          id="louie"
+                          name="drone"
+                          value={t.table_ID.table_ID}
+                          onClick={() => setPointTable(t.table_ID.table_ID)}
+                        />
+                        <label>โต๊ะที่ {t.table_ID.table_Zone}</label>
+                      </div>
+                    </fieldset>
+                  );
+                })}
+              </div>
+            </Modal.Body>
+          </form>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleCloseEditMix}>
+              กลับ
+            </Button>
+            <Button
+              variant="success"
+              onClick={() => mixTable(data?.totalOrder_ID)}
+              disabled={pointTable === null}
+            >
+              {isLoading ? "Loading..." : "รวมโต๊ะ"}
+              {isLoading && <Spinner animation="border" size="sm" />}
+            </Button>
+            <Button
+              variant="danger"
+              onClick={() => CancelTable(data?.totalOrder_ID)}
+            >
+              {isLoadingCan ? "Loading..." : "ยกเลิกการรวมโต๊ะ"}
+              {isLoadingCan && <Spinner animation="border" size="sm" />}
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      </>
+    );
+  };
 
   const Checkbill = (compoSite) => {
     navigate("/Checkbill/" + compoSite);
@@ -826,20 +847,30 @@ const TableOrderEmp = () => {
               เวลา {hour}:{minutes} น.
             </h4>
             <div className="text-center">
-            <select
-              style={{ width: "200px", marginLeft: "50px" ,marginBottom: "15px"}}
-              name="typeMenu_ID"
-              className="form-control"
-              value={showMytable}
-              onChange={(e) => setShowMytable(e.target.value)}
-            >
-              <option value="0" className="text-center" >-- โต๊ะของฉัน --</option>
-              <option value="1" className="text-center"> -- โต๊ะทั้งหมด -- </option>
-            </select>
-    
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <label>
+                  <input
+                    type="radio"
+                    name="typeMenu_ID"
+                    value="0"
+                    checked={showMytable === "0"}
+                    onChange={() => setShowMytable("0")}
+                  />
+                  โต๊ะของฉัน
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="typeMenu_ID"
+                    value="1"
+                    checked={showMytable === "1"}
+                    onChange={() => setShowMytable("1")}
+                  />
+                  โต๊ะทั้งหมด
+                </label>
+              </div>
+            </div>
           </div>
-          </div>
-         
 
           {totalOrder.length === 0 ? (
             <h2 className="text-center" style={{ color: "red" }}>
@@ -869,7 +900,8 @@ const TableOrderEmp = () => {
                           disabled={
                             totalOrder.compoSite !=
                               totalOrder.table_ID.table_Zone ||
-                            totalOrder.totalOrder_Status === "1" || totalOrder.discount_ID !== null
+                            totalOrder.totalOrder_Status === "1" ||
+                            totalOrder.discount_ID !== null
                           }
                         >
                           สั่งอาหาร
@@ -901,9 +933,9 @@ const TableOrderEmp = () => {
                             disabled={
                               totalOrder.compoSite !=
                                 totalOrder.table_ID.table_Zone ||
-                              totalOrder.totalOrder_Status === "1" || 
-                              DisBTNmixTable(totalOrder.compoSite)
-                              || totalOrder.discount_ID !== null 
+                              totalOrder.totalOrder_Status === "1" ||
+                              DisBTNmixTable(totalOrder.compoSite) ||
+                              totalOrder.discount_ID !== null
                             }
                             onClick={
                               (e) => handleShowModeTable(totalOrder)
@@ -930,8 +962,8 @@ const TableOrderEmp = () => {
                             disabled={
                               totalOrder.compoSite !=
                                 totalOrder.table_ID.table_Zone ||
-                              DisBTNmixTable(totalOrder.compoSite)
-                              || totalOrder.discount_ID !== null
+                              DisBTNmixTable(totalOrder.compoSite) ||
+                              totalOrder.discount_ID !== null
                             }
                             onClick={() => handleShow(totalOrder)}
                           >
@@ -978,4 +1010,3 @@ const TableOrderEmp = () => {
 };
 
 export default TableOrderEmp;
-

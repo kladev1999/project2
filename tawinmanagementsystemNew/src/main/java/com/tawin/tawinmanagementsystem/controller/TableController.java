@@ -44,6 +44,7 @@ public class TableController {
 	public List<TableTawin> getmoveTable(){
 		return (List<TableTawin>) tableRepo.GetmoveTableTawins();
 	}
+	
 
 	@GetMapping("/moveTable/{table_id}/{total_order_ID}")
 	public int mergeTable(@PathVariable int table_id,@PathVariable int total_order_ID) {

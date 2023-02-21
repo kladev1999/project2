@@ -379,6 +379,7 @@ const TatalOrder = () => {
   };
 
   const UpdatePay = (totalOrder_ID) => {
+    if(window.confirm("ชำระเงินแล้วใช่หรือไม่")){
     TotalOrderService.UpdateStatusPay(totalOrder_ID)
       .then(() => {
         console.log(totalOrder_ID);
@@ -388,6 +389,7 @@ const TatalOrder = () => {
       .catch((e) => {
         console.log(e);
       });
+    }
   };
 
   const PayModal = ({ data }) => {
@@ -436,6 +438,12 @@ const TatalOrder = () => {
             {CheckSlip()}
           </Modal.Body>
           <Modal.Footer>
+          <Button
+              variant="warning"
+              onClick={() => UpdatePay(data?.compoSite)}
+            >
+              ชำระเงินแล้ว
+            </Button>
             <button
               style={{ marginLeft: "5px" }}
               onClick={() => Uploadslip()}
@@ -452,7 +460,7 @@ const TatalOrder = () => {
               onClick={() => UpdatePay(data?.compoSite)}
               disabled={data?.totalOrder_image === null || data?.totalOrder_Status === "1"}
             >
-              อนุมัติการชำระเงิน
+              อนุมัติการโอนเงิน
             </Button>
           </Modal.Footer>
         </Modal>

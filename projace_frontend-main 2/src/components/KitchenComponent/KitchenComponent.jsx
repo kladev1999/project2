@@ -144,7 +144,7 @@ const KitchenComponent = () => {
           .catch((e) => {
             console.log(e);
           });
-        cutStock(status, menu_ID, qty);
+        cutStock(menu_ID, qty);
       }
     }
   };
@@ -207,9 +207,9 @@ const KitchenComponent = () => {
   }
   
 
-  const cutStock = (status, menu_ID, qty) => {
+  const cutStock = ( menu_ID, qty) => {
     console.log(qty);
-    if (status?.status_ID?.status_ID === 1) {
+
       OrderMenuService.loopStockCut(menu_ID, qty)
         .then((response) => {
           console.log(response.data);
@@ -217,7 +217,7 @@ const KitchenComponent = () => {
         .catch((error) => {
           console.log(error);
         });
-    }
+    
   };
 
   const waste = (orderMenu_ID,name) => {
@@ -276,7 +276,7 @@ const KitchenComponent = () => {
     ) {
       return (
         <tr
-          style={{ backgroundColor: getBackgroundColor(k), marginTop: "50px",color: "red" }}
+          style={{ backgroundColor: getBackgroundColor(k), marginTop: "50px"}}
         >
           <th>{index + 1}</th>
           <td>{k.totalOrder_ID.table_ID.table_Zone}</td>
