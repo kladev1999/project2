@@ -6,22 +6,154 @@ import { Button, Spinner } from "react-bootstrap";
 import Dropdown from "react-bootstrap/Dropdown";
 import { Container, Row, Col } from "react-grid-system";
 import { useNavigate } from "react-router-dom";
+import "react-datepicker/dist/react-datepicker.css";
+import DatePicker from "react-datepicker";
+
 function IncomeExpense() {
   const [searchName, setsearchName] = useState("");
   const navigate = useNavigate();
+  const  [StartDate,setStartdate] = useState(null);
+  const  [EndDate,setEnddStart] = useState(null);
 
-  const [selectedDate, setSelectedDate] = useState({
-    day: "",
-    month: "",
-    year: "",
-  });
+const [date, setDate] = useState(null);
 
-  const [selectedDateEnd, setSelectedDateEnd] = useState({
-    day: "",
-    month: "",
-    year: "",
-  });
-  const [days, setDays] = useState([]);
+const start = (date) => {
+  
+  let s = date.toString();
+  let datetime =  s.split(' ')
+  let y = parseInt(datetime[3])
+
+  setDate(date)
+
+  let monthnum =''
+  
+  if(datetime[1] === "Jan"){
+
+    monthnum ='01'
+  }
+  else if (datetime[1] === "Feb"){
+  
+    monthnum ='02'
+  }
+  else if (datetime[1] === "Mar"){
+
+    monthnum ='03'
+  }
+  else if (datetime[1] === "Apr"){
+   
+    monthnum ='04'
+  }
+  else if (datetime[1] === "May"){
+ 
+    monthnum ='05'
+  }
+  else if (datetime[1] === "Jun"){
+   
+    monthnum ='06'
+  }
+  else if (datetime[1] === "Jul"){
+    
+    monthnum ='07'
+  }
+  else if (datetime[1] === "Aug"){
+ 
+    monthnum ='08'
+  }
+  else if (datetime[1] === "Sep"){
+  
+    monthnum ='09'
+  }
+  else if (datetime[1] === "Oct"){
+   
+    monthnum ='10'
+  }
+  else if (datetime[1] === "Nov"){
+
+    monthnum ='11'
+  }
+  else if (datetime[1] === "Dec"){
+
+    monthnum ='12'
+  }
+  
+  let dateData = datetime[3]+'-'+monthnum+'-'+datetime[2]
+
+  setStartdate(dateData)
+
+}
+const [dateEnd, setDateEnd] = useState(null);
+
+const end = (dateEnd) => {
+
+  let sE = dateEnd?.toString();
+  let datetimeE =  sE?.split(' ')
+  let yE = parseInt(datetimeE[3])
+
+  setDateEnd(dateEnd)
+  
+  let day = ''
+  let month = ''
+  let monthnum =''
+
+if(datetimeE[1] === "Jan"){
+
+  monthnum ='01'
+}
+else if (datetimeE[1] === "Feb"){
+
+  monthnum ='02'
+}
+else if (datetimeE[1] === "Mar"){
+
+  monthnum ='03'
+}
+else if (datetimeE[1] === "Apr"){
+ 
+  monthnum ='04'
+}
+else if (datetimeE[1] === "May"){
+
+  monthnum ='05'
+}
+else if (datetimeE[1] === "Jun"){
+
+  monthnum ='06'
+}
+else if (datetimeE[1] === "Jul"){
+
+  monthnum ='07'
+}
+else if (datetimeE[1] === "Aug"){
+
+  monthnum ='08'
+}
+else if (datetimeE[1] === "Sep"){
+
+  monthnum ='09'
+}
+else if (datetimeE[1] === "Oct"){
+
+  monthnum ='10'
+}
+else if (datetimeE[1] === "Nov"){
+ 
+  monthnum ='11'
+}
+else if (datetimeE[1] === "Dec"){
+
+  monthnum ='12'
+}
+
+let dateDataE = datetimeE[3]+'-'+monthnum+'-'+datetimeE[2]
+
+setEnddStart(dateDataE);
+  
+}
+
+
+
+
+const [days, setDays] = useState([]);
   const [totalOrder, setTotalOrder] = useState([]);
 
   const [incomeAll, setIncomeAll] = useState([]);
@@ -30,67 +162,7 @@ function IncomeExpense() {
 
   let TotalPrice = totalOrder?.reduce((prev, cur) => prev + cur.totalPrice, 0);
 
-  let dateDatalable = "";
-  let dateData = "";
-
-  let date = "";
-  if (
-    selectedDate.day === "" &&
-    selectedDate.month === "" &&
-    selectedDate.year === ""
-  ) {
-    dateDatalable = [];
-  } else if (selectedDate.month === "") {
-    dateData = selectedDate.year;
-    dateDatalable = [
-      "01",
-      "02",
-      "03",
-      "04",
-      "05",
-      "06",
-      "07",
-      "08",
-      "09",
-      "10",
-      "11",
-      "12",
-    ];
-  } else if (selectedDate.day === "") {
-    dateData = selectedDate.year + "-" + selectedDate.month;
-  }
-
-  let dateDatalableEnd = "";
-  let dateDataEnd = "";
-
-  let dateEnd = "";
-  if (
-    selectedDateEnd.day === "" &&
-    selectedDateEnd.month === "" &&
-    selectedDateEnd.year === ""
-  ) {
-    dateDatalableEnd = [];
-  } else if (selectedDateEnd.month === "") {
-    dateDataEnd = selectedDateEnd.year;
-    dateDatalableEnd = [
-      "01",
-      "02",
-      "03",
-      "04",
-      "05",
-      "06",
-      "07",
-      "08",
-      "09",
-      "10",
-      "11",
-      "12",
-    ];
-  } else if (selectedDateEnd.day === "") {
-    dateDataEnd = selectedDateEnd.year + "-" + selectedDateEnd.month;
-  }
-
-  console.log(dateDatalableEnd);
+  
 
   const getIncomeAllMenu = async () => {
     try {
@@ -163,162 +235,26 @@ function IncomeExpense() {
     }
   };
 
-  const grap = (dataDateStart) => {
-    let dateDatalableStart = "";
-    let dateDataStart = "";
-    if (
-      dataDateStart.day === "" &&
-      dataDateStart.month === "" &&
-      dataDateStart.year === ""
-    ) {
-      dateDatalableStart = [];
-    } else if (
-      dataDateStart.day !== "" &&
-      dataDateStart.month !== "" &&
-      dataDateStart.year !== ""
-    ) {
-      dateDataStart =
-        dataDateStart.year +
-        "-" +
-        dataDateStart.month +
-        "-" +
-        dataDateStart.day;
-      dateDatalableStart = dataDateStart.day;
-    } else if (dataDateStart.month === "") {
-      dateDataStart = dataDateStart.year;
-      dateDatalableStart = [
-        "01",
-        "02",
-        "03",
-        "04",
-        "05",
-        "06",
-        "07",
-        "08",
-        "09",
-        "10",
-        "11",
-        "12",
-      ];
-    } else if (dataDateStart.day === "") {
-      dateDataStart = dataDateStart.year + "-" + dataDateStart.month;
-      dateDatalableStart = days;
+  const grap = () => {
+
+    console.log("Start",StartDate)
+    console.log("End",EndDate)
+
+    if (EndDate === null) {
+      getIncomeAllByDate(StartDate);
+    } else {
+      getIncomeBetweenDate(StartDate, EndDate);
     }
-
-    console.log(dateDataStart);
-
-    date = dateData;
+    
   };
 
-  const grapEnd = (dataDate, dataDateStart) => {
-    let dateDatalable = "";
-    let dateData = "";
-    let dateDatalableStart = "";
-    let dateDataStart = "";
-    if (
-      dataDateStart.day === "" &&
-      dataDateStart.month === "" &&
-      dataDateStart.year === ""
-    ) {
-      dateDatalableStart = [];
-    } else if (
-      dataDateStart.day !== "" &&
-      dataDateStart.month !== "" &&
-      dataDateStart.year !== ""
-    ) {
-      dateDataStart =
-        dataDateStart.year +
-        "-" +
-        dataDateStart.month +
-        "-" +
-        dataDateStart.day;
-      dateDatalableStart = dataDateStart.day;
-    } else if (dataDateStart.month === "") {
-      dateDataStart = dataDateStart.year;
-      dateDatalableStart = [
-        "01",
-        "02",
-        "03",
-        "04",
-        "05",
-        "06",
-        "07",
-        "08",
-        "09",
-        "10",
-        "11",
-        "12",
-      ];
-    } else if (dataDateStart.day === "") {
-      dateDataStart = dataDateStart.year + "-" + dataDateStart.month;
-      dateDatalableStart = days;
-    }
 
-    if (dataDate.day === "" && dataDate.month === "" && dataDate.year === "") {
-      dateDatalable = [];
-    } else if (
-      dataDate.day !== "" &&
-      dataDate.month !== "" &&
-      dataDate.year !== ""
-    ) {
-      dateData = dataDate.year + "-" + dataDate.month + "-" + dataDate.day;
-      dateDatalable = dataDate.day;
-    } else if (dataDate.month === "") {
-      dateData = dataDate.year;
-      dateDatalable = [
-        "01",
-        "02",
-        "03",
-        "04",
-        "05",
-        "06",
-        "07",
-        "08",
-        "09",
-        "10",
-        "11",
-        "12",
-      ];
-    } else if (dataDate.day === "") {
-      dateData = dataDate.year + "-" + dataDate.month;
-      dateDatalable = days;
-    }
-
-    console.log("Start", dateDataStart);
-    console.log("End", dateData);
-
-    date = dateData;
-    // getIncomeAllByDate(dateDataStart);
-    if (dateData.length === 0) {
-      getIncomeAllByDate(dateDataStart);
-    } else if (dateData.length > 0) {
-      getIncomeBetweenDate(dateDataStart, dateData);
-    }
-  };
-
-  useEffect(() => {
-    let year = selectedDate.year;
-    let month = selectedDate.month;
-    let daysInMonth = new Date(year, month, 0).getDate();
-    let daysArr = Array.from({ length: daysInMonth }, (_, i) => i + 1);
-    setDays(daysArr);
-  }, [selectedDate]);
-
-  useEffect(() => {
-    let year = selectedDate.year;
-    let month = selectedDate.month;
-    let daysInMonth = new Date(year, month, 0).getDate();
-    let daysArr = Array.from({ length: daysInMonth }, (_, i) => i + 1);
-    setDays(daysArr);
-  }, [selectedDate]);
 
   useEffect(() => {
     getIncomeAllMenu();
     getIncomeAllMenuTotal();
     console.log(incomeAll);
   }, []);
-
-  console.log("pppdppp = ", selectedDate);
 
   const filterMenu = incomeAll?.filter((incomeAll) => {
     if (searchName.length > 0) {
@@ -345,125 +281,50 @@ function IncomeExpense() {
         <div className="text-center">
           <h3> รายงานรายรับ - รายจ่าย </h3>
         </div>
-        <div className="text-center" style={{ margin: "40px" }}>
-          <div>
+      
+      <div className="text-center">
             เริ่มต้น:
-            <select
-              value={selectedDate.day}
-              disabled={selectedDate.month === ""}
-              onChange={(e) =>
-                setSelectedDate({ ...selectedDate, day: e.target.value })
-              }
-            >
-              <option value="">วันที่</option>
-              {days.map((day) => (
-                <option key={day} value={day}>
-                  {day}
-                </option>
-              ))}
-            </select>
-            <select
-              style={{ margin: "10px" }}
-              value={selectedDate.month}
-              disabled={selectedDate.year === ""}
-              onChange={(e) =>
-                setSelectedDate({ ...selectedDate, month: e.target.value })
-              }
-            >
-              <option value="">เดือน</option>
-              {Array.from({ length: 12 }, (_, i) =>
-                new Date(null, i).toLocaleString("default", {
-                  month: "2-digit",
-                })
-              ).map((month, index) => (
-                <option key={month} value={month}>
-                  {month}
-                </option>
-              ))}
-            </select>
-            <select
-              value={selectedDate.year}
-              onChange={(e) =>
-                setSelectedDate({ ...selectedDate, year: e.target.value })
-              }
-            >
-              <option value="">ปี</option>
-              {Array.from(
-                { length: 10 },
-                (_, i) => new Date().getFullYear() - i
-              ).map((year) => (
-                <option key={year} value={year}>
-                  {year}
-                </option>
-              ))}
-            </select>
-          </div>
+        <p>
 
-          <div>
+        <DatePicker
+          selected={date}
+          onChange={(date) => start(date)}
+          dateFormat="dd / MM / yyyy"
+          maxDate={new Date()}
+          showYearDropdown
+        />
+
+        <p style={{marginTop: "5px"}}></p>
+
             สิ้นสุด:
-            <select
-              value={selectedDateEnd.day}
-              disabled={selectedDateEnd.month === ""}
-              onChange={(e) =>
-                setSelectedDateEnd({ ...selectedDateEnd, day: e.target.value })
-              }
-            >
-              <option value="">วันที่</option>
-              {days.map((day) => (
-                <option key={day} value={day}>
-                  {day}
-                </option>
-              ))}
-            </select>
-            <select
-              style={{ margin: "10px" }}
-              value={selectedDateEnd.month}
-              disabled={selectedDateEnd.year === ""}
-              onChange={(e) =>
-                setSelectedDateEnd({
-                  ...selectedDateEnd,
-                  month: e.target.value,
-                })
-              }
-            >
-              <option value="">เดือน</option>
-              {Array.from({ length: 12 }, (_, i) =>
-                new Date(null, i).toLocaleString("default", {
-                  month: "2-digit",
-                })
-              ).map((month, index) => (
-                <option key={month} value={month}>
-                  {month}
-                </option>
-              ))}
-            </select>
-            <select
-              value={selectedDateEnd.year}
-              onChange={(e) =>
-                setSelectedDateEnd({ ...selectedDateEnd, year: e.target.value })
-              }
-            >
-              <option value="">ปี</option>
-              {Array.from(
-                { length: 10 },
-                (_, i) => new Date().getFullYear() - i
-              ).map((year) => (
-                <option key={year} value={year}>
-                  {year}
-                </option>
-              ))}
-            </select>
-          </div>
+        <DatePicker
+          selected={dateEnd}
+          onChange={(date) => end(date)}
+          dateFormat="dd / MM / yyyy"
+          maxDate={new Date()}
+          showYearDropdown
+        />
+   
+
+        </p>
+      </div>
+
+
+
+
+   
+         
+        <p className="text-center">
 
           <div className="text-center">
             <Button
               variant="success"
-              onClick={() => grapEnd(selectedDateEnd, selectedDate)}
+              onClick={() => grap()}
             >
               {"ตกลง"}
             </Button>
           </div>
-        </div>
+        </p>
         <Container>
           <Row>
             <h4 style={{ color: "#F4656D", margin: "5px", padding: "5px" }}>

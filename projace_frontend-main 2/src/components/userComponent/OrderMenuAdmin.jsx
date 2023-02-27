@@ -8,6 +8,8 @@ import { useParams, Link } from "react-router-dom";
 import MenuService from "../../services/MenuService";
 import "./stly/User.css";
 import { Container, Row, Col } from "reactstrap";
+import { Tab, Tabs } from "react-bootstrap";
+// import "react-tabs/style/react-tabs.css";
 
 function OrderMenuAdmin() {
   let pic = "http://localhost:8080/menu/getimages/";
