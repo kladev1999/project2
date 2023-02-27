@@ -1,6 +1,8 @@
 @import url("https://cdn.syncfusion.com/ej2/bootstrap5.css");
+@import url('https://fonts.googleapis.com/css2?family=Athiti:wght@200&display=swap');
 
 .App {
+
   text-align: center;
 }
 
@@ -14,6 +16,10 @@
     animation: App-logo-spin infinite 20s linear;
   }
 }
+
+
+
+
 
 .center-select {
   display: block;
@@ -45,6 +51,7 @@
 }
 
 .footer {
+ 
   position: absolute;
   bottom: 0;
   width:100%;
@@ -55,19 +62,23 @@
 }
 
 .custom-select {
+ 
   position: relative;
   font-family: Arial;
 }
 
 .custom-select select {
+ 
   display: none; /*hide original SELECT element: */
 }
 
 .select-selected {
+ 
   background-color: DodgerBlue;
 }
 
 input[type=search] {
+ 
   border: 2px solid green;
   border-radius: 10px;
   
@@ -76,12 +87,14 @@ input[type=search] {
 
 
 .button-2{
+ 
   width: 20;
   height: 10;
 }
 
 /* CSS */
 .button-3 {
+ 
   appearance: none;
   background-color: #2ea44f;
   border: 1px solid rgba(27, 31, 35, .15);
@@ -109,11 +122,13 @@ input[type=search] {
 }
 
 .button-3:focus:not(:focus-visible):not(.focus-visible) {
+ 
   box-shadow: none;
   outline: none;
 }
 
 .button-3:hover {
+
   background-color: #2c974b;
 }
 
